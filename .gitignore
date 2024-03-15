@@ -2,6 +2,8 @@
 .Rhistory
 .Rapp.history
 
+*.Rproj
+
 # Session Data files
 .RData
 .RDataTmp
@@ -24,6 +26,9 @@
 # produced vignettes
 vignettes/*.html
 vignettes/*.pdf
+
+# other .pdfs 
+*.pdf
 
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
