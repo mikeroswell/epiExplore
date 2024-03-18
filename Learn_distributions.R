@@ -65,11 +65,44 @@ summary(r_geom_devs)
 summary(my_geom_devs)
 summary(rgd2)
 
-# no, I didn't get the probability backwards, but also the distributions that I 
-# thought would be the same have drastically different means.
+# no, I didn't get the probability backwards (but watch out, scale = 1 /rate)
 
 # visualize with a q-q plot
 my_quantl <- function(x){quantile(log(x), probs = seq(0.001,0.999,0.001))}
 plot(my_quantl(my_geom_devs), my_quantl(r_geom_devs))
 abline(0,1)
-# oh no
+# after exploration, decided they are nearly the same but something technical 
+# means not entirely. 
+# https://github.com/wch/r-source/blob/f46b4cd47b4f4b2bb5ef40137a7f48f91b66469e/src/nmath/rgeom.c#L45
+
+# Ok, now on to gamma from exponential (easy to go the other way)
+# maybe go by way of the Erlang (gamma with integer shape parameter)
+myErlang <- function(n, p, r){
+    apply(replicate(r, rexp(n = reps, makeRate(p))), 1, sum)
+}
+Erlang <- rgamma(reps, rate = makeRate(p), shape = 2)
+
+plot(sort(myErlang(reps, p, 2)), sort(Erlang))
+
+# how to assemble a gamma more generally?
+### Skipping that for now...
+
+# Sample the Erlang to make a negative binomial with an integer shape parameter
+# (a "Pascal" distribution).
+
+myPascal <- function(n, p, r){
+    rpois(n, lambda = 
+              myErlang(n, p, r))
+}
+
+
+# test
+
+# pdf("propagates_to_nbinom.pdf")
+plot(sort(myPascal(reps, p, 2)), sort(rnbinom(reps, size = r, prob = p))
+     , col = rgb(red = 0, green = 0, blue = 0, alpha = 0.01)
+     , pch = 16, cex =0.5)
+# dev.off()
+
+# at this point I feel fine about the code, noting the buggy-seeming deviations 
+# in the q-q plots. 
