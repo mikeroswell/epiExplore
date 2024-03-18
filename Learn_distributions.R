@@ -50,7 +50,7 @@ makeRate <- function(p){
 # make a q-q plot
 
 p <- 0.2
-reps <- 5000
+reps <- 1e6
 my_geom_devs <- rpois(reps
                       , lambda = rexp(reps
                                       , rate = makeRate(p)) )
@@ -82,7 +82,7 @@ myErlang <- function(n, p, r){
 }
 Erlang <- rgamma(reps, rate = makeRate(p), shape = 2)
 
-plot(sort(myErlang(reps, p, 2)), sort(Erlang))
+# plot(sort(myErlang(reps, p, 2)), sort(Erlang))
 
 # how to assemble a gamma more generally?
 ### Skipping that for now...
