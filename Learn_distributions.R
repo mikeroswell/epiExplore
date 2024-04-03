@@ -49,8 +49,8 @@ makeRate <- function(p){
 # focus on a probability p
 # make a q-q plot
 
-p <- 0.2
-reps <- 1e6
+p <- 0.5
+reps <- 5e4
 my_geom_devs <- rpois(reps
                       , lambda = rexp(reps
                                       , rate = makeRate(p)) )
@@ -99,7 +99,12 @@ myPascal <- function(n, p, r){
 # test
 
 # pdf("propagates_to_nbinom.pdf")
-plot(sort(myPascal(reps, p, 2)), sort(rnbinom(reps, size = r, prob = p))
+plot(my_quantl(myPascal(reps, p, 2)), my_quantl(rnbinom(reps, size = r, prob = p))
+     , col = rgb(red = 0, green = 0, blue = 0, alpha = 0.01)
+     , pch = 16, cex =0.5)
+
+reps = 5e5
+plot(sort(myPascal(reps, p, 2)), sort(myPascal(reps, p, 2))
      , col = rgb(red = 0, green = 0, blue = 0, alpha = 0.01)
      , pch = 16, cex =0.5)
 # dev.off()
