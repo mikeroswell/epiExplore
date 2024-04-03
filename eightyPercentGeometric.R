@@ -5,10 +5,9 @@ library(purrr)
 library(ggplot2)
 
 bv <- 10^(1:4) 
-popSize <- c(bv, 2*bv, 5*bv) # population sizes
+popSize <- sort(c(bv, 2*bv, 5*bv)) # population sizes
 
 pRec <- seq(0.05, 0.3, 0.05) # Beta over Beta + Gamma
-
 
 geom_Study <-map_dfr(popSize, function(pS){
     map_dfr(pRec, function(pR){
