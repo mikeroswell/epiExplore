@@ -77,10 +77,15 @@ abline(0,1)
 
 # Ok, now on to gamma from exponential (easy to go the other way)
 # maybe go by way of the Erlang (gamma with integer shape parameter)
-myErlang <- function(n, p, r){
-    apply(replicate(r, rexp(n = reps, makeRate(p))), 1, sum)
+myErlang <- function(n = reps, p, r){
+    apply(replicate(r, rexp(n, makeRate(p))), 1, sum)
 }
-Erlang <- rgamma(reps, rate = makeRate(p), shape = 2)
+Erlang <- function(n, p, r){
+    rgamma(n, rate = makeRate(p), shape = r)
+}
+
+hist(Erlang(n = 1e4, 0.2, 10), breaks = 30, xlim = c(0, 120))
+hist(myErlang(n = 1e4, 0.2, 10), breaks = 30, xlim = c(0, 120))
 
 # plot(sort(myErlang(reps, p, 2)), sort(Erlang))
 
