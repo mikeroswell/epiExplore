@@ -121,7 +121,7 @@ cFracs %>%
 # more inequality in D0, and when R0<1, the inequality gets small even if there 
 # is a good bit of dispersion in the underlying expectation. Check JLS paper, 
 # They probably said exactly that...
-# Note rank-switching in the first half at high dispersion between R0=1 and R0<1
+
 cFracs %>% 
     ggplot(aes(qp, cFRealiz, color = brn)) + 
     facet_wrap(~round(ishape,2)) +
@@ -137,7 +137,7 @@ cFracs %>%
          , y = "fraction of new infections"
          , color = "R0"
          , title = paste0("Inequality in \"realized\" infectiousness\n(counting"
-                          , " only those with >0 offspring\n\nred is idealized"
+                          , " only those with >0 offspring)\n\nred is idealized"
                           , "\n\npanels by dispersion (inverse shape parameter)"
                           , ":\n1 is exponential/geometric\n0 is  Dirac/Poisson"
                           , "\nInf is way dispersed"
