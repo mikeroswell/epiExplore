@@ -9,7 +9,7 @@ library(ggplot2)
 source("spreadHelpers.R")
 
 # set some integer population size; keep it small for plotting
-n <- 1e3
+n <- 3e3
 
 
 
