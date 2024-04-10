@@ -32,16 +32,16 @@ cFracs <- map_dfr(R0, function(brn){
         # First, parameterize an underlying thing (gamma, where 
         # ishape = shape = 1 is exponential)
         contin <- rgamma(n, shape = 1/ishape, scale = brn*ishape) # this latent 
-        #distribution is the idealized/expected individual-level reproductive
-        #rate. The base case (ishape = 1) is based on imagining individuals
-        #falling into the the system described by the canonical ODE SIR model:
-        #constant per-capita recovery rate & no individual-level variation in
-        #transmission rate either.
+        # distribution is the idealized/expected individual-level reproductive
+        # rate. The base case (ishape = 1) is based on imagining individuals
+        # falling into the the system described by the canonical ODE SIR model:
+        # constant per-capita recovery rate & no individual-level variation in
+        # transmission rate either.
         # Lloyd-Smith calls this the "individual reproductive number, *v*"
         realiz <- rpois(n, lambda = contin) # But these expected, real-numbered 
-        #reproductive rate is unrealistic. Instead, the actual (integer) number
-        #of new infections is assumed to be a random(i.e., Poisson) sample from
-        #that idealized rate
+        # reproductive rate is unrealistic. Instead, the actual (integer) number
+        # of new infections is assumed to be a random(i.e., Poisson) sample from
+        # that idealized rate
         
         # verify my parameterization
         # alt <-  rnbinom(n, prob = (1/ishape)/((1/ishape)+brn), size = 1/ishape)
@@ -79,7 +79,7 @@ cFracs %>%
     geom_vline(xintercept = 0.2, color = "grey") +
     scale_color_viridis_c(trans = "log") +
     labs(x = "fraction contributing"
-         , y = "hypothetical fraction of new infections"
+         , y = "expected fraction of new infections"
          , color = "R0"
          , title = paste0("Inequality in \"intrinsic\" infectiousness\n\npanels"
                           , " by dispersion (inverse shape parameter):\n1"
