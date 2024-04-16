@@ -21,3 +21,14 @@ makeP <- function(rate){rate/(1+rate)}
 makeRate <- function(p){
     p/(1-p)
 }
+
+
+makeDistData <- function(v){
+    n <- length(v)
+    realiz <- rpois(n, lambda = v) 
+    cFIdeal <- cumFrac(v)
+    cFRealiz <- cumFrac(realiz)
+    q  <- (1:n)/n
+    qp <- (1:n)/sum(realiz>0)
+    return(data.frame(q, qp, cFIdeal, cFRealiz))
+}
