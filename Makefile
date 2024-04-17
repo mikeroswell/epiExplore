@@ -1,4 +1,4 @@
-## This is a _linked_ (mkfile) Makefile for epiExplore
+## This is a  newly unlinked (repo-ized) Makefile for epiExplore
 
 current: target
 -include target.mk
