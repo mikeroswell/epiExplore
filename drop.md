@@ -35,20 +35,11 @@ $c$ (`pRat`): probability a susceptible individual moves to the superspreader
 infectious class. $c = 0$ is a single-class model if $c = \sigma = 0$ we get a
 single-class S[E]IR model.
 
-$\rho$ (`sRat`): the ratio of the mean sub-spreader reproductive number to the
-mean superspreader reproductive number. When $\rho = 1$ there shouldn't be
-differences in the classes.
+$\rho$ (`sRat`): the ratio of the mean sub-spreader reproductive number to the mean superspreader reproductive number. When $\rho = 1$ there shouldn't be differences in the classes.
 
+They use this model to generate the latent distribution $v$, the distribution of idealized individual reproductive numbers at the start of the epidemic, and then use Poisson sampling of $v$ to get integer counts, which they then fit to real-world data.
 
-They use this model to generate the latent distribution $v$, the distribution of 
-idealized individual reproductive numbers at the start of the epidemic, and then 
-use Poisson sampling of $v$ to get integer counts, which they then fit to real-world data.
-
-w.r.t. JD's comment about overconfidence, maybe the issue is that they only fit
-the observed distribution of infections per infectee and not the timeseries of
-observed incidence, a recorded final size, or any other info that would inform
-whether the models they fit are any good for the epidemic as a whole vs. just the
-distribution of $Z ~ Poisson(v)$
+w.r.t. JD's comment about overconfidence, maybe the issue is that they only fit the observed distribution of infections per infectee and not the timeseries of observed incidence, a recorded final size, or any other info that would inform whether the models they fit are any good for the epidemic as a whole vs. just the distribution of $Z ~ Poisson(v)$
 
 ----------------------------------------------------------------------
 
