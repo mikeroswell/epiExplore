@@ -38,26 +38,12 @@ cFracs <- map_dfr(R0, function(brn){
         # constant per-capita recovery rate & no individual-level variation in
         # transmission rate either.
         # Lloyd-Smith calls this the "individual reproductive number, *v*"
-        realiz <- rpois(n, lambda = contin) # But these expected, real-numbered 
+        # realiz <- rpois(n, lambda = contin) # But these expected, real-numbered 
         # reproductive rate is unrealistic. Instead, the actual (integer) number
         # of new infections is assumed to be a random(i.e., Poisson) sample from
         # that idealized rate
-        
-        # verify my parameterization
-        # alt <-  rnbinom(n, prob = (1/ishape)/((1/ishape)+brn), size = 1/ishape)
-        # print(paste0(
-        #     "R0_alt = "
-        #     , mean(alt, na.rm = TRUE)
-        #     , ", R0_sim = "
-        #     , mean(realiz, na.rm = TRUE)
-        #     , ", R0 = "
-        #     , brn ))
-        # Count in the "80/20 rule paradigm"
-        cFIdeal <- cumFrac(contin)
-        cFRealiz <- cumFrac(realiz)
-        q  <- (1:n)/n
-        qp <- (1:n)/sum(realiz>0)
-        return(data.frame(q, qp, cFRealiz, cFIdeal, brn, ishape))
+        dat <- makeDistData(contin)
+        return(data.frame(dat, brn, ishape))
     })
 })
 
