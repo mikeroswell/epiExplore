@@ -57,4 +57,3 @@ I don't think I've done much with Joshua on the front of separating the idealize
 
 So now, you're up to date, I think! I'm looking forward to today's meeting.
 
-
