@@ -25,6 +25,9 @@ Sources += $(wildcard *.md)
 ## Lloyd
 
 myLloyd-Smith.Rout: myLloyd-Smith.R
+myMeehan.Rout: myMeehan.R
+
+pass.Rout: pass.R
 
 ######################################################################
 
