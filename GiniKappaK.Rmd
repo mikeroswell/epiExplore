@@ -62,11 +62,15 @@ $k$ (as realized in the nb) approaches infinity from opposite sides when the
 variance is greater vs. smaller than the mean. In the gamma/ negative binomial
 context, it is strictly positive; in the more generalized moment-based
 definition it could be negative any time $\mu > \sigma^2$.
+
 $\kappa$ Is also strictly positive and $\leq \mu$ in the gamma/NB context, but
 could be greater in an underdispersed distribution, or negative in a
 distribution with a negative mean.
-Both $k$ and $\kappa$ decrease with dispersion/inequality.
-The Gini Coefficient is bounded between 0 and 1 for any distribution. It increases with inequality/dispersion 
+
+Both $k$ and $\kappa$ decrease with dispersion/inequality. The Gini Coefficient
+is bounded between 0 and 1 for any distribution. It increases with
+inequality/dispersion
+
 The CV grows with dispersion, and cv=1 
 
 
