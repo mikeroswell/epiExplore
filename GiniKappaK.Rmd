@@ -1,0 +1,26 @@
+---
+title: "GiniKappaK"
+author: "Michael Roswell"
+date: "2024-04-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Overview 
+
+$k$, the shape parameter of a gamma, or size/dispresion parameter of a negative
+binomial, is the canonical but confusing way of describing nb dispersion. It is
+confusing b/c it is inversely related to dispersion. It can be re-written more
+generally (see below), allowing us to see that $k$ shows pathological behavior
+as $\mu \to \sigma$, approaching positive infinity when $\sigma > \mu$ and
+positive infinity when $\mu > \sigma$. While $k$ is a canonical parameter for
+gamma & negative-binomial distributions, it may be less intuitive for other
+families of distributions.
+
+Several other measures of dispersion may be computed either based on the moments
+of a distribution or a sample from it, for example, the coefficient of variation
+$CV = \sigma / \mu$, its cousin, $\kappa = 1/CV^2 = \mu^2/\sigma^2$, and the
+Gini coefficient, $G = \frac{\sum_{i}\sum_{j} |x_i -
+x_j|}{2\sum_{i}\sum_{j}x_i}$
