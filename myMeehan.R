@@ -52,8 +52,8 @@ vProb <- function(R0, pRat, sRat, iRat
 
 # set a big number at which to truncate
 
-vMax <- 175
-vProb(pars = pars, v = vMax) # confirm it's a "Big" number
+# vMax <- 175
+# vProb(pars = pars, v = vMax) # confirm it's a "Big" number
 
 # generate N random deviates using accept/reject
 sampleV <- function(nTarget = 1e3, vMax = 150
@@ -76,7 +76,7 @@ sampleV <- function(nTarget = 1e3, vMax = 150
 }
 
 # see if this goes reasonably fast
-replicate(10, system.time(sampleV(nTarget = 100, vMax = vMax, pars = pars)))
+# replicate(10, system.time(sampleV(nTarget = 100, vMax = vMax, pars = pars)))
 
 
 # Check that it looks geometric when I make this an S[E]IR model where E is 

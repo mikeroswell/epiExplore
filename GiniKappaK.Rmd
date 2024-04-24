@@ -1,0 +1,77 @@
+---
+title: "GiniKappaK"
+author: "Michael Roswell"
+date: "2024-04-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Overview 
+
+$k$, the shape parameter of a gamma, or size/dispresion parameter of a negative
+binomial, is the canonical but confusing way of describing nb dispersion. It is
+confusing b/c it is inversely related to dispersion. It can be re-written more
+generally (see below), allowing us to see that $k$ shows pathological behavior
+as $\mu \to \sigma$, approaching positive infinity when $\sigma > \mu$ and
+positive infinity when $\mu > \sigma$. While $k$ is a canonical parameter for
+gamma & negative-binomial distributions, it may be less intuitive for other
+families of distributions.
+
+Several other measures of dispersion may be computed either based on the moments
+of a distribution or a sample from it, for example, the coefficient of variation
+$CV = \sigma / \mu$, its cousin, $\kappa = 1/CV^2 = \mu^2/\sigma^2$, and the
+Gini coefficient, $G = \frac{\sum_{i}\sum_{j} |x_i -
+x_j|}{2\sum_{i}\sum_{j}x_i}$. We may want to consider one more that may have a 
+name or well-known properties, at least as a point of comparison, which is the 
+mean-normalized kappa, or the ratio of the mean the variance, $\mu/\sigma^2$. 
+
+# Properties and relationships among measures and distributions
+
+## the gamma distribution
+The mean of a gamma distribution with shape $k$ and rate $\theta$ is the shape
+times the rate, or $k* \theta$, and the variance is $k\theta^2$, which means
+that $\mu^2/\sigma^2 = \kappa =k$. Furthermore, $\mu/\sigma^2 = \theta$ and the
+inverse coefficient of variation, $\mu/\sigma = \sqrt{k}$
+
+## the negative binomial distribution 
+The negative binomial can be considered a Poisson sampling of a
+gamma-distributed mean. If the size parameter is $k$ and the probability $p$,
+$nb(k, p) = Pois(gamma(k, p/(1-p))$ The mean of this distribution is $k(1-p)/p$
+and the variance is $k(1-p)/p^2$, so re-writing $k$ in terms of the first two
+moments of this distribution we get $\frac{\mu^2}{\sigma^2 - \mu}$, sublty
+different from $\kappa$. When $\mu = \sigma^2$, $k$ is infinite, and the sign
+depends on whether you approach from variance > mean (positive) or variance <
+mean (negative). By contrast, when the mean = variance, $\kappa = \mu$, when the
+variance is less than the mean, $\kappa$ can get very big but there is no
+singularity until variance approaches 0; both $\kappa$ and $k$ approach 0 as the
+variance gets big w.r.t. the mean. For $\kappa = 1$, the $\mu = \sigma$, a cool
+point to pay attention to as well (this is also a property of the CV); when $k =
+1$, $\mu^2 = $\sigma^2-\mu$, which is not a super intuitive point value.
+
+## The Poisson distribution
+As $k \to \inf$, $\kappa \to \mu$, as $n, \mu$ get large, the Gini coefficient
+approaches 0 (no inequality). $1- \mu/sigma^2$ is more Gini-esque, bounded by 1
+at super high inequality (a negative binomial with a high mean and a very low
+size/k parameter) and 0 (a Poisson with a high mean), though they scale
+differently with $k$.
+
+## Bounds + signs
+$k$ (as realized in the nb) approaches infinity from opposite sides when the
+variance is greater vs. smaller than the mean. In the gamma/ negative binomial
+context, it is strictly positive; in the more generalized moment-based
+definition it could be negative any time $\mu > \sigma^2$.
+
+$\kappa$ Is also strictly positive and $\leq \mu$ in the gamma/NB context, but
+could be greater in an underdispersed distribution, or negative in a
+distribution with a negative mean.
+
+Both $k$ and $\kappa$ decrease with dispersion/inequality. The Gini Coefficient
+is bounded between 0 and 1 for any distribution. It increases with
+inequality/dispersion
+
+The CV grows with dispersion, and cv=1 
+
+
+
