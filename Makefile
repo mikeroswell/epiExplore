@@ -39,6 +39,8 @@ nbtest.Rout: nbtest.R
 
 ######################################################################
 
+Ignore += *.html
+
 Sources += GiniKappaK.Rmd
 GiniKappaK.html: GiniKappaK.Rmd
 	$(rmdh_r)
