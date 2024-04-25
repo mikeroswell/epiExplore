@@ -1,4 +1,4 @@
-## This is a  newly unlinked (repo-ized) Makefile for epiExplore
+## This is a epiExplore (Roswell/Weitz heterogeneity)(
 
 current: target
 -include target.mk
@@ -55,6 +55,10 @@ eightyPercentGeometric.Rout: eightyPercentGeometric.R
 
 ## Simpler from JD
 80.Rout: 80.R
+
+######################################################################
+
+kappaSims.Rout: kappaSims.R
 
 ######################################################################
 
