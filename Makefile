@@ -40,6 +40,11 @@ nbtest.Rout: nbtest.R
 ######################################################################
 
 Sources += GiniKappaK.Rmd
+GiniKappaK.html: GiniKappaK.Rmd
+	$(rmdh_r)
+
+phi.html: phi.md
+	pandoc $< --mathjax -s -o $@
 
 ## 80-20
 
@@ -67,6 +72,7 @@ makestuff/Makefile:
 -include makestuff/os.mk
 
 -include makestuff/pipeR.mk
+-include makestuff/rmd.mk
 -include makestuff/ldrop.mk
 
 -include makestuff/git.mk
