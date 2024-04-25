@@ -1,4 +1,10 @@
 
+## For a given activity distribution we can make Poisson draws and confirm that 
+## the realized r has approximately the same value of κ as the original distribution
+## For comparison, we also calculate a naive κ for the realizations
+## The idea is that unadjusted κs might not match,
+## but the κs corresponding to the respective types should match well.
+
 ctsKappa <- function(v){
 	mu <- mean(v)
 	V <- mean((v-mu)^2)
