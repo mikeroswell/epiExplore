@@ -45,6 +45,7 @@ Sources += GiniKappaK.Rmd
 GiniKappaK.html: GiniKappaK.Rmd
 	$(rmdh_r)
 
+## JD generating function notes
 phi.html: phi.md
 	pandoc $< --mathjax -s -o $@
 
