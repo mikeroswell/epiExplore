@@ -47,8 +47,8 @@ mean (negative). By contrast, when the mean = variance, $\kappa = \mu$, when the
 variance is less than the mean, $\kappa$ can get very big but there is no
 singularity until variance approaches 0; both $\kappa$ and $k$ approach 0 as the
 variance gets big w.r.t. the mean. For $\kappa = 1$, the $\mu = \sigma$, a cool
-point to pay attention to as well (this is also a property of the CV); when $k =
-1$, $\mu^2 = $\sigma^2-\mu$, which is not a super intuitive point value.
+point to pay attention to as well (this is also a property of the CV); when 
+$k =1$, $\mu^2 = \sigma^2-\mu$, which is not a super intuitive point value.
 
 ## The Poisson distribution
 As $k \to \inf$, $\kappa \to \mu$, as $n, \mu$ get large, the Gini coefficient
