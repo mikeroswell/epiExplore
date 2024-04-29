@@ -42,6 +42,8 @@ nbtest.Rout: nbtest.R
 Ignore += *.html
 
 Sources += GiniKappaK.Rmd
+## Roswell notes on $a$, the nb/realized dispersion parameter (inverse), 
+##  $\kappa$, and a bit on the Gini ceofficient
 GiniKappaK.html: GiniKappaK.Rmd
 	$(rmdh_r)
 
@@ -58,7 +60,8 @@ eightyPercentGeometric.Rout: eightyPercentGeometric.R
 80.Rout: 80.R
 
 ######################################################################
-
+## JD show that the relationship between $1/a$, $\kappa$ generally holds between
+## activity distributions and the Poisson-process realized distributions 
 kappaSims.Rout: kappaSims.R
 
 ######################################################################
