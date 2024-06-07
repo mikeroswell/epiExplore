@@ -1,0 +1,62 @@
+---
+title: "EmergentHeterogeneity"
+author: "Roswell, Dushoff, Weitz"
+date: "2024-04-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Abstract
+
+# Introduction
+
+In its simplest form, the canonical ODE S[E]IR model {reference to equations}
+assumes homogeneous rates of recovery and constant, uniform infectivity across
+all individuals during the infectious stage. Yet, even this model that assumes
+all individuals are "effectively the same" encodes *emergent heterogeneity*, for
+example in the distribution of secondary cases. Although the
+**mean** number of new infections per infected individual in an entirely
+susceptible population, $R_0$, in this simplest SIR model, is the product of the
+transmission rate and the recovery time, $\beta/\gamma$, the ODE model implies
+distribution about that mean, in the form of an exponential distribution.
+Furthermore, we can imagine a discrete realization of the model (i.e., with
+discrete individuals) and find *additional emergent heterogeneity* arising from
+the discrete stochastic process, leading to a
+*geometric* distribution of secondary cases per infected individual at a given time.
+
+Of course, in practice, epidemiological modelers include
+*explicit heterogeneity* into their models, for example by considering age- or
+spatially-explicit compartments that may have different expected rates of
+transmission or recovery. In structured models such as these, members of classes
+with long expected recovery times or high rates of effective contact are
+expected to infect many more individuals than members of classes with fast
+recovery or low rates of effective contact; this can get quite complex with
+non-uniform mixing rates. But it may be less apparent if such models do, or do
+not, capture the variation observed in secondary case distributions, or, in other
+words, how much super-spreading these models include. This is because the
+emergent heterogeneity (say, in the secondary case distribution) is both a
+result of the differences in parameters between classes, but also of the
+implied stochastic processes around the compartment-level rates.
+
+Although there have been efforts to both quantitatively describe
+individual-level heterogeneity in contact rates (Woolhouse et al. 1997 PNAS) and
+to parameterize biologically realistic secondary case distributions, abstracted
+from the mechanism (Lloyd-Smith et al. 2005 Nature), these efforts have been
+largely separate from the construction and evaluation of the compartmental
+models that enable epidemic forecasting and intervention design (but see Meehan
+et al. 2023). To date, we are unaware of a unified effort to a) quantify the
+degree of emergent heterogeneity in widely-used compartmental models, b) provide
+a theoretical framework for how model structure increases and decreases emergent
+heterogeneity, and c) simultaneously validate models with observed incidence
+*and* secondary case distribution. In this manuscript, we first describe statistics
+for quantifying emergent heterogeneity, then provide some general rules for how
+the topology of compartmental models affects the degree of emergent
+heterogeneity, and finally, we quantify the emergent heterogeneity in
+widely-used epidemic models and compare and contrast the modeled heterogeneity
+with observations of the secondary case distribution. Similar to how basic
+reproductive numbers ($R_{effective}$ or $R_0$) serve as common currency by
+which to measure and compare models and epidemics, our contribution enables
+parallel treatment of variation about those mean quantities.
+
