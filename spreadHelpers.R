@@ -32,3 +32,32 @@ makeDistData <- function(v){
     qp <- (1:n)/sum(realiz>0)
     return(data.frame(q, qp, cFIdeal, cFRealiz))
 }
+
+
+
+# get t20 or tX
+tX <- function(DD, X, q = "q", cF = "cFIdeal"){
+    DD[which(DD[, eval(q)]>=X)[1], eval(cF)]    
+}
+
+
+# compute Gini
+Gini <- function(v){
+    dst <- c(abs(outer(v,v, "-")))
+    nrm <- 2*length(v)*sum(v)
+    return(sum(dst)/nrm)
+}
+
+
+# Dushoff Kappas (note one for continuous, the other for poissonified)
+ctsKappa <- function(v){
+    mu <- mean(v)
+    V <- mean((v-mu)^2)
+    return(V/mu^2)
+}
+
+discKappa <- function(v){
+    mu <- mean(v)
+    V <- mean((v-mu)^2)
+    return((V-mu)/mu^2)
+}
