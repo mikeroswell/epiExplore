@@ -16,7 +16,7 @@ n <- 3e3
 
 # set the dispersion parameter JD-style such that the limiting case of 0 gets us 
 # to poisson
-JDDisp <- c(exp(seq(-4, 4, length.out = 5)))
+JDDisp <- c(exp(seq(-4, 4, length.out = 12)))
 
 
 R0 <- seq(0.5, 3, length.out = 6) # this is the rate parameter for an exponential 
@@ -47,6 +47,39 @@ cFracs <- map_dfr(R0, function(brn){
     })
 })
 
+
+Kappas <- map_dfr(R0, function(brn){
+    map_dfr(JDDisp, function(ishape){
+        # First, parameterize an underlying thing (gamma, where 
+        # ishape = shape = 1 is exponential)
+        contin <- rgamma(n, shape = 1/ishape, scale = brn*ishape)
+        # poissonify (nb)
+        realiz <- rpois(n, contin)
+        dat <- makeDistData(contin)
+        t20_activity <- tX(dat, X = 0.2)
+        t20_realized <- tX(dat, X = 0.2, cF = "cFRealiz")
+        Kappa <- ishape
+        R0 <- brn
+        return(data.frame(t20_activity, t20_realized, Kappa, R0))
+    })
+})
+      
+
+head(Kappas) 
+
+Kappas %>% 
+    pivot_longer(cols = starts_with("t20")
+                 , names_to = "heterogeneityType"
+                 , values_to = "t20") %>% 
+    ggplot(aes(Kappa, t20, color = heterogeneityType ))+
+    facet_wrap(~R0, labeller = "label_both") +
+    geom_point() +
+    theme_classic() +
+    scale_x_log10() +
+    scale_color_manual(values = c("purple3", "lightseagreen"))
+    scale_y_log10()
+        
+        
 # Plots are for a counter-factual universe where we imagine the offspring 
 # distribution _at the beginning of an outbreak_ where susceptible are infinite
 # This is conceptually analogous to R0, but instead of only considering the 
