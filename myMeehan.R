@@ -17,7 +17,7 @@ library(dplyr)
 # solve for R1, R2
 subR <- function(R0, sRat, pRat, iRat){
  
-    R0/(pRat*sRat + 1- pRat)
+    sRat*R0/(pRat+ sRat*(1- pRat))
 }
 
 superR <- function(subR = subR, sRat){
@@ -52,7 +52,7 @@ vProb <- function(R0, pRat, sRat, iRat
 
 # set a big number at which to truncate
 
-# vMax <- 175
+vMax <- 175
 # vProb(pars = pars, v = vMax) # confirm it's a "Big" number
 
 # generate N random deviates using accept/reject
@@ -70,7 +70,7 @@ sampleV <- function(nTarget = 1e3, vMax = 150
         cand <- runif(1, min = 0, max = vMax)
         kP <- vProb(pars = pars, v = cand)
 
-        if(as.logical(rbinom(1, 1, kP))){vVec <- c(vVec, cand)}
+        if(isTRUE(as.logical(rbinom(1, 1, kP)))){vVec <- c(vVec, cand)}
     }
     return(vVec)
 }
@@ -106,9 +106,18 @@ pars.twostage <- list(R0 = 2, pRat = 0, sRat = 1, iRat = 0.5)
 # two classes but one stage
 pars.twoclass <- list(R0 = 2, pRat = 0.5, sRat = 0.5, iRat = 0)
 # full fancyness: two classes, each with two stages
-pars.fancy <- list(R0 = 2, pRat = 1/5, sRat = .25, iRat = 0.1 )
+pars.fancy <- list(R0 = 5, pRat = 1/5, sRat = .25, iRat = 0.1 )
 # a guess about what might produce high inequality
-pars.heter <- list(R0 = 9, pRat = 0.3, sRat = 0.02, iRat = 0.9 )
+# pars.heter <- list(R0 = 9, pRat = 0.35, sRat = 0.35, iRat = 0.0 )
+
+
+
+
+# a guess about what might produce high inequality
+pars.heter <- list(R0 = 9, pRat = 0.05, sRat = 0.5, iRat = 0.0)
+
+# 80/20
+pars.eightyTwenty <- list(R0 = 1.4, pRat = 0.667, sRat = 0.05, iRat = 0.0)
 
 ######################
 
@@ -130,13 +139,14 @@ makeDistData(sampleV(pars = pars.twoclass)) %>%
     geom_vline(xintercept = 0.2) + 
     theme_classic()
 
-makeDistData(sampleV(pars = pars.fancy)) %>% 
-    ggplot(aes(q, cFRealiz))+
-    geom_point() +
-    geom_point(aes(y = cFIdeal), color = "grey") +
-    geom_hline(yintercept = 0.8) +
-    geom_vline(xintercept = 0.2) + 
-    theme_classic()
+
+data.frame(exNewCases = sampleV(pars = pars.heter)) %>% 
+    ggplot(aes(exNewCases))+
+    geom_histogram() + 
+    geom_vline(aes(xintercept = mean(exNewCases)), color = "red")+
+    theme_classic() + 
+    labs(x = "expected new cases per infectious individual", y = "fraction of infected individuals") + 
+    scale_y_continuous(labels = function(x){x/1000})
 
 makeDistData(sampleV(pars = pars.heter, nTarget = 550)) %>% 
     ggplot(aes(q, cFRealiz))+
@@ -144,8 +154,57 @@ makeDistData(sampleV(pars = pars.heter, nTarget = 550)) %>%
     geom_point(aes(y = cFIdeal), color = "grey") +
     geom_hline(yintercept = 0.8) +
     geom_vline(xintercept = 0.2) + 
-    theme_classic()
+    theme_classic() + 
+    labs(x = "Fraction of infectious individuals, ranked by n(offspring)", y = "fraction of new infections")
 
+data.frame(exNewCases = sampleV(pars = pars.eightyTwenty)) %>% 
+    ggplot(aes(exNewCases))+
+    geom_histogram() + 
+    geom_vline(aes(xintercept = mean(exNewCases)), color = "red") +
+    theme_classic() + 
+    labs(x = "expected new cases per infectious individual", y = "fraction of infected individuals") + 
+    scale_y_continuous(labels = function(x){x/1000})
+
+makeDistData(sampleV(pars = pars.eightyTwenty, nTarget = 550)) %>% 
+    ggplot(aes(q, cFRealiz))+
+    geom_point() +
+    geom_point(aes(y = cFIdeal), color = "grey") +
+    geom_hline(yintercept = 0.8) +
+    geom_vline(xintercept = 0.2) + 
+    theme_classic() + 
+    labs(x = "Fraction of infectious individuals, ranked by n(offspring)", y = "fraction of new infections")
+
+
+
+data.frame(exNewCases = sampleV(pars = pars.fancy)) %>% 
+    ggplot(aes(exNewCases))+
+    geom_histogram() + 
+    geom_vline(aes(xintercept = mean(exNewCases)), color = "red") +
+    theme_classic() + 
+    labs(x = "expected new cases per infectious individual", y = "fraction of infected individuals") + 
+    scale_y_continuous(labels = function(x){x/1000})
+
+
+
+makeDistData(sampleV(pars = pars.fancy)) %>% 
+    ggplot(aes(q, cFRealiz))+
+    geom_point() +
+    geom_point(aes(y = cFIdeal), color = "grey") +
+    geom_hline(yintercept = 0.8) +
+    geom_vline(xintercept = 0.2) + 
+    theme_classic() + 
+    labs(x = "Fraction of infectious individuals, ranked by n(offspring)", y = "fraction of new infections")
+
+
+
+sampleV(pars = pars.heter, nTarget = 550) %>% 
+    ggplot(aes(q, cFRealiz))+
+    geom_point() +
+    geom_point(aes(y = cFIdeal), color = "grey") +
+    geom_hline(yintercept = 0.8) +
+    geom_vline(xintercept = 0.2) + 
+    theme_classic() + 
+    labs(x = "Fraction of infectious individuals, ranked by n(offspring)", y = "fraction of new infections")
 
 
 
