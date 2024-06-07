@@ -64,6 +64,8 @@ eightyPercentGeometric.Rout: eightyPercentGeometric.R
 ## activity distributions and the Poisson-process realized distributions 
 kappaSims.Rout: kappaSims.R
 
+saturate.Rout: saturate.R
+
 ######################################################################
 
 ### Makestuff
