@@ -51,13 +51,30 @@ Gini <- function(v){
 
 # Dushoff Kappas (note one for continuous, the other for poissonified)
 ctsKappa <- function(v){
-    mu <- mean(v)
-    V <- mean((v-mu)^2)
-    return(V/mu^2)
+	mu <- mean(v)
+	V <- mean((v-mu)^2)
+	return(V/mu^2)
 }
 
 discKappa <- function(v){
-    mu <- mean(v)
-    V <- mean((v-mu)^2)
-    return((V-mu)/mu^2)
+	mu <- mean(v)
+	V <- mean((v-mu)^2)
+	return((V-mu)/mu^2)
+}
+
+kComp <- function(a){
+	r <- rpois(length(a), lambda=a)
+	return(c(cκ = ctsKappa(a), unadj=ctsKappa(r), dκ = discKappa(r)))
+}
+
+
+# Wrapper to provide summary statistics based on data
+ehm <- function(dat){
+    kapCont <- ctsKappa(dat$ideal)
+    kapDisc <- discKappa(dat$real)
+    tx20Cont <- tX(dat, 0.2)
+    tx20Disc <- tX(dat, 0.2, cF = "cFRealiz")
+    R0Ideal <- mean(dat$ideal)
+    R0Real <- mean(dat$real)
+    return(data.frame(kapCont, kapDisc, tx20Cont, tx20Disc, R0Ideal, R0Real))
 }
