@@ -24,9 +24,9 @@ cmptMod <- function(x, xChoice = c("low", "mid"), midRNum, scaleRNum){
     if(xChoice == "low"){
         eps <- max((-sqrt(-3*(x)^2+4*x)-x)/(2*x)
                    , (sqrt(-3*(x)^2+4*x)-x)/(2*x) )
-        high <- x
+        low <- x
         mid <- x*eps
-        low <- x*eps^2
+        high <- x*eps^2
     }
     # compute the reproductive numbers for the three compartments
     lowR <- midRNum/scaleRNum
@@ -73,9 +73,9 @@ emerge <- map_dfr(scaleRNum, function(scaleR){
         kappa <- compVar(dat)^2/R_0^2
         return(data.frame(eps = as.numeric(dat$pars[1]), epsMethod = dat$pars[2]
                           , transmissionScaler = as.numeric(dat$pars[3])
-                          , highFrac = dat$fracs[1]
+                          , lowFrac = dat$fracs[1]
                           , midFrac = dat$fracs[2]
-                          , lowFrac = dat$fracs[3]
+                          , highFrac = dat$fracs[3]
                           , R_0, kappa ))
     })
 })
