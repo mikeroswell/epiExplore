@@ -24,9 +24,9 @@ cmptMod <- function(x, xChoice = c("low", "mid"), midRNum, scaleRNum){
     if(xChoice == "low"){
         eps <- max((-sqrt(-3*(x)^2+4*x)-x)/(2*x)
                    , (sqrt(-3*(x)^2+4*x)-x)/(2*x) )
-        low <- x
+        high <- x
         mid <- x*eps
-        high <- x*eps^2
+        low <- x*eps^2
     }
     # compute the reproductive numbers for the three compartments
     lowR <- midRNum/scaleRNum
