@@ -70,7 +70,7 @@ emerge <- map_dfr(scaleRNum, function(scaleR){
         dat <- cmptMod(
             x = x, xChoice = "low", midRNum = midRNum, scaleRNum = scaleR)
         R_0 <- R0(dat)
-        kappa <- compVar(dat)^2/R_0^2
+        kappa <- compVar(dat)/R_0^2
         return(data.frame(eps = as.numeric(dat$pars[1]), epsMethod = dat$pars[2]
                           , transmissionScaler = as.numeric(dat$pars[3])
                           , lowFrac = dat$fracs[1]
@@ -86,7 +86,7 @@ kappaPlot <- emerge %>%
     geom_point()+
     facet_grid(~transmissionScaler) +
     theme_classic() +
-    labs(x = "fraction of population in high-transmission group", y ="\n")
+    labs(x = "fraction of population in high-transmission group", y ="kappa \n")
 
 
 fractionPlot <- emerge %>%
