@@ -97,6 +97,24 @@ sampleV <- function(nTarget = 1e3, vMax = 150
 # see if this goes reasonably fast
 # replicate(10, system.time(sampleV(nTarget = 100, vMax = vMax, pars = pars)))
 
+# But I know the PDF, so just get a profile, truncating somehow
+
+vDens <- function(vMax
+                  , nPoints = 200
+                  , R0, pRat, sRat, iRat
+                  , pars = NULL
+                  , ...){
+    if(is.null(pars)){pars <- list(R0 = R0, pRat = pRat, sRat = sRat, iRat = iRat)}
+    list2env(pars, envir = environment())
+    
+    pSet <- probSet(pars = pars)
+    testMax <- vProb(pSet, vMax)
+    if(testMax > 1e-12){warning(paste0("p(vMax) = ", testMax, ", consider increasing vMax to avoid truncating distribution"))}
+    vVec <- seq(0, vMax, length.out = nPoints)
+    return(data.frame(X = vVec, pX = sapply(vVec, function(x){vProb(pSet, x)})))
+    
+}
+
 
 # Check that it looks geometric when I make this an S[E]IR model where E is 
 # irrelevant for the D0 distribution.
@@ -150,6 +168,75 @@ pars.medi <- list(R0 = 10, pRat = 0.3, sRat = 0.15, iRat = 0.0)
 # 80/20
 pars.heter <- list(R0 = 10, pRat = 0.1, sRat = 0.1, iRat = 0.0)
 
+#################################################
+
+
+densDat <- map_dfr(c("pars.homo", "pars.medi", "pars.heter"), function(parSet){
+    data.frame(parSet = parSet
+               , vDens(vMax = 900, pars = get(parSet)
+                       , nPoints = 5e3))
+})
+
+densPlot <- 
+    densDat %>% 
+    mutate(parSet = factor(parSet
+                           , levels = c("pars.homo", "pars.medi", "pars.heter")
+                           , labels = c(bquote(kappa ==  1)
+                                        , bquote(kappa == 2.9) 
+                                        , bquote(kappa == 4.9))
+                           )
+           ) %>% 
+    ggplot(aes(X, pX, color = parSet, fill = parSet)) + 
+    geom_ribbon( aes(ymax = pX)
+                 , linewidth = 0
+                 , ymin = -Inf
+                 # , alpha = 0.2
+                 , outline.type = "upper") + 
+    geom_vline(xintercept = 10, color = "red") +
+    annotate("text", x = 60, y = 2e-2
+             , label = "bolditalic(R)[0] == 10"
+             , parse = TRUE
+             , color = "red"
+             , size = 2) +
+    geom_text(
+               aes(x = 200, y = 2e-3, label = parSet)
+              , stat = "unique"
+              
+              , parse = TRUE
+              , color = "black"
+              , size = 3) +
+        # annotate("text",aes( x = 200, y = 2e-2, label = parSet), size = 2)+
+    theme_classic(base_size = 6) +
+    scale_y_log10(n.breaks = 6, limits = c(5e-6, NA), expand = c(0,0)) +
+    # scale_y_sqrt(expand = c(0,0), limits = c(0,NA)) + 
+    xlim(c(0, 375)) +
+    scale_color_viridis_d()+
+    scale_fill_viridis_d() +
+    # guides(color = guide_legend(position = "inside")
+    #        , fill = guide_legend(position = "inside")) +
+        theme(strip.background = element_blank()
+              # , strip.text = element_blank()
+              # , panel.spacing.y = unit(1.1, "lines")
+              # , strip.placement = "inside"
+              # , strip.text = element_text(vjust = 0, size =14)
+              , strip.text = element_blank()
+              # , legend.position.inside = c(0.7, 0.7)
+              , legend.position = "none"
+              ) +
+        labs(x = "expected new cases per infected individual", y = "density") +
+    facet_wrap(~parSet, nrow = 3
+               #, labeller = label_parsed
+               ) 
+# dev.off()
+
+
+
+
+
+
+
+
+
 ######################
 secondaryCases <- function(pars, nTarget = 5e3, vMax = 1e3){
     ideal <- sampleV(pars = pars, nTarget = nTarget, vMax = vMax)
@@ -170,6 +257,10 @@ cFrac.homo <- makeDistData(data.homo$ideal) %>% bind_cols(data.homo)
 cFrac.medi <- makeDistData(data.medi$ideal) %>% bind_cols(data.medi)
 cFrac.heter <- makeDistData(data.heter$ideal) %>% bind_cols(data.heter)
 
+
+
+
+
 ehm.homo <- ehm(cFrac.homo)
 ehm.medi <- ehm(cFrac.medi)
 ehm.heter <- ehm(cFrac.heter)
@@ -186,35 +277,49 @@ ineq <- cFracs %>%
     mutate(model_description = 
                factor(model_description
                       , labels = c("homogeneous"
-                                   , "3:10 slow:fast, slow is 15% as fast"
-                                   , "1:10 slow:fast, slow is 10% as fast")
+                               # , "10 of duration a : 3 of duration 20/3a"
+                               #     , "10 of duration b : 1 of duration 10b"
+                               , "3 slow:10 fast; slow is 15% as fast"
+                               , "1 slow:10 fast; slow is 10% as fast")
                       )
            ) %>% 
                       cFPlot(showRealized = FALSE) + 
  aes(color = model_description) +
     scale_color_viridis_d()  +
-    labs(color = "model description")
+    geom_point(x = 0.2, y = 0.8, shape = 18, color = "black", size = 3) +
+    labs(color = "Distribution of infections"
+         , x = "fraction of most infectious individuals"
+         , y = "fraction of new infections") +
+    guides(color = guide_legend(position = "inside")) +
+    theme_classic(base_size = 6) +
+    theme(legend.position.inside = c(0.6, 0.3)
+          , legend.text = element_text(size = 4.5)
+          , legend.title = element_text(size = 6)
+          , legend.key.size = unit(0.3, "lines")
+          , legend.key.spacing = unit(0.3, "lines")
+          # , legend.key
+          # , base_size = 6
+          )
 
 
 
-hists <- cFracs %>% 
-    mutate(model_description = 
-               factor(model_description
-                      , labels = c("kappa = 1"
-                                   , "kappa = 2.7"
-                                   , "kappa = 5"))
-           ) %>% 
-    secDist(caseCol = "ideal", xMax = 300
-            , breaks = c(0.0005, 0.005, 0.05,0.5)) +
-    aes(group = model_description, fill = model_description) +
-    scale_fill_viridis_d() +
-    facet_wrap(~model_description, ncol = 1) +
-    theme(strip.background = element_blank()
-          # , strip.text = element_blank()
-          , panel.spacing.y = unit(2, "lines"))
+# hists <- cFracs %>% 
+#     mutate(model_description = 
+#                factor(model_description
+#                       , labels = c("kappa = 1"
+#                                    , "kappa = 2.7"
+#                                    , "kappa = 5"))
+#            ) %>% 
+#     secDist(caseCol = "ideal", xMax = 300
+#             , breaks = c(0.0005, 0.005, 0.05,0.5)) +
+#     aes(group = model_description, fill = model_description) +
+#     scale_fill_viridis_d() +
+#     facet_wrap(~model_description, ncol = 1) 
+    
 
-png(filename = "MPOPHC_emergent.png", width = 7*1.5, height = 3*1.5, units = "in", res = 380)
-ineq + hists
+pdf(file = "MPOPHC_emergent.pdf", width = 4, height = 2)
+# quartz(width = 4, height = 2)
+ineq  + densPlot 
 dev.off()
 
 # twostage
@@ -277,7 +382,7 @@ dev.off()
 #     geom_hline(yintercept = 0.8) +
 #     geom_vline(xintercept = 0.2) + 
 #     theme_classic() + 
-#     labs(x = "Fraction of infectious individuals, ranked by n(offspring)", y = "fraction of new infections")
+#     labs(x = "fraction of infectious individuals, ranked by n(offspring)", y = "fraction of new infections")
 # 
 
 

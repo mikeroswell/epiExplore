@@ -1,5 +1,6 @@
 ---
-title: Universality of κ
+title: "Universality of Kappa"
+output: pdf_document
 ---
 
 Start with a distribution of activities $f(\lambda)$.

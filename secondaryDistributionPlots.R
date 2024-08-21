@@ -24,7 +24,7 @@ secDist <- function(dat, caseCol = c("real", "ideal"), caseSource = NULL
                    ))+
         geom_histogram() +
         geom_vline(aes(xintercept = mean(.data[[caseCol]]), color = "red")) +
-        theme_classic() +
+   
         labs(x = "expected new cases per infectious individual", y = "fraction of infected individuals") +
         scale_y_log10(breaks = breaks, labels = function(x){x/nPoints}, limits = c(NA, yMax))+
         theme(legend.position = "none") +
@@ -34,11 +34,10 @@ secDist <- function(dat, caseCol = c("real", "ideal"), caseSource = NULL
 cFPlot <- function(cFDat, showRealized = TRUE){
     p <- cFDat %>% 
            ggplot(aes(q, cFIdeal))+
-           geom_point() +
-           geom_hline(yintercept = 0.8) +
-           geom_vline(xintercept = 0.2) + 
-           theme_classic() + 
-           labs(x = "Fraction of infectious individuals, ranked by n(offspring)"
+        geom_hline(yintercept = 0.8, linetype = "dashed" ) +
+        geom_vline(xintercept = 0.2, linetype = "dashed") + 
+        geom_point(size = 0.6) +
+           labs(x = "fraction of most infectious individuals"
                 , y = "fraction of new infections")
     if(showRealized){p <- p + geom_point(aes(y = cFRealiz)
                                          , color = "grey", size = 1) }
