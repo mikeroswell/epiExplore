@@ -5,10 +5,15 @@ scaleRNum <- c(2, 3, 10)
 xChoice <- c("low", "mid")
 
 ##############################################################
+library(shellpipes)
+manageConflicts()
+startGraphics()
+
 # load some packages
 library(dplyr)
 library(purrr)
 library(ggplot2)
+
 
 #####################################################
 # create some functions to help out here
@@ -108,6 +113,4 @@ R0Plot <- emerge %>%
 
 library(patchwork)
 
-pdf("kappas_in_3-class.pdf")
 kappaPlot/R0Plot/fractionPlot
-dev.off()

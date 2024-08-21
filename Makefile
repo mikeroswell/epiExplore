@@ -31,6 +31,8 @@ pass.Rout: pass.R
 
 ######################################################################
 
+kappas_in_3-class.Rout: kappas_in_3-class.R
+
 Learn_distributions.Rout: Learn_distributions.R
 
 geometric.Rout: geometric.R
