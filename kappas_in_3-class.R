@@ -14,7 +14,6 @@ library(dplyr)
 library(purrr)
 library(ggplot2)
 
-
 #####################################################
 # create some functions to help out here
 cmptMod <- function(x, xChoice = c("low", "mid"), midRNum, scaleRNum){
@@ -41,7 +40,6 @@ cmptMod <- function(x, xChoice = c("low", "mid"), midRNum, scaleRNum){
     return(list(fracs = c(low, mid, high), pars = c(eps
                       , xChoice,  scaleRNum), rNums = c(lowR, midR, highR)))
 }
-
 
 # Note to self: Right now, this is not at all set up to have fixed R0, but might 
 # be able to do a small amt of math to get there (i.e., we rescale)
@@ -85,14 +83,12 @@ emerge <- map_dfr(scaleRNum, function(scaleR){
     })
 })
 
-
 kappaPlot <- emerge %>% 
     ggplot(aes(highFrac, kappa, color = R_0))+
     geom_point()+
     facet_grid(~transmissionScaler) +
     theme_classic() +
     labs(x = "fraction of population in high-transmission group", y ="kappa \n")
-
 
 fractionPlot <- emerge %>%
     ggplot(aes(highFrac, lowFrac)) +
