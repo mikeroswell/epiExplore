@@ -7,8 +7,9 @@
 R_0 <- 3
 scaleRNum <- c(2, 3, 5)
 xChoice <- c("low", "mid")
-gam <- 1/10
-popSize <- 1e5
+gamm <- 1/10
+popSizee <- 1e4
+tff <- 1e3
 
 
 ##############################################################
@@ -21,6 +22,7 @@ library(purrr)
 library(tidyr)
 library(ggplot2)
 library(patchwork)
+library(GillespieSSA)
 
 #####################################################
 # create some functions to help out here
@@ -135,10 +137,10 @@ vecMaker <- function(vec, name){
     return(x)
 }
 
-ssaMaker <- function(mod, gam, popSize){
+ssaMaker <- function(mod, gam = gamm, popSize= popSizee, tf = tff){
     U <- length(mod$fracs)
     # set parms
-    betas <- mod$rNums/gam
+    betas <- mod$rNums*gam
 
     parms <- c(
         gamma = gam
@@ -155,11 +157,11 @@ ssaMaker <- function(mod, gam, popSize){
     x0 <- c(S = popSize -1, vecMaker(I0, "I"), R = 0)
 
     a <- unlist(lapply(seq_len(U), function(grp){
-        c(paste0("p",grp, "*S*"
+        c(paste0("p",grp, "*S*("
                  , paste0("beta1*I1"
                           , paste0(c(unlist(lapply(seq_len(U-1), function(ind){
                      paste0("+beta", ind+1, "*I", ind+1)
-                     }))), collapse =""))
+                     }))), collapse =""), ")")
                  ) # infection
         , paste0("I", grp, "*gamma") # recovery
         )
@@ -174,8 +176,24 @@ ssaMaker <- function(mod, gam, popSize){
                    , +1, -1, rep(0,4) # I1
                  , 0, 0, +1, -1, 0, 0 # I2
                  , rep(0, 4), +1, -1 # I3
-                 , rep(c(0,1), 3)
+                 , rep(c(0, +1), 3)
                  )
                  , nrow = 5
                  , byrow=TRUE)
+    out <- list(x0 = x0, a = a, nu = nu, parms = parms, tf = tf)
+    return(out)
 }
+
+firstSSAList <- ssaMaker(mod = dat1)
+tictoc::tic()
+firstSim <- do.call(ssa, firstSSAList)
+tictoc::toc()
+
+firstSim$data %>%
+    data.frame() %>%
+    pivot_longer(
+    cols = 2:6, names_to = "pop", values_to = "individuals"
+) %>%
+    ggplot(aes(t, individuals, color = "pop")) +
+    geom_point() +
+    theme_classic()
