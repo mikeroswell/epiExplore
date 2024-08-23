@@ -77,6 +77,13 @@ saturate.Rout: saturate.R
 
 Sources += Makefile
 Ignore += makestuff
+
+Makefile: makestuff/00.stamp
+makestuff/%.stamp:
+	- $(RM) makestuff/*.stamp
+	(cd makestuff && $(MAKE) pull) || git clone --depth 1 $(msrepo)/makestuff
+	touch $@
+
 msrepo = https://github.com/dushoff
 Makefile: makestuff/Makefile
 makestuff/Makefile:
