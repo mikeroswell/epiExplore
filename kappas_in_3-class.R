@@ -60,7 +60,7 @@ R0 <- function(dat){
     with(dat, sum(fracs*rNums))
 }
 
-# dat1 <- cmptMod(0.1, xChoice = "low", midRNum = midRNum, scaleRNum = scaleRNum[1])
+dat1 <- cmptMod(0.1, xChoice = "low", midRNum = midRNum, scaleRNum = scaleRNum[1])
 # dat1 <- list(fracs = 1, rNums = 3)
 # dat1 <- list(fracs = c(1/3, 1/3, 1/3), rNums = c(3,3,3))
 #
@@ -140,7 +140,7 @@ vecMaker <- function(vec, name){
 ssaMaker <- function(mod, gam = gamm, popSize= popSizee, tf = tff){
     U <- length(mod$fracs)
     # set parms
-    betas <- mod$rNums*gam
+    betas <- mod$rNums*gam/popSize
 
     parms <- c(
         gamma = gam
@@ -152,18 +152,18 @@ ssaMaker <- function(mod, gam = gamm, popSize= popSizee, tf = tff){
     # set initial states
     # randomly seed one infection
     I0 <- rep(0, U)
-    I0[sample(1:U)]<-1
+    I0[sample(1:U,1)]<-1
 
     x0 <- c(S = popSize -1, vecMaker(I0, "I"), R = 0)
 
     a <- unlist(lapply(seq_len(U), function(grp){
-        c(paste0("p",grp, "*S*("
+        c(paste0("p",grp, " * S * ("
                  , paste0("beta1*I1"
                           , paste0(c(unlist(lapply(seq_len(U-1), function(ind){
-                     paste0("+beta", ind+1, "*I", ind+1)
+                     paste0(" + beta", ind+1, " * I", ind+1)
                      }))), collapse =""), ")")
                  ) # infection
-        , paste0("I", grp, "*gamma") # recovery
+        , paste0("I", grp, " * gamma") # recovery
         )
 
     }))
@@ -189,11 +189,13 @@ tictoc::tic()
 firstSim <- do.call(ssa, firstSSAList)
 tictoc::toc()
 
+# ssa.plot(firstSim)
+
 firstSim$data %>%
     data.frame() %>%
     pivot_longer(
     cols = 2:6, names_to = "pop", values_to = "individuals"
 ) %>%
-    ggplot(aes(t, individuals, color = "pop")) +
+    ggplot(aes(t, individuals, color = pop)) +
     geom_point() +
     theme_classic()
