@@ -22,7 +22,11 @@ library(purrr)
 library(tidyr)
 library(ggplot2)
 library(patchwork)
-library(GillespieSSA)
+
+############################
+# simulation stuff, probably not important
+library(GillespieSSA) # I started writing simulation code but I think we don't want this approach.
+# library(tictoc) # this was for timing simulation, I think we don't explicitly care rn tho.
 
 #####################################################
 # create some functions to help out here
@@ -185,9 +189,9 @@ ssaMaker <- function(mod, gam = gamm, popSize= popSizee, tf = tff){
 }
 
 firstSSAList <- ssaMaker(mod = dat1)
-tictoc::tic()
+# tictoc::tic()
 firstSim <- do.call(ssa, firstSSAList)
-tictoc::toc()
+# tictoc::toc()
 
 # ssa.plot(firstSim)
 
