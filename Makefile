@@ -39,6 +39,12 @@ geometric.Rout: geometric.R
 
 nbtest.Rout: nbtest.R
 
+IBM_sketch.Rout: IBM_sketch.R
+Sources += IBM_sketch.md
+
+## Dushoff is confused today and he already finished his extra coffee!
+IBM_sketch_sketch.Rout: IBM_sketch_sketch.R
+
 ######################################################################
 
 Ignore += *.html

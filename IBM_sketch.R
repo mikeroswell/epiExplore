@@ -31,23 +31,25 @@ setBeta <- 0.2 # this may be approximate, hack to estimate r0
 setGamma <- 0.1 # this is a recovery rate
 
 tProb <- 0.1 # transmission event in 10% of effective contacts
-cProb <- setBeta/tProb # mean daily per capita contacts
+c <- setBeta/tProb # mean daily per capita contacts ## Roswell may prefer another name
+
 # interesting contacts
 mat <- outer(mixProp, mixProp)
 # first, check with SIR assumption
 # mat <- outer(rep(1, popSize), rep(1, popSize))
 # seems good and kappa for secondary cases is nearly 1
-contactProb <- mat/sum(mat)*2
+contactProb <- 2*mat/sum(mat)
 contactProb[lower.tri(contactProb, diag = TRUE)] <- 0
 
 # Initialization
-tCur <- 0 # set time t0
+tCur <- 0 
 tMax <- 2e3
+
+Sstate <- 1 
 # let states 1 = susceptible, 2 = infectious, 3 = removed
-states <- rep(1, popSize)
+states <- rep(Sstate, popSize)
 # initialize with one random infection
 states[sample(1:popSize, 1)]<- 2
-
 
 # keep track of cases per person
 
@@ -58,8 +60,10 @@ i <- 0
 totalContacts <- 0
 
 # Not really initialization, but pre-computing to avoid loading up the loop
-contactsToSim <- cProb * popSize * tMax
+contactsToSim <- c * popSize * tMax
+## JD doesn't care, but this could also be an rpois()
 
+## Probably unpack contactProb into a data frame with indices and prob
 contactOrder <- sample(1:length(contactProb[upper.tri(contactProb)])
                                    , size = contactsToSim
                                    , prob = contactProb[upper.tri(contactProb)]
@@ -73,7 +77,7 @@ while(tCur < tMax){
   # generate an event
   i <- i +1
   # is it a contact or a recovery?
-  waitContact <- min(rexp(popSize, cProb))
+  waitContact <- min(rexp(popSize, c))
   waitRecovery <- min(rexp(I,  setGamma))
   # if it is a contact, do we get a new infection?
   if(waitContact< waitRecovery){
