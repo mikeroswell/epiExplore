@@ -73,7 +73,8 @@ while(tCur < tMax){
   # generate an event
   i <- i +1
   # is it a contact or a recovery?
-  waitContact <- min(rexp(popSize, cProb))
+  waitContact <- min(rexp(popSize, cProb)) # check not off by a factor of two or 
+  # need to take a geometric mean
   waitRecovery <- min(rexp(I,  setGamma))
   # if it is a contact, do we get a new infection?
   if(waitContact< waitRecovery){
