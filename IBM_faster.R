@@ -181,7 +181,7 @@ for(i in 1:length(contactOrder[,3])){
 
 # check Kappa
 kd <- function(x){(sd(x)^2-mean(x))/mean(x)^2}
-kd(caseTally[states != Sstate]) # is this the way to think about kappa? or do we only want to focus on recovered individuals during the epidemic? What is kappa_effective?
+# is this the way to think about kappa? or do we only want to focus on recovered individuals during the epidemic? What is kappa_effective?
 
 
 ktdt <- function(startT, deltaT){
@@ -200,7 +200,7 @@ ktdt <- function(startT, deltaT){
 #   ktdt(st, 10)
 # }))
 
-keff <- purrr::map_dfr(0:26, function(d){
+keff <- purrr::map_dfr(0:33, function(d){
   ktdt(d, 6)
 })
 
@@ -214,5 +214,6 @@ keff |>
   theme_classic() +
   labs(x = "day", y = "kappa")
 
-
+#confirm kappa
+kd(caseTally[states != Sstate])
 
