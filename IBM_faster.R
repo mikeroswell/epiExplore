@@ -4,10 +4,10 @@
 
 # load some libraries
 # library(GillespieSSA2)
-# library(dplyr)
+library(dplyr)
 # library(purrr)
-# library(tidyr)
-# library(ggplot2)
+library(tidyr)
+library(ggplot2)
 # library(patchwork) # for assembling ggplot objects
 
 # the idea here is that individuals will differ in their mixing propensity.
@@ -18,9 +18,10 @@
 # we will also assume that transmission probability, given contact, is constant
 # during the infectious stage and equal for all individuals
 # we will assume that recovered individuals cannot be reinfected.
+set.seed(4228)
 
 # first, play with this mixing idea
-popSize <- 5e4
+popSize <- 1e4
 # some shape parameter
 mixKap <- 1e-16 ## verify kappa = 1 if here kappa ==0
 # mixKap <- 0.1 #
@@ -45,7 +46,7 @@ comb2.int <- function(n, rep = FALSE){
     o <- c(0,cumsum(n:2))
     y <- i-o[x]+x-1
   }
-  return(cbind(x,y))
+  return(rbind(x,y))
 }
 rateInds <-comb2.int(popSize)
 
@@ -187,23 +188,31 @@ ktdt <- function(startT, deltaT){
   who <- which(startT <= iTime & iTime < startT+deltaT)
   n <- sum(startT <= iTime & iTime < startT+deltaT)
   secDist <- caseTally[who]
-  kappa_eff = kd(secDist)
+  kappa_discrete = kd(secDist)
   mu <- mean(secDist)
   sig <- sd(secDist)
-  return(data.frame(n, kappa_eff, mu, sig, startT))
+  kappa_naive = sig^2/mu^2
+  return(data.frame(n, kappa_discrete, kappa_naive, mu, sig, startT))
 }
 
-hist(iTime[iTime< tMax])
-plot(sapply(seq(0, 40, 1), function(st){
-  ktdt(st, 10)
-}))
+# hist(iTime[iTime< tMax])
+# plot(sapply(seq(0, 40, 1), function(st){
+#   ktdt(st, 10)
+# }))
 
 keff <- purrr::map_dfr(0:26, function(d){
   ktdt(d, 6)
 })
 
-keff
 
-sum(keff$n*keff$kappa_eff)/sum(keff$n)
+keff |>
+  pivot_longer(cols = c("kappa_discrete", "kappa_naive"), names_to = "kappa_approximation", values_to = "Kappa") |>
+  ggplot(aes(startT, Kappa, color = kappa_approximation)) +
+  geom_point() +
+  geom_hline(yintercept = 1, color = "blue") +
+  scale_y_log10()+
+  theme_classic() +
+  labs(x = "day", y = "kappa")
+
 
 
