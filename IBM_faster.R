@@ -4,7 +4,7 @@
 
 # load some libraries
 # library(GillespieSSA2)
-library(dplyr)
+# library(dplyr)
 # library(purrr)
 # library(tidyr)
 # library(ggplot2)
@@ -20,16 +20,39 @@ library(dplyr)
 # we will assume that recovered individuals cannot be reinfected.
 
 # first, play with this mixing idea
-popSize <- 5e3
+popSize <- 5e4
 # some shape parameter
-mixKap <- 0.1 # 1e-16 ## verify kappa = 1 if here kappa ==0
+mixKap <- 1e-16 ## verify kappa = 1 if here kappa ==0
+# mixKap <- 0.1 #
 mixScale <- 1 # think about whether this makes any sense
 # mixing propensity
 mixProp <- qgamma(p = ((1:popSize) - 1/2)/popSize, shape = 1/mixKap
                   , scale = mixScale*mixKap)
-rateInds <-combn(1:popSize, 2)
-dailyRate <- 3
 
+# combn is very slow with big numbers
+# looks good https://stackoverflow.com/a/49153855/8400969
+comb2.int <- function(n, rep = FALSE){
+  if(!rep){
+    # e.g. n=3 => (1,2), (1,3), (2,3)
+    x <- rep(1:n,(n:1)-1)
+    i <- seq_along(x)+1
+    o <- c(0,cumsum((n-2):1))
+    y <- i-o[x]
+  }else{
+    # e.g. n=3 => (1,1), (1,2), (1,3), (2,2), (2,3), (3,3)
+    x <- rep(1:n,n:1)
+    i <- seq_along(x)
+    o <- c(0,cumsum(n:2))
+    y <- i-o[x]+x-1
+  }
+  return(cbind(x,y))
+}
+rateInds <-comb2.int(popSize)
+
+# daily per-person interactions
+dailyRate <- 5
+
+# generate un-scaled interaction rates by dyad
 rateFrame <- rateInds |>
   rbind(rateInds |>
           apply(MARGIN = 2, FUN = function(x){ mixProp[x[1]]*mixProp[x[2]]}) ) |>
@@ -38,60 +61,41 @@ rateFrame <- rateInds |>
 names(rateFrame)<- c("ind1", "ind2", "mixRate")
 
 
-# rhexp <- function(n, probs, rates) {
-#   x <- vapply(rates, function(lambda) {
-#     rexp(n, lambda)
-#   }, numeric(n))
-#   i <- sample.int(length(probs), size = n, replace = TRUE, prob = probs)
-#   x[cbind(seq_len(n), i)]
-# }
-#
-#
-# rhexp(1, rates = c(2/10, 4/10, 1/10, 3/10), probs = c(2/10, 4/10, 1/10, 3/10))
-
+# rescale to match daily rate
 rateFrame <- rateFrame |>
   mutate(mixRate = mixRate * popSize/2 * dailyRate / sum(mixRate))
 sum(rateFrame$mixRate)
+
 # get event timings: here is when each individual contact occurs
 # Initialization
-
 tMax <- 2e3
-toSim <- floor(1.1*dailyRate*popSize*tMax)
-r2 <- runif(toSim)
-# make and sort events
-cs <- cumsum(rateFrame$mixRate)
 
+# This is 10% more than the expected number of contacts up to tMax
+toSim <- floor(0.55*dailyRate*popSize*tMax)
+
+# make events
 contTime <- cumsum(rexp(toSim,sum(rateFrame$mixRate)))
-# I feel
+# link to contact matrix
 contInd <- sample( 1:length(rateFrame$mixRate)
                             , size = toSim
                             , replace = TRUE
                             , rateFrame$mixRate)
 
-
+# save as a data.frame (will be longer than necessary)
 contactOrder <- cbind(t(rateInds)[ contInd,], contTime)
 
 # We will also pre-compute recovery times
 # First lets assume it is exponential to compare to basic model
 setGamma <- 0.1 #
 recDelay <- rexp(1:popSize, rate = setGamma)
+# initialize infection time with a large number for logical testing
 iTime <- rep(tMax, popSize)
-# first, check with SIR assumption
-# mat <- outer(rep(1, popSize), rep(1, popSize))
-# # seems good and kappa for secondary cases is nearly 1
-# contactProb <- 2*mat/sum(mat)
-# contactProb[lower.tri(contactProb, diag = TRUE)] <- 0
 
 # epidemic parameters
-
-
-
-tProb <- 0.1 # transmission event in 10% of effective contacts
+tProb <- 0.075 # transmission event in 10% of effective contacts
 setBeta <- dailyRate*tProb
 
-
-
-# we're getting towards the simulation now
+# map integers to infection status
 Sstate <- 1
 Istate <- 2
 Rstate <- 3
@@ -100,19 +104,20 @@ states <- rep(Sstate, popSize)
 # initialize with one random infection
 p0 <- sample(1:popSize, 1)
 states[p0]<- Istate
+
+# start the clock
 tCur <- 0
 iTime[p0] <- tCur
 
-# keep track of cases per person
-
+# keep track of cases per person and counts for each state
 caseTally <- rep(0, popSize)
-
-# Days
-dayz <- 1
-# totalContacts <- 0
 
 I <- sum(states == Istate)
 S <- sum(states == Sstate)
+
+# and Days
+dayz <- 1
+
 
 ####
 # Think about if this gets params as inputs too.
@@ -175,11 +180,30 @@ for(i in 1:length(contactOrder[,3])){
 
 # check Kappa
 kd <- function(x){(sd(x)^2-mean(x))/mean(x)^2}
-kd(caseTally[states != Sstate]) # slightly higher than 1 with this setup.
+kd(caseTally[states != Sstate]) # is this the way to think about kappa? or do we only want to focus on recovered individuals during the epidemic? What is kappa_effective?
 
 
+ktdt <- function(startT, deltaT){
+  who <- which(startT <= iTime & iTime < startT+deltaT)
+  n <- sum(startT <= iTime & iTime < startT+deltaT)
+  secDist <- caseTally[who]
+  kappa_eff = kd(secDist)
+  mu <- mean(secDist)
+  sig <- sd(secDist)
+  return(data.frame(n, kappa_eff, mu, sig, startT))
+}
 
+hist(iTime[iTime< tMax])
+plot(sapply(seq(0, 40, 1), function(st){
+  ktdt(st, 10)
+}))
 
+keff <- purrr::map_dfr(0:26, function(d){
+  ktdt(d, 6)
+})
 
+keff
+
+sum(keff$n*keff$kappa_eff)/sum(keff$n)
 
 
