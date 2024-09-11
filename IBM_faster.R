@@ -20,13 +20,13 @@ library(dplyr)
 # we will assume that recovered individuals cannot be reinfected.
 
 # first, play with this mixing idea
-popSize <- 2e2
+popSize <- 5e3
 # some shape parameter
-mixKap <- 2.2
-mixScale <- 1 # Too hard to think about this so leave at default to rescale later
+mixKap <- 0.1 # 1e-16 ## verify kappa = 1 if here kappa ==0
+mixScale <- 1 # think about whether this makes any sense
 # mixing propensity
 mixProp <- qgamma(p = ((1:popSize) - 1/2)/popSize, shape = 1/mixKap
-                  , scale = mixScale)
+                  , scale = mixScale*mixKap)
 rateInds <-combn(1:popSize, 2)
 dailyRate <- 3
 
@@ -36,33 +36,40 @@ rateFrame <- rateInds |>
   t() |>
   data.frame()
 names(rateFrame)<- c("ind1", "ind2", "mixRate")
-rateFrame <- rateFrame |>
-  mutate(mixRate = dailyRate * popSize * mixRate / sum(mixRate))
 
+
+# rhexp <- function(n, probs, rates) {
+#   x <- vapply(rates, function(lambda) {
+#     rexp(n, lambda)
+#   }, numeric(n))
+#   i <- sample.int(length(probs), size = n, replace = TRUE, prob = probs)
+#   x[cbind(seq_len(n), i)]
+# }
+#
+#
+# rhexp(1, rates = c(2/10, 4/10, 1/10, 3/10), probs = c(2/10, 4/10, 1/10, 3/10))
+
+rateFrame <- rateFrame |>
+  mutate(mixRate = mixRate * popSize/2 * dailyRate / sum(mixRate))
+sum(rateFrame$mixRate)
 # get event timings: here is when each individual contact occurs
 # Initialization
-tCur <- 0
-i <- 0 # meaningless counter
-tMax <- 2e2
-Who <- rep(0L, popSize*mixMean*tMax)
-When <- rep(0, popSize*mixMean*tMax)
+
+tMax <- 2e3
+toSim <- floor(1.1*dailyRate*popSize*tMax)
+r2 <- runif(toSim)
 # make and sort events
+cs <- cumsum(rateFrame$mixRate)
+
+contTime <- cumsum(rexp(toSim,sum(rateFrame$mixRate)))
+# I feel
+contInd <- sample( 1:length(rateFrame$mixRate)
+                            , size = toSim
+                            , replace = TRUE
+                            , rateFrame$mixRate)
 
 
-# I think I can do this smarter
-
-contactInds <- while(tCur < tMax){
-  i <- i + 1
-  ev <- rexp(1:length(rateFrame$mixRate), rate = rateFrame$mixRate)
-  tE <- min(ev)
-  tCur <- tE +tCur
-  When[i] <- tCur
-  Who[i] <- which.min(ev)
-}
-
-When <- When[ When> 0]
-Who <- Who[When > 0]
-contactOrder <- cbind(t(rateInds)[ Who,], When)
+contactOrder <- cbind(t(rateInds)[ contInd,], contTime)
 
 # We will also pre-compute recovery times
 # First lets assume it is exponential to compare to basic model
@@ -98,10 +105,10 @@ iTime[p0] <- tCur
 
 # keep track of cases per person
 
-caseTally <- rep(0L, popSize)
+caseTally <- rep(0, popSize)
 
 # Days
-dayz <- 0L
+dayz <- 1
 # totalContacts <- 0
 
 I <- sum(states == Istate)
@@ -109,7 +116,8 @@ S <- sum(states == Sstate)
 
 ####
 # Think about if this gets params as inputs too.
-atEachStep <- function(co){
+for(i in 1:length(contactOrder[,3])){
+  co <- contactOrder[i,]
 # a bunch of stuff I want to do for each row...
   # check if anyone is infectious
   tCur <- co[3]
@@ -117,18 +125,21 @@ atEachStep <- function(co){
         # see if anyone has already recovered
     recVec <- (iTime[co[1:2]] + recDelay[co[1:2]]) <= tCur
     # count them
+    # if(sum(recVec>0)){cat("recovery")}
     I <- I - sum(recVec)
     # remove them
     states[co[1:2]][recVec] <- Rstate
     # if one is infectious AND one is susceptible, lots to do
-    if(sum(states[co[1:2]]) == Istate+Sstate){
+    if(sum(states[co[1:2]]) == (Istate+Sstate)){
       # first flip the coin
      if(rbinom(1,1, prob = tProb)){
+       # cat("infection")
        # update cumulative state counters
         I <- I + 1
         S <- S - 1
         # count the win
         caseTally[co[1:2][states[co[1:2]] == 2]] <- caseTally[co[1:2][states[co[1:2]] == 2]] + 1
+
         # record the infection time
         iTime[co[1:2][states[co[1:2]] == 1]] <- tCur
         # update the states
@@ -139,21 +150,32 @@ atEachStep <- function(co){
 }
 # [save state? and] print some stuff once per day
   if(floor(tCur>dayz)){
-      dayz <- dayz + 1
-      cat(paste0("t = ", tCur, ",  I = ", I, ", S = ", S, ", maxCases = "
-      , max(caseTally)
-      , "\n")
+
+      cat(paste0("day ", dayz
+                 , "; contact #", i
+                 ,"; I = ", I
+                 , ", S = " , S
+                 , "; maxCases = ", max(caseTally)
+                 , "\n")
     )
+    dayz <- dayz + 1
     }
   # stop when no new infections
- # if(S == 0 | I == 0){stop}
+ if(S == 0 | I == 0){
+   cat(paste0("END!  day ", dayz
+              , "; contact # ", i
+              ,",  I = ", I
+              , ", S = " , S
+              , ", maxCases = ", max(caseTally)
+              , "\n")
+ )
+   break}
 }
 
-apply(contactOrder, 1, atEachStep)
 
 # check Kappa
 kd <- function(x){(sd(x)^2-mean(x))/mean(x)^2}
-kd(caseTally[states == 3]) # slightly higher than 1 with this setup.
+kd(caseTally[states != Sstate]) # slightly higher than 1 with this setup.
 
 
 
