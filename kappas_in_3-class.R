@@ -25,7 +25,7 @@ library(patchwork)
 
 ############################
 # simulation stuff, probably not important
-library(GillespieSSA) # I started writing simulation code but I think we don't want this approach.
+# library(GillespieSSA) # I started writing simulation code but I think we don't want this approach.
 # library(tictoc) # this was for timing simulation, I think we don't explicitly care rn tho.
 
 #####################################################
@@ -135,71 +135,71 @@ fractionPlot <- emerge %>%
 kappaPlot/fractionPlot
 # dev.off()
 #########################################################
-vecMaker <- function(vec, name){
-    x <- vec
-    names(x) <- unlist(lapply(seq_len(length(vec)), function(i){paste0(name, i)}))
-    return(x)
-}
+# vecMaker <- function(vec, name){
+#     x <- vec
+#     names(x) <- unlist(lapply(seq_len(length(vec)), function(i){paste0(name, i)}))
+#     return(x)
+# }
 
-ssaMaker <- function(mod, gam = gamm, popSize= popSizee, tf = tff){
-    U <- length(mod$fracs)
-    # set parms
-    betas <- mod$rNums*gam/popSize
-
-    parms <- c(
-        gamma = gam
-        , vecMaker(mod$fracs, "p")
-        , vecMaker(betas, "beta")
-
-
-    )
-    # set initial states
-    # randomly seed one infection
-    I0 <- rep(0, U)
-    I0[sample(1:U,1)]<-1
-
-    x0 <- c(S = popSize -1, vecMaker(I0, "I"), R = 0)
-
-    a <- unlist(lapply(seq_len(U), function(grp){
-        c(paste0("p",grp, " * S * ("
-                 , paste0("beta1*I1"
-                          , paste0(c(unlist(lapply(seq_len(U-1), function(ind){
-                     paste0(" + beta", ind+1, " * I", ind+1)
-                     }))), collapse =""), ")")
-                 ) # infection
-        , paste0("I", grp, " * gamma") # recovery
-        )
-
-    }))
-
-    # define state change matrix for each S, I, and R (rows) for each reaction
-    # (columns)
-
-    # This is super ugly, make it programmatic later
-    nu <- matrix(c(-1,  0,  -1, 0, -1, 0  #changes in S
-                   , +1, -1, rep(0,4) # I1
-                 , 0, 0, +1, -1, 0, 0 # I2
-                 , rep(0, 4), +1, -1 # I3
-                 , rep(c(0, +1), 3)
-                 )
-                 , nrow = 5
-                 , byrow=TRUE)
-    out <- list(x0 = x0, a = a, nu = nu, parms = parms, tf = tf)
-    return(out)
-}
-
-firstSSAList <- ssaMaker(mod = dat1)
-# tictoc::tic()
-firstSim <- do.call(ssa, firstSSAList)
-# tictoc::toc()
-
-# ssa.plot(firstSim)
-
-firstSim$data %>%
-    data.frame() %>%
-    pivot_longer(
-    cols = 2:6, names_to = "pop", values_to = "individuals"
-) %>%
-    ggplot(aes(t, individuals, color = pop)) +
-    geom_point() +
-    theme_classic()
+# ssaMaker <- function(mod, gam = gamm, popSize= popSizee, tf = tff){
+#     U <- length(mod$fracs)
+#     # set parms
+#     betas <- mod$rNums*gam/popSize
+#
+#     parms <- c(
+#         gamma = gam
+#         , vecMaker(mod$fracs, "p")
+#         , vecMaker(betas, "beta")
+#
+#
+#     )
+#     # set initial states
+#     # randomly seed one infection
+#     I0 <- rep(0, U)
+#     I0[sample(1:U,1)]<-1
+#
+#     x0 <- c(S = popSize -1, vecMaker(I0, "I"), R = 0)
+#
+#     a <- unlist(lapply(seq_len(U), function(grp){
+#         c(paste0("p",grp, " * S * ("
+#                  , paste0("beta1*I1"
+#                           , paste0(c(unlist(lapply(seq_len(U-1), function(ind){
+#                      paste0(" + beta", ind+1, " * I", ind+1)
+#                      }))), collapse =""), ")")
+#                  ) # infection
+#         , paste0("I", grp, " * gamma") # recovery
+#         )
+#
+#     }))
+#
+#     # define state change matrix for each S, I, and R (rows) for each reaction
+#     # (columns)
+#
+#     # This is super ugly, make it programmatic later
+#     nu <- matrix(c(-1,  0,  -1, 0, -1, 0  #changes in S
+#                    , +1, -1, rep(0,4) # I1
+#                  , 0, 0, +1, -1, 0, 0 # I2
+#                  , rep(0, 4), +1, -1 # I3
+#                  , rep(c(0, +1), 3)
+#                  )
+#                  , nrow = 5
+#                  , byrow=TRUE)
+#     out <- list(x0 = x0, a = a, nu = nu, parms = parms, tf = tf)
+#     return(out)
+# }
+#
+# firstSSAList <- ssaMaker(mod = dat1)
+# # tictoc::tic()
+# firstSim <- do.call(ssa, firstSSAList)
+# # tictoc::toc()
+#
+# # ssa.plot(firstSim)
+#
+# firstSim$data %>%
+#     data.frame() %>%
+#     pivot_longer(
+#     cols = 2:6, names_to = "pop", values_to = "individuals"
+# ) %>%
+#     ggplot(aes(t, individuals, color = pop)) +
+#     geom_point() +
+#     theme_classic()
