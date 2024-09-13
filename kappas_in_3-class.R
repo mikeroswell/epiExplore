@@ -5,9 +5,9 @@
 ###########################################################
 # Set some params, this will eventually get moved to another script when we makify
 R_0 <- 3
-scaleRNum <- c(2, 3, 5)
-xChoice <- c("low", "mid")
-gamm <- 1/10
+scaleRNum <- c(2, 3, 5) # we pre-specify the ratio of infectiousness between mid/low/high
+xChoice <- c("low", "mid") # this is a way to specify different rules for how the fractions of low, mid, and high transmitters are determined
+gamm <- 1/10 # recovery rate
 popSizee <- 1e4
 tff <- 1e3
 
@@ -16,19 +16,14 @@ tff <- 1e3
 # load some packages
 library(shellpipes)
 manageConflicts()
-startGraphics()
+# startGraphics()
 library(dplyr)
 library(purrr)
 library(tidyr)
-library(ggplot2)
-library(patchwork)
+# library(ggplot2)
+# library(patchwork)
 
 ############################
-# simulation stuff, probably not important
-# library(GillespieSSA) # I started writing simulation code but I think we don't want this approach.
-# library(tictoc) # this was for timing simulation, I think we don't explicitly care rn tho.
-
-#####################################################
 # create some functions to help out here
 cmptMod <- function(x, xChoice = c("low", "mid"), midRNum, scaleRNum){
     # define probabilities for each of three compartments
@@ -82,58 +77,6 @@ compVar <- function(dat){
 #########################################
 # do a pile of simulations
 
-emerge <- map_dfr(scaleRNum, function(scaleR){
-    map_dfr(seq(0., 1, 0.02), function(x){
-        dat <- cmptMod(
-            x = x, xChoice = "low", midRNum = midRNum, scaleRNum = scaleR)
-        R_0 <- R0(dat) # simple verification that I got R_0
-        kappa <- compVar(dat)/R_0^2
-        return(data.frame(eps = as.numeric(dat$pars[1])
-                          , epsMethod = dat$pars[2]
-                          , transmissionScaler = as.numeric(dat$pars[3])
-                          , lowFrac = dat$fracs[1]
-                          , midFrac = dat$fracs[2]
-                          , highFrac = dat$fracs[3]
-                          , R_0
-                          , kappa ))
-    })
-})
-
-kappaPlot <- emerge %>%
-    ggplot(aes(highFrac, kappa, color = as.factor(transmissionScaler)))+
-    geom_point()+
-    theme_classic() +
-    labs(x = "fraction of population in high-transmission group"
-         , y ="kappa"
-         , color = "ratio of\ntransmission\nbetween groups" )+
-    scale_color_brewer(palette = "Dark2")
-
-fractionPlot <- emerge %>%
-    mutate(hf = highFrac) %>%
-    pivot_longer(cols = ends_with("Frac"), names_to = "transLevel", values_to = "frac") %>%
-    ggplot(aes(hf, frac
-               , color = factor(transLevel
-                                , levels = c("lowFrac", "midFrac", "highFrac")
-                                , labels = c("low", "mid", "high")))) +
-    geom_point() +
-    theme_classic() +
-    scale_color_manual(values = RColorBrewer::brewer.pal(9, "YlOrRd")[c(9, 8, 6)]) +
-    # facet_grid(~transmissionScaler) +
-    labs(x = "fraction of population in high-transmission group"
-         , y = "fraction of population"
-         , color = "transmission\nlevel")
-
-# R0Plot <- emerge %>%
-#     ggplot(aes(highFrac, R_0)) +
-#     geom_point() +
-#     theme_classic() +
-#     facet_grid(~transmissionScaler) +
-#     labs(x = "fraction of population in high-transmission group"
-#          , y = "R0\n")
-
-# pdf("kappas_in_3-class.pdf")
-kappaPlot/fractionPlot
-# dev.off()
 #########################################################
 # vecMaker <- function(vec, name){
 #     x <- vec
@@ -203,3 +146,4 @@ kappaPlot/fractionPlot
 #     ggplot(aes(t, individuals, color = pop)) +
 #     geom_point() +
 #     theme_classic()
+saveEnvironment()

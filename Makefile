@@ -31,13 +31,10 @@ pass.Rout: pass.R
 
 ######################################################################
 
+## emergent heterogeneity in compartmental models
 kappas_in_3-class.Rout: kappas_in_3-class.R
+plotEmergent.Rout: plotEmergent.R kappas_in_3-class.rda
 
-Learn_distributions.Rout: Learn_distributions.R
-
-geometric.Rout: geometric.R
-
-nbtest.Rout: nbtest.R
 
 IBM_sketch.Rout: IBM_sketch.R
 Sources += IBM_sketch.md
@@ -47,10 +44,17 @@ IBM_sketch_sketch.Rout: IBM_sketch_sketch.R
 
 ######################################################################
 
+## General distribution stuff
+Learn_distributions.Rout: Learn_distributions.R
+
+geometric.Rout: geometric.R
+
+nbtest.Rout: nbtest.R
+
 Ignore += *.html
 
 Sources += GiniKappaK.Rmd
-## Roswell notes on $a$, the nb/realized dispersion parameter (inverse), 
+## Roswell notes on $a$, the nb/realized dispersion parameter (inverse),
 ##  $\kappa$, and a bit on the Gini ceofficient
 GiniKappaK.html: GiniKappaK.Rmd
 	$(rmdh_r)
@@ -69,7 +73,7 @@ eightyPercentGeometric.Rout: eightyPercentGeometric.R
 
 ######################################################################
 ## JD show that the relationship between $1/a$, $\kappa$ generally holds between
-## activity distributions and the Poisson-process realized distributions 
+## activity distributions and the Poisson-process realized distributions
 kappaSims.Rout: kappaSims.R
 
 saturate.Rout: saturate.R
