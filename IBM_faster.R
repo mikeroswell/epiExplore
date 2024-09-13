@@ -24,7 +24,9 @@ set.seed(4228)
 popSize <- 1e4
 # some shape parameter
 mixKap <- 1e-16 ## verify kappa = 1 if here kappa ==0
-# mixKap <- 0.1 #
+# mixKap <- 0.1 # I think this should give overall kappa close to 1.2, but with big dynamics in kappa(T, deltaT)
+
+# mixKap <- 1 # based on one run, this makes for kappa(0,Inf) of 2, with high spread in kappa(T, 6)
 mixScale <- 1 # think about whether this makes any sense
 # mixing propensity
 mixProp <- qgamma(p = ((1:popSize) - 1/2)/popSize, shape = 1/mixKap
