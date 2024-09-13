@@ -13,9 +13,11 @@ loadEnvironments()
 
 emerge <- map_dfr(scaleRNum, function(scaleR){
   map_dfr(seq(0., 1, 0.02), function(x){
-    dat <- cmptMod(
-      x = x, xChoice = "low", midRNum = midRNum, scaleRNum = scaleR)
-    R_0 <- R0(dat) # simple verification that I got R_0
+    dat <- cmptMod(R_0 = R_0
+                   , x = x
+                   , xChoice = "low"
+                   , scaleRNum = scaleR)
+    # R_0 <- R0(dat) # simple verification that I got R_0
     kappa <- compVar(dat)/R_0^2
     return(data.frame(eps = as.numeric(dat$pars[1])
                       , epsMethod = dat$pars[2]

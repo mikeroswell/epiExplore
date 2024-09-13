@@ -2,14 +2,6 @@
 # notes:
 # is there a singularity to deal with in the fractions so I get the ends?
 
-###########################################################
-# Set some params, this will eventually get moved to another script when we makify
-R_0 <- 3
-scaleRNum <- c(2, 3, 5) # we pre-specify the ratio of infectiousness between mid/low/high
-xChoice <- c("low", "mid") # this is a way to specify different rules for how the fractions of low, mid, and high transmitters are determined
-gamm <- 1/10 # recovery rate
-popSizee <- 1e4
-tff <- 1e3
 
 
 ##############################################################
@@ -24,8 +16,18 @@ library(tidyr)
 # library(patchwork)
 
 ############################
+
+###########################################################
+# Set some params, this will eventually get moved to another script when we makify
+R_0 <- 3
+scaleRNum <- c(2, 3, 5) # we pre-specify the ratio of infectiousness between mid/low/high
+xChoice <- c("low", "mid") # this is a way to specify different rules for how the fractions of low, mid, and high transmitters are determined
+gamm <- 1/10 # recovery rate
+
+tff <- 1e3
+
 # create some functions to help out here
-cmptMod <- function(x, xChoice = c("low", "mid"), midRNum, scaleRNum){
+cmptMod <- function(x, xChoice = c("low", "mid"), R_0 = R_0, scaleRNum){
     # define probabilities for each of three compartments
     if(xChoice == "mid"){
         eps <- max((-sqrt((x-1)^2-4*x^2)+(1-x))/(2*x)
@@ -59,7 +61,7 @@ R0 <- function(dat){
     with(dat, sum(fracs*rNums))
 }
 
-dat1 <- cmptMod(0.1, xChoice = "low", midRNum = midRNum, scaleRNum = scaleRNum[1])
+dat1 <- cmptMod(0.1, xChoice = "low", scaleRNum = scaleRNum[1], R_0 = R_0)
 # dat1 <- list(fracs = 1, rNums = 3)
 # dat1 <- list(fracs = c(1/3, 1/3, 1/3), rNums = c(3,3,3))
 #
