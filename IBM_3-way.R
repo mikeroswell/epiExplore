@@ -1,16 +1,16 @@
 # script to begin dreaming simulation up
 
-# random note but I'm committed to using the native R pipe for the first time
-
-# load some libraries
 library(shellpipes)
 manageConflicts()
 startGraphics()
 library(dplyr)
-# library(purrr)
+library(purrr)
 library(tidyr)
 library(ggplot2)
-# library(patchwork) # for assembling ggplot objects
+library(patchwork)
+
+# note dependency on params and functions in kappas_in_3-class.R
+# loadEnvironments()
 
 # the idea here is that individuals will differ in their mixing propensity.
 # for now I will not include preferential mixing
@@ -20,10 +20,17 @@ library(ggplot2)
 # we will also assume that transmission probability, given contact, is constant
 # during the infectious stage and equal for all individuals
 # we will assume that recovered individuals cannot be reinfected.
-set.seed(4228)
+# set.seed(4228)
 
-# first, play with this mixing idea
+# Initialization
+tMax <- 1e3 # measured in days, assume for most things I'll do 1 year is plenty
 popSize <- 1e4
+# daily per-person interactions
+dailyRate <- 5
+R_0 <- 7 # much higher than in current fig 1 but maybe necessarily so to enable
+# outbreak with high probability
+
+# generate the contact model
 # some shape parameter
 mixKap <- 1e-16 ## verify kappa = 1 if here kappa ==0
 # mixKap <- 0.1 # I think this should give overall kappa close to 1.2, but with big dynamics in kappa(T, deltaT)
@@ -54,8 +61,7 @@ comb2.int <- function(n, rep = FALSE){
 }
 rateInds <-comb2.int(popSize)
 
-# daily per-person interactions
-dailyRate <- 5
+
 
 # generate un-scaled interaction rates by dyad
 rateFrame <- rateInds |>
@@ -72,8 +78,7 @@ rateFrame <- rateFrame |>
 sum(rateFrame$mixRate)
 
 # get event timings: here is when each individual contact occurs
-# Initialization
-tMax <- 2e3
+
 
 # This is 10% more than the expected number of contacts up to tMax
 toSim <- floor(0.55*dailyRate*popSize*tMax)
@@ -96,19 +101,23 @@ recDelay <- rexp(1:popSize, rate = setGamma)
 # initialize infection time with a large number for logical testing
 iTime <- rep(tMax, popSize)
 
+
+# generate ODE model parameters or something
+mod <- cmptMod(0.2, xChoice = "low", R_0 = R_0, scaleRNum = scaleRNum[1])
 # epidemic parameters
-tProb <- 0.075 # transmission event in 10% of effective contacts
-setBeta <- dailyRate*tProb
+meanBeta <- R_0*gamm
+tProb <-mod$rNums*gamm/dailyRate # 0.075 # transmission event in 10% of effective contacts
+
 
 # map integers to infection status
 Sstate <- 1
-Istate <- 2
-Rstate <- 3
+Istate <- c(2,3,4)
+Rstate <- 5
 
 states <- rep(Sstate, popSize)
 # initialize with one random infection
 p0 <- sample(1:popSize, 1)
-states[p0]<- Istate
+states[p0]<- sample(Istate, 1, prob = mod$fracs)
 
 # start the clock
 tCur <- 0
@@ -117,7 +126,7 @@ iTime[p0] <- tCur
 # keep track of cases per person and counts for each state
 caseTally <- rep(0, popSize)
 
-I <- sum(states == Istate)
+I <- sum(states %in% Istate)
 S <- sum(states == Sstate)
 
 # and Days
@@ -131,29 +140,31 @@ for(i in 1:length(contactOrder[,3])){
 # a bunch of stuff I want to do for each row...
   # check if anyone is infectious
   tCur <- co[3]
-  if(any(states[co[1:2]] == Istate)){
+  estat <- states[co[1:2]]
+  if(any(estat %in% Istate)){
         # see if anyone has already recovered
     recVec <- (iTime[co[1:2]] + recDelay[co[1:2]]) <= tCur
     # count them
     # if(sum(recVec>0)){cat("recovery")}
     I <- I - sum(recVec)
     # remove them
-    states[co[1:2]][recVec] <- Rstate
+    estat[recVec] <- Rstate
     # if one is infectious AND one is susceptible, lots to do
-    if(sum(states[co[1:2]]) == (Istate+Sstate)){
-      # first flip the coin
-     if(rbinom(1,1, prob = tProb)){
+    if(any(estat== Sstate) & any(estat %in% Istate)){
+      # first flip the coin on an infection
+     if(rbinom(1,1, prob = tProb[estat[estat != 1] - 1])){
        # cat("infection")
        # update cumulative state counters
         I <- I + 1
         S <- S - 1
         # count the win
-        caseTally[co[1:2][states[co[1:2]] == 2]] <- caseTally[co[1:2][states[co[1:2]] == 2]] + 1
+        caseTally[co[1:2][estat %in% Istate]] <- caseTally[co[1:2][estat %in% Istate]] + 1
 
         # record the infection time
         iTime[co[1:2][states[co[1:2]] == 1]] <- tCur
-        # update the states
-        states[co[1:2][states[co[1:2]] == 1]] <- Istate
+        # get the right infectious state
+        states[co[1:2][states[co[1:2]] == 1]] <-
+          sample(Istate, 1, prob = mod$fracs)
 
     }
   }
