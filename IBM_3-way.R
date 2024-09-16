@@ -96,14 +96,14 @@ contactOrder <- cbind(t(rateInds)[ contInd,], contTime)
 
 # We will also pre-compute recovery times
 # First lets assume it is exponential to compare to basic model
-setGamma <- 0.1 #
+setGamma <- 0.05 #
 recDelay <- rexp(1:popSize, rate = setGamma)
 # initialize infection time with a large number for logical testing
 iTime <- rep(tMax, popSize)
 
 
 # generate ODE model parameters or something
-mod <- cmptMod(0.2, xChoice = "low", R_0 = R_0, scaleRNum = scaleRNum[1])
+mod <- cmptMod(0.2, xChoice = "low", R_0 = R_0, scaleRNum = scaleRNum[2])
 # epidemic parameters
 meanBeta <- R_0*gamm
 tProb <-mod$rNums*gamm/dailyRate # 0.075 # transmission event in 10% of effective contacts
@@ -219,7 +219,7 @@ keff <- purrr::map_dfr(0:33, function(d){
   ktdt(d, 6)
 })
 
-
+pdf("kappa_in_intermediate_ratio.pdf")
 keff |>
   pivot_longer(cols = c("kappa_discrete", "kappa_naive"), names_to = "kappa_approximation", values_to = "Kappa") |>
   ggplot(aes(startT, Kappa, color = kappa_approximation)) +
@@ -228,7 +228,7 @@ keff |>
   scale_y_log10()+
   theme_classic() +
   labs(x = "day", y = "kappa")
-
+dev.off()
 #confirm kappa
 kd(caseTally[states != Sstate])
 
