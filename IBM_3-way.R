@@ -10,7 +10,9 @@ library(ggplot2)
 library(patchwork)
 
 # note dependency on params and functions in kappas_in_3-class.R
-# loadEnvironments()
+loadEnvironments()
+
+
 
 # the idea here is that individuals will differ in their mixing propensity.
 # for now I will not include preferential mixing
@@ -29,6 +31,8 @@ popSize <- 1e4
 dailyRate <- 5
 R_0 <- 7 # much higher than in current fig 1 but maybe necessarily so to enable
 # outbreak with high probability
+# generate ODE model parameters or something (shd be SIR)
+mod <- cmptMod(0.2, xChoice = "low", R_0 = R_0, scaleRNum = 1) #scaleRNum[2])
 
 # generate the contact model
 # some shape parameter
@@ -95,18 +99,18 @@ contInd <- sample( 1:length(rateFrame$mixRate)
 contactOrder <- cbind(t(rateInds)[ contInd,], contTime)
 
 # We will also pre-compute recovery times
-# First lets assume it is exponential to compare to basic model
+# First let's assume it is exponential to compare to basic model
 setGamma <- 0.05 #
 recDelay <- rexp(1:popSize, rate = setGamma)
 # initialize infection time with a large number for logical testing
 iTime <- rep(tMax, popSize)
 
 
-# generate ODE model parameters or something
-mod <- cmptMod(0.2, xChoice = "low", R_0 = R_0, scaleRNum = scaleRNum[2])
 # epidemic parameters
 meanBeta <- R_0*gamm
-tProb <-mod$rNums*gamm/dailyRate # 0.075 # transmission event in 10% of effective contacts
+# probability transmission occurs, given contact between susceptible, infectious
+# (may have several probability values if several classes)
+tProb <-mod$rNums*gamm/dailyRate #
 
 
 # map integers to infection status
@@ -140,10 +144,11 @@ for(i in 1:length(contactOrder[,3])){
 # a bunch of stuff I want to do for each row...
   # check if anyone is infectious
   tCur <- co[3]
-  estat <- states[co[1:2]]
+  pair <- co[1:2]
+  estat <- states[pair]
   if(any(estat %in% Istate)){
         # see if anyone has already recovered
-    recVec <- (iTime[co[1:2]] + recDelay[co[1:2]]) <= tCur
+    recVec <- (iTime[pair] + recDelay[pair]) <= tCur
     # count them
     # if(sum(recVec>0)){cat("recovery")}
     I <- I - sum(recVec)
@@ -158,12 +163,12 @@ for(i in 1:length(contactOrder[,3])){
         I <- I + 1
         S <- S - 1
         # count the win
-        caseTally[co[1:2][estat %in% Istate]] <- caseTally[co[1:2][estat %in% Istate]] + 1
+        caseTally[pair[estat %in% Istate]] <- caseTally[pair[estat %in% Istate]] + 1
 
         # record the infection time
-        iTime[co[1:2][states[co[1:2]] == 1]] <- tCur
+        iTime[pair[estat == Sstate]] <- tCur
         # get the right infectious state
-        states[co[1:2][states[co[1:2]] == 1]] <-
+        states[pair[estat == Sstate]] <-
           sample(Istate, 1, prob = mod$fracs)
 
     }
@@ -219,7 +224,7 @@ keff <- purrr::map_dfr(0:33, function(d){
   ktdt(d, 6)
 })
 
-pdf("kappa_in_intermediate_ratio.pdf")
+# pdf("kappa_in_intermediate_ratio.pdf")
 keff |>
   pivot_longer(cols = c("kappa_discrete", "kappa_naive"), names_to = "kappa_approximation", values_to = "Kappa") |>
   ggplot(aes(startT, Kappa, color = kappa_approximation)) +
@@ -228,7 +233,7 @@ keff |>
   scale_y_log10()+
   theme_classic() +
   labs(x = "day", y = "kappa")
-dev.off()
+# dev.off()
 #confirm kappa
 kd(caseTally[states != Sstate])
 
