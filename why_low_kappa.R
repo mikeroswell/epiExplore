@@ -1,0 +1,49 @@
+# gut check on low kappas
+library(shellpipes)
+manageConflicts()
+startGraphics()
+library(purrr)
+library(ggplot2)
+nreps <- 9999
+
+mysim <- map_dfr(1:nreps, function(nr){
+  n <- 6
+  gamm <- 1/3
+  rtimes <-rexp(n = n, gamm)
+  rtimes
+
+  cd <- rpois(n = n, rtimes)
+  mu <- mean(cd)
+  sig <- sd(cd)
+  kap <- (sig^2-mu)/mu^2
+  return(data.frame(mu, sig, kap))
+})
+
+mysim |> ggplot(aes(mu, kap)) +
+  geom_point(alpha = 0.04) +
+  theme_classic() +
+  geom_hline( yintercept = mean(mysim$kap, na.rm = TRUE), color = "red") +
+  geom_vline(xintercept = mean(mysim$mu, na.rm = TRUE), color = "red") +
+  geom_hline(yintercept = 1, color ="blue", linetype = 2)+
+  geom_vline(xintercept = 3, color ="blue", linetype = 2)+
+  labs(x = "mean cases per case", y = "kappa for 2ary cases from 6 individuals"
+       , title = "R_0 = 3\n blue is platonic, red observed")
+
+# not because of a mistake with sampling
+
+# geomsim <- map_dfr(1:nreps, function(nr){
+#   n <- 6
+#   gamm <- 0.3
+#   cd <-rgeom(n = n, prob = gamm/(1-gamm))
+#   mu <- mean(cd)
+#   sig <- sd(cd)
+#   kap <- (sig^2-mu)/mu^2
+#   return(data.frame(mu, sig, kap))
+# })
+#
+# geomsim |> ggplot(aes(mu, kap)) +
+#   geom_point(alpha = 0.3) +
+#   theme_classic()
+# # scale_x_log10()+
+# # scale_y_log10()
+# mean(geomsim$kap, na.rm = TRUE)

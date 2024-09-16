@@ -27,12 +27,33 @@ loadEnvironments()
 # Initialization
 tMax <- 1e3 # measured in days, assume for most things I'll do 1 year is plenty
 popSize <- 1e4
-# daily per-person interactions
-dailyRate <- 5
-R_0 <- 7 # much higher than in current fig 1 but maybe necessarily so to enable
+
+R_0 <- 4 # much higher than in current fig 1 but maybe necessarily so to enable
 # outbreak with high probability
 # generate ODE model parameters or something (shd be SIR)
 mod <- cmptMod(0.2, xChoice = "low", R_0 = R_0, scaleRNum = 1) #scaleRNum[2])
+# First let's assume recovery times are exponentially distributed,
+# to compare to basic model
+setGamma <- 1/3 #
+
+
+# epidemic parameters
+meanBeta <- R_0*setGamma
+
+# daily per-person interactions
+dailyRate <- 1.6
+
+# probability transmission occurs, given contact between susceptible, infectious
+# (may have several probability values if several classes)
+
+tProb <-mod$rNums*setGamma/dailyRate #
+if(any(tProb >1)){stop("One or more transmission probabilities > 1, ", tProb)}
+if(any(tProb ==1)){stop("One or more transmission probabilities = 1, ", tProb)}
+if(any(tProb < 0.3)){stop("some transmission probabilities low -- are you wasting time? ", tProb)}
+print(paste("transmission probability = ", tProb))
+
+
+
 
 # generate the contact model
 # some shape parameter
@@ -99,18 +120,10 @@ contInd <- sample( 1:length(rateFrame$mixRate)
 contactOrder <- cbind(t(rateInds)[ contInd,], contTime)
 
 # We will also pre-compute recovery times
-# First let's assume it is exponential to compare to basic model
-setGamma <- 0.05 #
 recDelay <- rexp(1:popSize, rate = setGamma)
 # initialize infection time with a large number for logical testing
 iTime <- rep(tMax, popSize)
 
-
-# epidemic parameters
-meanBeta <- R_0*gamm
-# probability transmission occurs, given contact between susceptible, infectious
-# (may have several probability values if several classes)
-tProb <-mod$rNums*gamm/dailyRate #
 
 
 # map integers to infection status
