@@ -11,17 +11,17 @@ library(dplyr)
 library(purrr)
 
 # R0 <- 2
-# iRat <- 0 # ratio of the reproductive number in the first serial compartment(s) 
-# relative to second; when iRat = 0 we have SEIR chains, and when iRat = 1 we 
-# have an Erlang with size = 2; this ignores duration vs. infectiveness 
+# iRat <- 0 # ratio of the reproductive number in the first serial compartment(s)
+# relative to second; when iRat = 0 we have SEIR chains, and when iRat = 1 we
+# have an Erlang with size = 2; this ignores duration vs. infectiveness
 # differences
 # pRat <- 0 # fraction of individuals assigned to "superspread"
 # sRat <- 1 # ratio of *sub*spreader's to *super*spreader's reproductive number
-# 
+#
 
 # solve for R1, R2
 subR <- function(R0, sRat, pRat, iRat){
- 
+
     sRat*R0/(pRat+ sRat*(1- pRat))
 }
 
@@ -79,13 +79,13 @@ sampleV <- function(nTarget = 1e3, vMax = 150
 
     if(is.null(pars)){pars <- list(R0 = R0, pRat = pRat, sRat = sRat, iRat = iRat)}
     list2env(pars, envir = environment())
-    
+
     vVec <- numeric()
     pSet <- probSet(pars = pars)
     testMax <- vProb(pSet, vMax)
     if(testMax > 1e-12){warning(paste0("p(vMax) = ", testMax, ", consider increasing vMax to avoid truncating distribution"))}
     while(length(vVec)<nTarget){
-        
+
         cand <- runif(1, min = 0, max = vMax)
         kP <- vProb(pSet, v = cand)
 
@@ -106,17 +106,17 @@ vDens <- function(vMax
                   , ...){
     if(is.null(pars)){pars <- list(R0 = R0, pRat = pRat, sRat = sRat, iRat = iRat)}
     list2env(pars, envir = environment())
-    
+
     pSet <- probSet(pars = pars)
     testMax <- vProb(pSet, vMax)
     if(testMax > 1e-12){warning(paste0("p(vMax) = ", testMax, ", consider increasing vMax to avoid truncating distribution"))}
     vVec <- seq(0, vMax, length.out = nPoints)
     return(data.frame(X = vVec, pX = sapply(vVec, function(x){vProb(pSet, x)})))
-    
+
 }
 
 
-# Check that it looks geometric when I make this an S[E]IR model where E is 
+# Check that it looks geometric when I make this an S[E]IR model where E is
 # irrelevant for the D0 distribution.
 # n <- 1e3
 # myExp <- sort(sampleV(nTarget = n, vMax = vMax
@@ -124,15 +124,15 @@ vDens <- function(vMax
 # realExp <- sort(rexp(n= n, rate = 0.5))
 # myGeo <- sort(rpois(n = n, myExp))
 # realGeo <- sort(rgeom(n = n, prob = 1/3))
-# 
+#
 # par(mfrow = c(2,1))
 # hist(myGeo, xlim = c(0, 10), breaks = 10)
 # hist(realGeo, xlim = c(0, 10), breaks = 10)
-# 
+#
 # hist(myExp, xlim = c(0, 10), breaks = 30)
 # hist(realExp, xlim = c(0, 10), breaks = 30)
-# 
-# 
+#
+#
 # # Check that R0 actually works
 # map((1:10)/10, function(p){
 #     map((1:10)/10, function(s){
@@ -149,7 +149,7 @@ vDens <- function(vMax
 #######
 # will want to separate this out better, but just listing some parameter sets for now
 
-# one class but two I stages, where the reproductive number in first is half 
+# one class but two I stages, where the reproductive number in first is half
 # that of the second
 # pars.twostage <- list(R0 = 2, pRat = 0, sRat = 1, iRat = 0.5)
 # two classes but one stage
@@ -177,21 +177,21 @@ densDat <- map_dfr(c("pars.homo", "pars.medi", "pars.heter"), function(parSet){
                        , nPoints = 5e3))
 })
 
-densPlot <- 
-    densDat %>% 
+densPlot <-
+    densDat %>%
     mutate(parSet = factor(parSet
                            , levels = c("pars.homo", "pars.medi", "pars.heter")
                            , labels = c(bquote(kappa ==  1)
-                                        , bquote(kappa == 2.9) 
+                                        , bquote(kappa == 2.9)
                                         , bquote(kappa == 4.9))
                            )
-           ) %>% 
-    ggplot(aes(X, pX, color = parSet, fill = parSet)) + 
+           ) %>%
+    ggplot(aes(X, pX, color = parSet, fill = parSet)) +
     geom_ribbon( aes(ymax = pX)
                  , linewidth = 0
                  , ymin = -Inf
                  # , alpha = 0.2
-                 , outline.type = "upper") + 
+                 , outline.type = "upper") +
     geom_vline(xintercept = 10, color = "red") +
     annotate("text", x = 60, y = 2e-2
              , label = "bolditalic(R)[0] == 10"
@@ -201,14 +201,14 @@ densPlot <-
     geom_text(
                aes(x = 200, y = 2e-3, label = parSet)
               , stat = "unique"
-              
+
               , parse = TRUE
               , color = "black"
               , size = 3) +
         # annotate("text",aes( x = 200, y = 2e-2, label = parSet), size = 2)+
     theme_classic(base_size = 6) +
     scale_y_log10(n.breaks = 6, limits = c(5e-6, NA), expand = c(0,0)) +
-    # scale_y_sqrt(expand = c(0,0), limits = c(0,NA)) + 
+    # scale_y_sqrt(expand = c(0,0), limits = c(0,NA)) +
     xlim(c(0, 375)) +
     scale_color_viridis_d()+
     scale_fill_viridis_d() +
@@ -226,7 +226,7 @@ densPlot <-
         labs(x = "expected new cases per infected individual", y = "density") +
     facet_wrap(~parSet, nrow = 3
                #, labeller = label_parsed
-               ) 
+               )
 # dev.off()
 
 
@@ -273,21 +273,21 @@ ehm.heter
 cFracs <- bind_rows(cFrac.homo, cFrac.medi, cFrac.heter
                     , .id = "model_description" )
 
-ineq <- cFracs %>% 
-    mutate(model_description = 
+ineq <- cFracs %>%
+    mutate(model_description =
                factor(model_description
                       , labels = c("homogeneous"
                                # , "10 of duration a : 3 of duration 20/3a"
                                #     , "10 of duration b : 1 of duration 10b"
-                               , "3 slow:10 fast; slow is 15% as fast"
-                               , "1 slow:10 fast; slow is 10% as fast")
+                               , "p = (0.23, 0.77); R = (6.7, 1)"
+                               , "p = (0.1, 0.9); R = (10, 1)")
                       )
-           ) %>% 
-                      cFPlot(showRealized = FALSE) + 
+           ) %>%
+                      cFPlot(showRealized = FALSE) +
  aes(color = model_description) +
     scale_color_viridis_d()  +
     geom_point(x = 0.2, y = 0.8, shape = 18, color = "black", size = 3) +
-    labs(color = "Distribution of infections"
+    labs(color = "Fractions and Reproduction Numbers"
          , x = "fraction of most infectious individuals"
          , y = "fraction of new infections") +
     guides(color = guide_legend(position = "inside")) +
@@ -303,87 +303,87 @@ ineq <- cFracs %>%
 
 
 
-# hists <- cFracs %>% 
-#     mutate(model_description = 
+# hists <- cFracs %>%
+#     mutate(model_description =
 #                factor(model_description
 #                       , labels = c("kappa = 1"
 #                                    , "kappa = 2.7"
 #                                    , "kappa = 5"))
-#            ) %>% 
+#            ) %>%
 #     secDist(caseCol = "ideal", xMax = 300
 #             , breaks = c(0.0005, 0.005, 0.05,0.5)) +
 #     aes(group = model_description, fill = model_description) +
 #     scale_fill_viridis_d() +
-#     facet_wrap(~model_description, ncol = 1) 
-    
+#     facet_wrap(~model_description, ncol = 1)
+
 
 pdf(file = "MPOPHC_emergent.pdf", width = 4, height = 2)
 # quartz(width = 4, height = 2)
-ineq  + densPlot 
+ineq  + densPlot
 dev.off()
 
 # twostage
-# makeDistData(sampleV(pars = pars.twostage)) %>% 
+# makeDistData(sampleV(pars = pars.twostage)) %>%
 #     ggplot(aes(q, cFRealiz))+
 #     geom_point() +
 #     geom_point(aes(y = cFIdeal), color = "grey") +
 #     geom_hline(yintercept = 0.8) +
-#     geom_vline(xintercept = 0.2) + 
+#     geom_vline(xintercept = 0.2) +
 #     theme_classic()
-# 
-# makeDistData(sampleV(pars = pars.twoclass)) %>% 
+#
+# makeDistData(sampleV(pars = pars.twoclass)) %>%
 #     ggplot(aes(q, cFRealiz))+
 #     geom_point() +
 #     geom_point(aes(y = cFIdeal), color = "grey") +
 #     geom_hline(yintercept = 0.8) +
-#     geom_vline(xintercept = 0.2) + 
+#     geom_vline(xintercept = 0.2) +
 #     theme_classic()
 
 #################################
 # # make this a function to avoid repetition
 ################################
 
-# data.frame(exNewCases = sampleV(pars = pars.medi)) %>% 
+# data.frame(exNewCases = sampleV(pars = pars.medi)) %>%
 #     ggplot(aes(exNewCases))+
-#     geom_histogram() + 
+#     geom_histogram() +
 #     geom_vline(aes(xintercept = mean(exNewCases)), color = "red")+
-#     theme_classic() + 
-#     labs(x = "expected new cases per infectious individual", y = "fraction of infected individuals") + 
+#     theme_classic() +
+#     labs(x = "expected new cases per infectious individual", y = "fraction of infected individuals") +
 #     scale_y_continuous(labels = function(x){x/1000})
 
 
 
-# data.frame(exNewCases = sampleV(pars = pars.heter, nTarget = 5e3)) %>% 
+# data.frame(exNewCases = sampleV(pars = pars.heter, nTarget = 5e3)) %>%
 #     ggplot(aes(exNewCases))+
-#     geom_histogram() + 
+#     geom_histogram() +
 #     geom_vline(aes(xintercept = mean(exNewCases)), color = "red") +
-#     theme_classic() + 
-#     labs(x = "expected new cases per infectious individual", y = "fraction of infected individuals") + 
+#     theme_classic() +
+#     labs(x = "expected new cases per infectious individual", y = "fraction of infected individuals") +
 #     scale_y_continuous(labels = function(x){x/1000})
 
 
 
 
 
-# data.frame(exNewCases = sampleV(pars = pars.fancy)) %>% 
+# data.frame(exNewCases = sampleV(pars = pars.fancy)) %>%
 #     ggplot(aes(exNewCases))+
-#     geom_histogram() + 
+#     geom_histogram() +
 #     geom_vline(aes(xintercept = mean(exNewCases)), color = "red") +
-#     theme_classic() + 
-#     labs(x = "expected new cases per infectious individual", y = "fraction of infected individuals") + 
+#     theme_classic() +
+#     labs(x = "expected new cases per infectious individual", y = "fraction of infected individuals") +
 #     scale_y_continuous(labels = function(x){x/1000})
-# 
-# 
-# 
-# makeDistData(sampleV(pars = pars.fancy)) %>% 
+#
+#
+#
+# makeDistData(sampleV(pars = pars.fancy)) %>%
 #     ggplot(aes(q, cFRealiz))+
 #     geom_point() +
 #     geom_point(aes(y = cFIdeal), color = "grey") +
 #     geom_hline(yintercept = 0.8) +
-#     geom_vline(xintercept = 0.2) + 
-#     theme_classic() + 
+#     geom_vline(xintercept = 0.2) +
+#     theme_classic() +
 #     labs(x = "fraction of infectious individuals, ranked by n(offspring)", y = "fraction of new infections")
-# 
+#
 
 
 
