@@ -38,7 +38,6 @@ why_low_kappa.Rout: why_low_kappa.R
 kappas_in_3-class.Rout: kappas_in_3-class.R
 plotEmergent.Rout: plotEmergent.R kappas_in_3-class.rda
 
-
 IBM_sketch.Rout: IBM_sketch.R
 Sources += IBM_sketch.md
 
@@ -46,6 +45,8 @@ IBM_3-way.Rout: IBM_3-way.R kappas_in_3-class.rda
 
 ## Dushoff is confused today and he already finished his extra coffee!
 IBM_sketch_sketch.Rout: IBM_sketch_sketch.R
+IBM_faster.Rout: IBM_faster.R
+IBM_3-way.Rout: IBM_3-way.R
 
 ######################################################################
 
