@@ -53,10 +53,8 @@ library(ggplot2)
 
 # geometric mean and variance
 
-
-
 cvGeom <- function(mu){
-  v <- mu^2-mu
+  v <- mu^2+mu
   kappa <- (v-mu)/mu^2
   CV <- sqrt(v)/mu
   return(data.frame(v, kappa, CV))
