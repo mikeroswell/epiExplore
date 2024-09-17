@@ -27,10 +27,12 @@ library(ggplot2)
 #   geom_vline(xintercept = mean(mysim$mu, na.rm = TRUE), color = "red") +
 #   geom_hline(yintercept = 1, color ="blue", linetype = 2)+
 #   geom_vline(xintercept = 3, color ="blue", linetype = 2)+
-#   labs(x = "mean cases per case", y = "kappa for 2ary cases from 6 individuals"
+#   labs(x = "mean cases per case"
+#        , y = "kappa for 2ary cases from 6 individuals"
 #        , title = "R_0 = 3\n blue is platonic, red observed")
 
 # not because of a mistake with sampling
+# but this stuff might be using a different parameterization than R's
 
 # geomsim <- map_dfr(1:nreps, function(nr){
 #   n <- 6
@@ -60,7 +62,7 @@ cvGeom <- function(mu){
   return(data.frame(v, kappa, CV))
 }
 
-checkGeom<-map_dfr(seq(1,7, 0.2), function(R){
+checkGeom<-map_dfr(seq(1,50, 1), function(R){
   data.frame(R, cvGeom(R))
 })
 
