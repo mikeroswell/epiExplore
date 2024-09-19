@@ -18,3 +18,7 @@ mysim <- map_dfr(1:nreps, function(nr){
 })
 
 summary(mysim)
+
+# what about a synthetic kappa, says JD?
+kappa_syn <- (mean(mysim$V)-mean(mysim$mu))/mean(mysim$mu)^2
+kappa_syn # looks on target

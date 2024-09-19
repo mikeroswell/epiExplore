@@ -15,9 +15,9 @@ mysim <- map_dfr(1:nreps, function(nr){
 
   cd <- rpois(n = n, rtimes)
   mu <- mean(cd)
-  sig <- sd(cd)
-  kap <- (sig^2-mu)/mu^2
-  return(data.frame(mu, sig, kap))
+  V <- var(cd)
+  kap <- (V-mu)/mu^2
+  return(data.frame(mu, V, kap))
 })
 
 mysim |> ggplot(aes(mu, kap)) +
