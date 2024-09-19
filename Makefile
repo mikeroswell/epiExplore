@@ -34,6 +34,8 @@ pass.Rout: pass.R
 # kappa mystery
 why_low_kappa.Rout: why_low_kappa.R
 
+low_kappa.Rout: low_kappa.R
+
 ## emergent heterogeneity in compartmental models
 kappas_in_3-class.Rout: kappas_in_3-class.R
 plotEmergent.Rout: plotEmergent.R kappas_in_3-class.rda
