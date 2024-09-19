@@ -11,6 +11,14 @@ library(patchwork)
 # note dependency on params and functions in kappas_in_3-class.R
 loadEnvironments()
 
+####
+# kluging from mpophc cartoon
+
+mod <- list(fracs = inputs$p, rNums = inputs$groupR)
+compVar(mod)/R0(mod)
+
+R0(mod)
+
 emerge <- map_dfr(scaleRNum, function(scaleR){
   map_dfr(seq(0., 1, 0.02), function(x){
     dat <- cmptMod(R_0 = R_0

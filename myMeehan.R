@@ -287,7 +287,7 @@ ineq <- cFracs %>%
  aes(color = model_description) +
     scale_color_viridis_d()  +
     geom_point(x = 0.2, y = 0.8, shape = 18, color = "black", size = 3) +
-    labs(color = "Fractions and Reproduction Numbers"
+    labs(color = "p's and R's"
          , x = "fraction of most infectious individuals"
          , y = "fraction of new infections") +
     guides(color = guide_legend(position = "inside")) +
