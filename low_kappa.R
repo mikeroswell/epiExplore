@@ -2,6 +2,7 @@ library(shellpipes)
 manageConflicts()
 
 library(purrr)
+library(dplyr)
 
 nreps <- 1e4
 
@@ -18,3 +19,9 @@ mysim <- map_dfr(1:nreps, function(nr){
 })
 
 summary(mysim)
+
+print(mysim 
+	|> summarize(V=mean(V), mu=mean(mu))
+	|> mutate(kap = (V-mu)/mu^2)
+)
+
