@@ -25,3 +25,6 @@ print(mysim
 	|> mutate(kap = (V-mu)/mu^2)
 )
 
+# what about a synthetic kappa, says JD?
+kappa_syn <- (mean(mysim$V)-mean(mysim$mu))/mean(mysim$mu)^2
+kappa_syn # looks on target
