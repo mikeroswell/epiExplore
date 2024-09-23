@@ -1,4 +1,7 @@
 
+
+----------------------------------------------------------------------
+
 Replicating superspreader dynamics with compartmental models
 * drop/meehan.pdf
 * drop/meehanSupp.pdf
