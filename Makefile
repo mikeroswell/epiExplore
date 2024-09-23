@@ -115,7 +115,7 @@ makestuff/Makefile:
 -include makestuff/pipeR.mk
 -include makestuff/rmd.mk
 ## -include makestuff/ldrop.mk
--include makestuff/mirrors.mk
+-include makestuff/mirror.mk
 
 -include makestuff/git.mk
 -include makestuff/visual.mk
