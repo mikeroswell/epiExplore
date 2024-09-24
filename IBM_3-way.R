@@ -25,8 +25,8 @@ loadEnvironments()
 # set.seed(4228)
 
 # Initialization
-tMax <- 1e3 # measured in days, assume for most things I'll do 1 year is plenty
-popSize <- 1e4
+tMax <- 2e2 # measured in days, assume for most things I'll do 1 year is plenty
+popSize <- 5e4
 
 R_0 <- 4 # much higher than in current fig 1 but maybe necessarily so to enable
 # outbreak with high probability
