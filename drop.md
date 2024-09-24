@@ -1,4 +1,19 @@
 
+JD: I am at war with Dropbox, so am updating on something called macdrive now; let me know if we should figure out how to share it
+
+## Unannotated things
+
+New (CV estimateion)
+* drop/Albatineh_etal_population_CV_CI.pdf
+* drop/Albrecher_etal_2010_sample_CV_theory.pdf
+* drop/Breunig_2001_Kappa_estimator.pdf
+
+Older
+* drop/Woolhouse_etal_1997_transmission_heterogeneity.pdf
+* drop/parkPropagating.pdf
+
+----------------------------------------------------------------------
+
 Replicating superspreader dynamics with compartmental models
 * drop/meehan.pdf
 * drop/meehanSupp.pdf
@@ -19,7 +34,7 @@ $\rho$ (`sRat`): the ratio of the mean sub-spreader reproductive number to the m
 
 They use this model to generate the latent distribution $v$, the distribution of idealized individual reproductive numbers at the start of the epidemic, and then use Poisson sampling of $v$ to get integer counts, which they then fit to real-world data.
 
-w.r.t. JD's comment about overconfidence, maybe the issue is that they only fit the observed distribution of infections per infectee and not the timeseries of observed incidence, a recorded final size, or any other info that would inform whether the models they fit are any good for the epidemic as a whole vs. just the distribution of $Z ~ Poisson(v)$
+MISSING: w.r.t. JD's comment about overconfidence, maybe the issue is that they only fit the observed distribution of infections per infectee and not the timeseries of observed incidence, a recorded final size, or any other info that would inform whether the models they fit are any good for the epidemic as a whole vs. just the distribution of $Z ~ Poisson(v)$
 
 ----------------------------------------------------------------------
 
@@ -36,4 +51,3 @@ I classes , we think it's pretty easy to think about (as the distributions shoul
 I don't think I've done much with Joshua on the front of separating the idealized, continuous distribution from the realized, integer one. He and I have actually not had a very direct conversation about why it might be interesting to think about the the stochasticity from the Poisson process outside of how to compute/estimate the underlying distribution, though I've tried to (very) gently push in that direction.
 
 So now, you're up to date, I think! I'm looking forward to today's meeting.
-

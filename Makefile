@@ -3,7 +3,7 @@
 current: target
 -include target.mk
 
-# -include makestuff/perl.def
+-include makestuff/perl.def
 
 vim_session:
 	bash -cl "vmt drop.md"
@@ -17,8 +17,8 @@ autopipeR = defined
 ######################################################################
 
 Sources += $(wildcard *.md)
-
 ## drop.filemerge: drop.md
+mirrors += drop
 
 ######################################################################
 
@@ -98,7 +98,7 @@ saturate.Rout: saturate.R
 Sources += Makefile
 Ignore += makestuff
 
-Makefile: makestuff/00.stamp
+Makefile: makestuff/01.stamp
 makestuff/%.stamp:
 	- $(RM) makestuff/*.stamp
 	(cd makestuff && $(MAKE) pull) || git clone --depth 1 $(msrepo)/makestuff
@@ -114,7 +114,8 @@ makestuff/Makefile:
 
 -include makestuff/pipeR.mk
 -include makestuff/rmd.mk
--include makestuff/ldrop.mk
+## -include makestuff/ldrop.mk
+-include makestuff/mirror.mk
 
 -include makestuff/git.mk
 -include makestuff/visual.mk
