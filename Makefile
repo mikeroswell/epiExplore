@@ -18,7 +18,7 @@ autopipeR = defined
 
 Sources += $(wildcard *.md)
 ## drop.filemerge: drop.md
-mirrors += drop
+## mirrors += drop
 
 ######################################################################
 
