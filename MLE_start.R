@@ -14,6 +14,21 @@ kapNB <- function(x, lkap, lM){
 
 }
 
+
+kapNB2 <- function(x, kap, lM){
+  mu <- exp(lM)
+  -sum(dnbinom(x, mu = mu, size = 1/kap, log = TRUE))
+
+}
+
+kapNB3 <- function(x, lkap, M){
+  mu <- M
+  kap <- exp(lkap)
+  -sum(dnbinom(x, mu = mu, size = 1/kap, log = TRUE))
+
+}
+
+
 set.seed(1905)
 # function to compute MLE kappa with CI
 kapEst <- function(x){
@@ -22,15 +37,46 @@ kapEst <- function(x){
                         , data = list(x = x)
                         , method = "L-BFGS-B"
                         # , optimizer = "nlminb"
-                        , lower = c(log(1e-9), log(1e-9))
+                        , lower = c(lkap = log(1e-9),  lM = log(1e-9))
   )
   est <- as.numeric(coef(mlefit)[1])
   ci <- confint(profile(mlefit))
   return(list(est = exp(est)
               , lower = exp(ci[1])
-              , upper = exp(ci[2])) )
+              , upper = exp(ci[3])) )
 }
+# kapEst2 <- function(x){
+#   mlefit <- bbmle::mle2(kapNB2
+#                         , start = list(kap = 0.5, lM = log(1.5))
+#                         , data = list(x = x)
+#                         , method = "L-BFGS-B"
+#                         # , optimizer = "nlminb"
+#                          , lower = c(1e-9, log(1e-9))
+#   )
+#   est <- as.numeric(coef(mlefit)[1])
+#   ci <- confint(profile(mlefit))
+#   return(list(est = est
+#               , lower = ci[1]
+#               , upper = ci[3]
+#               )
+#   )
+# }
 
+
+kapEst3 <- function(x){
+  mlefit <- bbmle::mle2(kapNB3
+                        , start = list(lkap = log(0.5), M = 1.5)
+                        , data = list(x = x)
+                        , method = "L-BFGS-B"
+                        # , optimizer = "nlminb"
+                        , lower = c(lkap = log(1e-9), M = 1e-9)
+  )
+  est <- as.numeric(coef(mlefit)[1])
+  ci <- confint(profile(mlefit))
+  return(list(est = exp(est)
+              , lower = exp(ci[1])
+              , upper = exp(ci[3])) )
+}
 nreps <- 200
 
 mysim <- map_dfr(1:nreps, function(nr){
@@ -43,7 +89,8 @@ mysim <- map_dfr(1:nreps, function(nr){
   mu <- mean(cd)
   V <- var(cd)
   kapNaive <- (V-mu)/mu^2
-  kapMLE <- kapEst(cd)
+  kapMLE <- kapEst3(cd)
+  # k2 <- kapEst2(cd)
   return(data.frame(nr
                     , mu
                     , V
@@ -51,6 +98,9 @@ mysim <- map_dfr(1:nreps, function(nr){
                     , est = kapMLE$est
                     , lower = if_else(is.na(kapMLE$lower), 0, kapMLE$lower)
                     , upper = kapMLE$upper
+                    # , e2 = k2$est
+                    # , l2 = k2$lower
+                    # , u2 = k2$upper
                     )
          )
 })
@@ -58,6 +108,10 @@ mysim <- map_dfr(1:nreps, function(nr){
 mysim |>
   filter(est > upper | est<lower)
 
-mysim |> rangePlot(target = 1
+mysim
+
+mysim |>
+  mutate(upper = if_else(upper>20, Inf, upper)) |>
+                  rangePlot(target = 1
                    , opacity = 1
                    , targNum = 200)
