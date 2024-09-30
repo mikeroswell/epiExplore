@@ -4,6 +4,8 @@ manageConflicts()
 library(bbmle)
 # ?dgamma
 # Let's write down dnbinom and dgamma in terms of mean, variance
+set.seed(1905)
+
 dgammaMV <- function(x, M, V, ...){
   gamScale <- V/M
   gamShape <- M/gamScale

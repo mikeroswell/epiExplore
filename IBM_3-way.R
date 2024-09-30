@@ -9,10 +9,10 @@ library(tidyr)
 library(ggplot2)
 library(patchwork)
 
+set.seed(127)
+
 # note dependency on params and functions in kappas_in_3-class.R
 loadEnvironments()
-
-
 
 # the idea here is that individuals will differ in their mixing propensity.
 # for now I will not include preferential mixing
