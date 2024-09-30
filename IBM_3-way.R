@@ -28,20 +28,20 @@ loadEnvironments()
 tMax <- 2e2 # measured in days, assume for most things I'll do 1 year is plenty
 popSize <- 1e4
 
-R_0 <- 4 # much higher than in current fig 1 but maybe necessarily so to enable
+R_0 <- 3 # much higher than in current fig 1 but maybe necessarily so to enable
 # outbreak with high probability
 # generate ODE model parameters or something (shd be SIR)
 mod <- cmptMod(0.2, xChoice = "low", R_0 = R_0, scaleRNum = 1) #scaleRNum[2])
 # First let's assume recovery times are exponentially distributed,
 # to compare to basic model
-setGamma <- 1/3 #
+setGamma <- 1/20 #
 
 
 # epidemic parameters
 meanBeta <- R_0*setGamma
 
 # daily per-person interactions
-dailyRate <- 1.6
+dailyRate <- 1
 
 # probability transmission occurs, given contact between susceptible, infectious
 # (may have several probability values if several classes)
@@ -49,7 +49,7 @@ dailyRate <- 1.6
 tProb <-mod$rNums*setGamma/dailyRate #
 if(any(tProb >1)){stop("One or more transmission probabilities > 1, ", tProb)}
 if(any(tProb ==1)){stop("One or more transmission probabilities = 1, ", tProb)}
-if(any(tProb < 0.3)){stop("some transmission probabilities low -- are you wasting time? ", tProb)}
+if(any(tProb < 0.3)){warning("some transmission probabilities low -- are you wasting time? ", tProb)}
 print(paste("transmission probability = ", tProb))
 
 
@@ -132,9 +132,9 @@ Istate <- c(2,3,4)
 Rstate <- 5
 
 states <- rep(Sstate, popSize)
-# initialize with one random infection
-p0 <- sample(1:popSize, 1)
-states[p0]<- sample(Istate, 1, prob = mod$fracs)
+# initialize with random infections
+p0 <- sample(1:popSize, 3)
+states[p0]<- sample(Istate, 3, prob = mod$fracs, replace = TRUE)
 
 # start the clock
 tCur <- 0
@@ -234,14 +234,14 @@ ktdt <- function(startT, deltaT){
 # }))
 
 keff <- purrr::map_dfr(0:33, function(d){
-  ktdt(d, 6)
+  ktdt(d, 3)
 })
 
 # compute the denoised estimator with loess
 loessMu <- loess(mu~startT, data = keff)
-loessV <- loess(V ~ startT, data  = keff )
+loessV <- loess(V ~ startT, data  = keff, span = 4)
 
-keff |> mutate(lmu = predict(loessMu, startT)
+keff <- keff |> mutate(lmu = predict(loessMu, startT)
                , lV = predict(loessV, startT)
                , kappa_loess = (lV-lmu)/lmu^2
                )
