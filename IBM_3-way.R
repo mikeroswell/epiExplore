@@ -26,7 +26,7 @@ loadEnvironments()
 
 # Initialization
 tMax <- 2e2 # measured in days, assume for most things I'll do 1 year is plenty
-popSize <- 5e4
+popSize <- 1e4
 
 R_0 <- 4 # much higher than in current fig 1 but maybe necessarily so to enable
 # outbreak with high probability
@@ -223,23 +223,31 @@ ktdt <- function(startT, deltaT){
   secDist <- caseTally[who]
   kappa_discrete = kd(secDist)
   mu <- mean(secDist)
-  sig <- sd(secDist)
-  kappa_naive = sig^2/mu^2
-  return(data.frame(n, kappa_discrete, kappa_naive, mu, sig, startT))
+  V <- var(secDist)
+  kappa_naive = V/mu^2
+  return(data.frame(n, kappa_discrete, kappa_naive, mu, V, startT))
 }
 
 # hist(iTime[iTime< tMax])
 # plot(sapply(seq(0, 40, 1), function(st){
-#   ktdt(st, 10)
+#   ktdt(st, 10)cat
 # }))
 
 keff <- purrr::map_dfr(0:33, function(d){
   ktdt(d, 6)
 })
 
+# compute the denoised estimator with loess
+loessMu <- loess(mu~startT, data = keff)
+loessV <- loess(V ~ startT, data  = keff )
+
+keff |> mutate(lmu = predict(loessMu, startT)
+               , lV = predict(loessV, startT)
+               , kappa_loess = (lV-lmu)/lmu^2
+               )
 # pdf("kappa_in_intermediate_ratio.pdf")
 keff |>
-  pivot_longer(cols = c("kappa_discrete", "kappa_naive"), names_to = "kappa_approximation", values_to = "Kappa") |>
+  pivot_longer(cols = c("kappa_discrete", "kappa_naive", "kappa_loess"), names_to = "kappa_approximation", values_to = "Kappa") |>
   ggplot(aes(startT, Kappa, color = kappa_approximation)) +
   geom_point() +
   geom_hline(yintercept = 1, color = "blue") +
@@ -249,4 +257,5 @@ keff |>
 # dev.off()
 #confirm kappa
 kd(caseTally[states != Sstate])
+
 
