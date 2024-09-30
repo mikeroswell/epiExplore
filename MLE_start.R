@@ -6,7 +6,6 @@ library(purrr)
 library(bbmle, mask.ok = "slice")
 library(ggplot2)
 
-
 # define NLL for kappa
 kapNB <- function(x, lkap, lM){
   mu <- exp(lM)
