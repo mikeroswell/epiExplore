@@ -12,15 +12,19 @@ kapNB <- function(x, kap, M){
 
 }
 
+kapNB2 <- function(x, kap, M) {
+  -sum(dnbinom2(x, mu = M, var = M*(1+kap*M), log = TRUE))
+}
+
 set.seed(1905)
 # function to compute MLE kappa with CI
 kapEst <- function(x){
-  mlefit <- bbmle::mle2(kapNB
+  mlefit <- bbmle::mle2(kapNB2
               , start = list(kap = 0.5, M = 1.5)
               , data = list(x = x)
-              # , method = "L-BFGS-B"
+              , method = "L-BFGS-B"
               # , optimizer = "nlminb"
-              # , lower = c(1e-9, 1e-9)
+              , lower = c(1e-9, 1e-9)
               )
   est <- as.numeric(coef(mlefit)[1])
   ci <- confint(profile(mlefit))

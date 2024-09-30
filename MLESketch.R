@@ -40,9 +40,32 @@ kapMLE <- bbmle::mle2(kapNB
 
 
 summary(kapMLE) # keeps estimating M = x, when I specify lower(M=x)
-
+coef(kapMLE)
 profile(kapMLE)
-
+ci <- confint(profile(kapMLE))
+ci[1]
 # y <- rnbinom(1e3, size =1, mu = 2)
 # hist(x)
 # plot(y[order(y)], x[order(x)])
+
+
+# code from Ben
+library(RTMB)
+## RTMB uses a different nbinom parameterization ...
+## V = M*(1 + M/theta) = M*(1+k*M)
+kapNB2 <- function(pars) {
+  getAll(pars, tmb_data)
+  mu <- exp(logM)
+  -sum(dnbinom2(x, mu = mu, var = mu*(1+kap*mu), log = TRUE))
+}
+p0 <- list(logM = log(2), kap = 0.5)
+tmb_data <- list(x = x)
+ff <- MakeADFun(kapNB2, parameters = p0)
+ff$fn()
+with(ff,
+     nlminb(start = par,
+            objective = fn,
+            lower = c(kap = 0),
+            control = list(trace = 1)
+     )
+)
