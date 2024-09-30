@@ -23,7 +23,7 @@ dnbinomMV <- function(x, M, V, ...){
 
 binomMLE <- bbmle::mle2(nbNLL, start = list(M =1, V = 3), data = list(x = x))
 summary(binomMLE) # looks fine
-
+set.seed(1905)
 
 kapNB <- function(x, kap, M){
   -sum(dnbinom(x, mu = M, size = 1/kap, log = TRUE))
