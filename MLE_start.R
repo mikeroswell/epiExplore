@@ -51,7 +51,7 @@ mysim <- map_dfr(1:nreps, function(nr){
                     , kapNaive
                     , est = kapMLE$est
                     , lower = if_else(is.na(kapMLE$lower), 0, kapMLE$lower)
-                    , upper = exp(kapMLE$upper)
+                    , upper = kapMLE$upper
                     )
          )
 })
