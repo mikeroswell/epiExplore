@@ -1,10 +1,12 @@
 library(shellpipes)
 manageConflicts()
 startGraphics()
-library(checkPlotR)
+library(checkPlotR) # checkPlots repo (Dushoff owner)
+# https://github.com/dushoff/checkPlots.git
 library(purrr)
 library(bbmle, mask.ok = "slice")
 library(ggplot2)
+library(RTMB)
 
 # define NLL for kappa
 kapNB <- function(x, lkap, lM){
@@ -21,12 +23,45 @@ kapNB2 <- function(x, kap, lM){
 
 }
 
+# seems like this is mostly working but giving wonky CI that seem like numeric
+# issues, and at least are sometimes associated with bbmle warning:
+# Warning messages:
+# 1: In bbmle::mle2(minuslogl = function (x, lkap, M)  :
+#                     convergence failure: code=52 (ERROR: ABNORMAL_TERMINATION_IN_LNSRCH)
 kapNB3 <- function(x, lkap, M){
   mu <- M
   kap <- exp(lkap)
   -sum(dnbinom(x, mu = mu, size = 1/kap, log = TRUE))
 
 }
+
+
+kapRTMB <- function(x, lkap, lM){
+  log_mu <- lM
+  V <- exp(lkap) * exp(lM)^2 + exp(lM)
+  log_var_minus_mu <- log(V-exp(lM))
+  -sum(RTMB::dnbinom_robust(x, log_mu = log_mu, log_var_minus_mu = log_var_minus_mu, log = TRUE))
+}
+
+kapRTMB(x, log(0.5),log(3))
+
+# ntest <- 50
+# x <- rgeom(500, 1/3)
+# lk <- log(runif(ntest, 0, 50))
+# lm <- log(runif(ntest, 0, 50))
+# # this is weirdly imaginary
+# all.equal(
+#   sapply(1:ntest, function(ind){
+#     kapNB(x, lk[ind], lm[ind])}
+#     )
+#   , sapply(1:ntest, function(ind){
+#     kapRTMB(x, lk[ind], lm[ind]) |> as.double()}
+#     )
+#   )
+#
+# sapply(1:3, function(j){
+#   RTMB::dnbinom_robust(1:50, j, 1, log = TRUE) |> sum() * -1}
+#   )
 
 
 set.seed(1905)
@@ -72,14 +107,16 @@ kapEst3 <- function(x){
                         , lower = c(lkap = log(1e-9), M = 1e-9)
   )
   est <- as.numeric(coef(mlefit)[1])
-  ci <- confint(profile(mlefit))
+  pro <- profile(mlefit)
+  ci <- confint(pro)
+  if(exp(ci[3])>20){message(pro)}
   return(list(est = exp(est)
               , lower = exp(ci[1])
               , upper = exp(ci[3])) )
 }
 nreps <- 200
 
-mysim <- map_dfr(1:nreps, function(nr){
+mysim <- map(1:nreps, function(nr){
   n <- 6
   gamm <- 1/3
   rtimes <-rexp(n = n, gamm)
@@ -103,12 +140,14 @@ mysim <- map_dfr(1:nreps, function(nr){
                     # , u2 = k2$upper
                     )
          )
-})
+}) |>
+  list_rbind()
+
+# mysim |>
+#   filter(est > upper | est<lower)
 
 mysim |>
-  filter(est > upper | est<lower)
-
-mysim
+  filter(upper > 20)
 
 mysim |>
   mutate(upper = if_else(upper>20, Inf, upper)) |>
