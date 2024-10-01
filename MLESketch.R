@@ -2,6 +2,28 @@
 library(shellpipes)
 manageConflicts()
 library(bbmle)
+
+# ??bbmle
+# vignette("quasi", package = "bbmle")
+# vignette("mle2", package = "bbmle")
+
+# simulate some data
+nsim <- 10
+
+Y <- rgamma(nsim, 1)
+kappa_Y <- 1
+X <- rpois(nsim, Y)
+# does it matter what link function I use? Probably should use log?
+firstMLE <- mle2(
+  minuslogl = X ~ dpois(exp(logMu))
+  , data = data.frame(X, Y)
+  , parameters = list(logMu~log(Y))
+  , start = list(logMu = 1)
+)
+
+str(firstMLE)
+summary(firstMLE)
+profile(firstMLE)
 # ?dgamma
 # Let's write down dnbinom and dgamma in terms of mean, variance
 set.seed(1905)

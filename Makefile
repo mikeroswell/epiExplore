@@ -31,8 +31,6 @@ pass.Rout: pass.R
 
 ######################################################################
 
-# MLE basics
-MLE_start.Rout: MLE_start.R
 
 # kappa mystery
 why_low_kappa.Rout: why_low_kappa.R
@@ -58,6 +56,7 @@ why_low_kappa.Rout: why_low_kappa.R
 ## Different versions of early mle attempts
 MLESketch.Rout: MLESketch.R
 mleRepeat.Rout: mleRepeat.R
+MLE_start.Rout: MLE_start.R
 
 ######################################################################
 
