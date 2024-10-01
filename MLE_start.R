@@ -43,7 +43,7 @@ kapRTMB <- function(x, lkap, lM){
   -sum(RTMB::dnbinom_robust(x, log_mu = log_mu, log_var_minus_mu = log_var_minus_mu, log = TRUE))
 }
 
-kapRTMB(x, log(0.5),log(3))
+# kapRTMB(x, log(0.5),log(3))
 
 # ntest <- 50
 # x <- rgeom(500, 1/3)
@@ -64,7 +64,7 @@ kapRTMB(x, log(0.5),log(3))
 #   )
 
 
-set.seed(1905)
+set.seed(1912)
 # function to compute MLE kappa with CI
 kapEst <- function(x){
   mlefit <- bbmle::mle2(kapNB
@@ -109,7 +109,6 @@ kapEst3 <- function(x){
   est <- as.numeric(coef(mlefit)[1])
   pro <- profile(mlefit)
   ci <- confint(pro)
-  if(exp(ci[3])>20){message(pro)}
   return(list(est = exp(est)
               , lower = exp(ci[1])
               , upper = exp(ci[3])) )
