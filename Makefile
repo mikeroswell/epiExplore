@@ -58,7 +58,7 @@ nbinom_z.Rout: nbinom_z.R
 ## Different versions of early mle attempts
 MLESketch.Rout: MLESketch.R
 mleRepeat.Rout: mleRepeat.R
-MLE_start.Rout: MLE_start.R
+MLE_start.Rout: MLE_start.R nbinom_z.rda
 
 ######################################################################
 

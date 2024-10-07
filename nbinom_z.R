@@ -1,3 +1,6 @@
+library(shellpipes)
+manageConflicts()
+startGraphics()
 library(bbmle)
 library(nloptr)
 library(stringr)
@@ -44,17 +47,37 @@ dnbinom_kappa <- function(x, mu, kappa, ...) {
     return(dnbinom(x, mu = mu, size = 1/kappa, ...))
 }
 
-fit <- mle2(z ~ dnbinom_kappa(exp(logmu), kappa),
-            data = dd,
-            skip.hessian = TRUE,
-            lower = c(logmu = -Inf, kappa = 0),
-            upper = c(logmu = Inf, kappa = Inf),
-            start = list(logmu = 0, kappa = 1),
-            optimizer = "user",
-            optimfun = nloptwrap,
-            control = list(algorithm = "NLOPT_LN_BOBYQA"))
+# make the fit a fuction
+fit_kappaNB <- function(dd, z = z){
+  mle2(z ~ dnbinom_kappa(exp(logmu), kappa),
+     data = dd,
+     skip.hessian = TRUE,
+     lower = c(logmu = -Inf, kappa = 0),
+     upper = c(logmu = Inf, kappa = Inf),
+     start = list(logmu = 0, kappa = 1),
+     optimizer = "user",
+     optimfun = nloptwrap,
+     control = list(algorithm = "NLOPT_LN_BOBYQA"))
+}
+
+fit <- fit_kappaNB(dd, z)
+
+# fit <- mle2(z ~ dnbinom_kappa(exp(logmu), kappa),
+#             data = dd,
+#             skip.hessian = TRUE,
+#             lower = c(logmu = -Inf, kappa = 0),
+#             upper = c(logmu = Inf, kappa = Inf),
+#             start = list(logmu = 0, kappa = 1),
+#             optimizer = "user",
+#             optimfun = nloptwrap,
+#             control = list(algorithm = "NLOPT_LN_BOBYQA"))
 
 coef(fit)
+
+# but can I get CI for the fit?
+# I can't get a profile
+profile(fit)
+
 
 ## can't use gradient-based methods in nloptr without explicitly
 ## specifying the gradient function ...
@@ -139,10 +162,12 @@ comb <- Map(\(nll, nm) data.frame(nm, theta = thetavec, nll),
     do.call(what=rbind)
 
 ## not sure why color spec isn't working?
+# Are those colorblind-friendly colors?
 tinyplot(nll ~ theta | nm, data = comb, type = "l",
          log = "x", lwd = 2,
          col = c(1,2,4),
          ylim = c(-2, 0))
 
-
+# rather than cutting out the functions here just use this script in a makerule:x
+saveEnvironment()
 
