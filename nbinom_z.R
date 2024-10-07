@@ -98,7 +98,22 @@ stringr::str_extract(list_algorithms, "(?<=_)[^_]+(?=_)") |> table()
 ## N= derivative-free, D = derivative-dependent
 
 
+
+
 ### part 2. Testing RTMB's functions as theta→ infty
+
+## MR saw some numerical instability in nbinom2
+# # underdispersed NB likelihood
+# n <- 50
+# x <- rep(3, 50)
+#
+# RTMB::dnbinom2(3, 3, 3+1e-9, log = TRUE)
+# RTMB::dnbinom2(3, 3, 3+1e-11, log = TRUE)
+# RTMB::dnbinom2(3, 3, 3+1e-12, log = TRUE)
+# RTMB::dnbinom2(3, 3, 3+1e-13, log = TRUE)
+# RTMB::dnbinom2(3, 3, 3+1e-14, log = TRUE)
+# RTMB::dnbinom2(3, 3, 3, log = TRUE)
+
 x <- 1; mu <- 1
 var_minus_mu <- 10^seq(-20, 0, length = 101)
 ## var = mu*(1+mu/theta) -> var_minus_mu = mu^2/theta -> theta = mu^2/var_minus_mu
