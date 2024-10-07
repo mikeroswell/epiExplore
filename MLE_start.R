@@ -145,9 +145,12 @@ mysim <- map(1:nreps, function(nr){
 # mysim |>
 #   filter(est > upper | est<lower)
 
-mysim |>
-  filter(upper > 20)
+# mysim |>
+#   filter(upper > 20)
 
+# return bias
+sum(mysim$est<1)/length(mysim$est)
+sum(mysim$est>1)/length(mysim$est)
 mysim |>
   mutate(upper = if_else(upper>20, Inf, upper)) |>
                   rangePlot(target = 1
