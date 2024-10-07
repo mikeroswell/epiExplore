@@ -7,6 +7,12 @@ library(stringr)
 library(RTMB)
 library(tinyplot)  ## felt like playing with this
 
+if (packageVersion("bbmle") <= "1.0.25.1") {
+    stop("please install later version of bbmle via remotes::install_github('bbolker/bbmle')")
+}
+
+rpcall("nbinom_z.Rout nbinom_z.pipestar nbinom_z.R")
+
 def_control <-
     list(algorithm = "NLOPT_LN_BOBYQA", xtol_abs = 1e-08,
          ftol_abs = 1e-08,
@@ -74,14 +80,33 @@ fit <- fit_kappaNB(dd, z)
 
 coef(fit)
 
-# but can I get CI for the fit?
-# I can't get a profile
-profile(fit, method="uniroot")
+## options for getting CIs
 
-# I can't get a profile using `profile`
-# profile(fit) # issue with no Hessian
-p0 <- profile(fit, std.err = TRUE)
-confint(p0)
+
+## ugh, debugging S4 methods ...
+## trace("confint", sig="mle2", browser)
+
+## confint is set to NA when we don't achieve the specified confidence level at
+## the bounds; it's up to the user to decide whether to set these NA values equal
+## to the bounds or not
+
+## when Hessian is ill-behaved, need to specify a standard error (or vector
+## of standard errors); availability for 'uniroot' is new
+c1 <- confint(fit, method = "uniroot", std.err=0.1)
+
+## deliberately set std.err smaller to get high-resolution profile for plotting
+p0 <- profile(fit, std.err = 0.01)
+c2 <- confint(p0)  ## default profile methods
+
+all.equal(c1, c2, tolerance = 2e-5)
+
+dd <- as.data.frame(p0)
+## should use ggplot or tinyplot?
+print(
+    lattice::xyplot(z^2 ~ focal|param, data = dd,
+                    scales = list(x = list(relation = "free")))
+)
+
 # confint(fit)
 ## can't use gradient-based methods in nloptr without explicitly
 ## specifying the gradient function ...
@@ -98,7 +123,6 @@ confint(p0)
 ## * create an RTMB wrapper for R's dnbinom (more robust)? Not necessarily
 ##   easy because we don't have a similarly robust implementation of the
 ##   gradient handy ...
-
 
 ## https://github.com/astamm/nloptr/blob/6d4943aff5a47bd3b3914f86acaa5d6eeeccaa77/R/is.nloptr.R#L65-L79
 list_algorithms <- c(
