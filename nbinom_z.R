@@ -78,7 +78,11 @@ coef(fit)
 # I can't get a profile
 profile(fit, method="uniroot")
 
-
+# I can't get a profile using `profile`
+# profile(fit) # issue with no Hessian
+p0 <- profile(fit, std.err = TRUE)
+confint(p0)
+# confint(fit)
 ## can't use gradient-based methods in nloptr without explicitly
 ## specifying the gradient function ...
 
