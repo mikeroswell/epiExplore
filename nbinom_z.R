@@ -76,7 +76,7 @@ coef(fit)
 
 # but can I get CI for the fit?
 # I can't get a profile
-profile(fit)
+profile(fit, method="uniroot")
 
 
 ## can't use gradient-based methods in nloptr without explicitly
