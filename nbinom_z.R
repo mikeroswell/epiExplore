@@ -77,8 +77,10 @@ coef(fit)
 # but can I get CI for the fit?
 # I can't get a profile using `profile`
 # profile(fit) # issue with no Hessian
-p0 <- profile(fit, std.err = TRUE)
-confint(p0)
+p0 <- profile(fit, std.err = c(0.01, 0.01))
+p0
+# but why do we get NA for the kappa lcl?
+confint(p0, method = "uniroot")
 # confint(fit)
 ## can't use gradient-based methods in nloptr without explicitly
 ## specifying the gradient function ...
