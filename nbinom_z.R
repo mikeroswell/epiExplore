@@ -76,6 +76,8 @@ coef(fit)
 
 ######################################################################
 
+## This could be deleted if it's in anyone's way, see quadraticNotes.md
+
 fit_cv <- function(dd, z = z){
   mle2(z ~ dnbinom_cv(exp(logmu), cv),
      data = dd,
@@ -84,14 +86,6 @@ fit_cv <- function(dd, z = z){
 
 fit <- fit_cv(dd, z)
 
-str(fit)
-quit()
-coef(fit)
-fit@hessian
-solve(fit$hessian)
-# profile(fit)
-
-quit()
 confint(fit)
 
 ########################################
