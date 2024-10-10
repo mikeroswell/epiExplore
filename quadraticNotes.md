@@ -1,3 +1,3 @@
 We encountered two problems. The first was kind of expected, which is that things are fragile if the maximum is on the boundary and the optimizer does not find it exactly. The second was a bit weird and may be numerical or fundamental: the Hessian estimated sd was smaller than seemed reasonable.
 
-JD should write some math notes and get a tiny bit more clarity about the second one, but is also feeling comfortable with letting this approach go.
+There is no evidence for a fundamental problem here. If we write our quadratic re-formulation as q(x) = f(x^2), where f was the original log likelihood, assumed to have negative derivative at x=0, so that that the boundary is the maximum for the domain, then q is an even function with 0 first and third derivatives, and should give a beautiful parabola with q”(0) = 2f'(0). As it seems to; not clear why the Hessian estimate seems off.

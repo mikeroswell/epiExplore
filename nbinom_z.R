@@ -86,7 +86,23 @@ fit_cv <- function(dd, z = z){
 
 fit <- fit_cv(dd, z)
 
+## str(fit)
 confint(fit)
+print(as.data.frame(profile(fit)))
+
+## Hessian-based profile for some reason too narrow
+print(
+    lattice::xyplot(z^2 ~ focal|param
+	 , data = as.data.frame(profile(fit))
+	 , scales = list(x = list(relation = "free")))
+)
+
+## Manual std.err
+print(
+    lattice::xyplot(z^2 ~ focal|param
+	 , data = as.data.frame(profile(fit, std.err = 0.01))
+	 , scales = list(x = list(relation = "free")))
+)
 
 ########################################
 # MR attempt to get CI with issues:
@@ -101,7 +117,6 @@ confint(p0, method = "uniroot")
 ########################################
 # BB reply drafted during push/pull
 ## options for getting CIs
-
 
 ## ugh, debugging S4 methods ...
 ## trace("confint", sig="mle2", browser)
