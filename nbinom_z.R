@@ -53,6 +53,10 @@ dnbinom_kappa <- function(x, mu, kappa, ...) {
     return(dnbinom(x, mu = mu, size = 1/kappa, ...))
 }
 
+dnbinom_cv <- function(x, mu, cv, ...) {
+    return(dnbinom(x, mu = mu, size = 1/cv^2, ...))
+}
+
 # make the fit a fuction
 fit_kappaNB <- function(dd, z = z){
   mle2(z ~ dnbinom_kappa(exp(logmu), kappa),
@@ -68,17 +72,27 @@ fit_kappaNB <- function(dd, z = z){
 
 fit <- fit_kappaNB(dd, z)
 
-# fit <- mle2(z ~ dnbinom_kappa(exp(logmu), kappa),
-#             data = dd,
-#             skip.hessian = TRUE,
-#             lower = c(logmu = -Inf, kappa = 0),
-#             upper = c(logmu = Inf, kappa = Inf),
-#             start = list(logmu = 0, kappa = 1),
-#             optimizer = "user",
-#             optimfun = nloptwrap,
-#             control = list(algorithm = "NLOPT_LN_BOBYQA"))
-
 coef(fit)
+
+######################################################################
+
+fit_cv <- function(dd, z = z){
+  mle2(z ~ dnbinom_cv(exp(logmu), cv),
+     data = dd,
+     start = list(logmu = 0, cv = 0)
+)}
+
+fit <- fit_cv(dd, z)
+
+str(fit)
+quit()
+coef(fit)
+fit@hessian
+solve(fit$hessian)
+# profile(fit)
+
+quit()
+confint(fit)
 
 ########################################
 # MR attempt to get CI with issues:
