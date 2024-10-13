@@ -4,8 +4,7 @@ startGraphics()
 library(bbmle)
 library(nloptr)
 library(stringr)
-library(RTMB)
-library(tinyplot)  ## felt like playing with this
+library(numDeriv)
 
 if (packageVersion("bbmle") <= "1.0.25.1") {
     stop("please install later version of bbmle via remotes::install_github('bbolker/bbmle')")
@@ -84,25 +83,44 @@ fit_cv <- function(dd, z = z){
      start = list(logmu = 0, cv = 0)
 )}
 
+
+
 fit <- fit_cv(dd, z)
 
+## estimated std error?
+sqrt(diag(solve(h1 <- fit@details$hessian)))
+ml <- function(p) do.call(fit@minuslogl, as.list(p))
+ml(coef(fit))
+h2 <- optimHess(coef(fit), ml)
+print(se2 <- sqrt(diag(solve(h2))))  ## much more reasonable
+
+## internal Hessian calculation uses
+## numDeriv::hessian [Richardson extrapolation] -- much worse in this case ... ???
+h3 <- hessian(ml, coef(fit))
+all.equal(h1, h3, tolerance = 0)
+
 ## str(fit)
+p1 <- profile(fit)
+p2 <- profile(fit, std.err = se2)
 confint(fit)
+confint(p2)
 print(as.data.frame(profile(fit)))
 
 ## Hessian-based profile for some reason too narrow
 print(
     lattice::xyplot(z^2 ~ focal|param
-	 , data = as.data.frame(profile(fit))
+	 , data = as.data.frame(p1),
 	 , scales = list(x = list(relation = "free")))
 )
 
 ## Manual std.err
 print(
     lattice::xyplot(z^2 ~ focal|param
-	 , data = as.data.frame(profile(fit, std.err = 0.01))
+	 , data = as.data.frame(p2),
 	 , scales = list(x = list(relation = "free")))
 )
+
+## so what went wrong with the internal Hessian calculation ... ???
 
 ########################################
 # MR attempt to get CI with issues:
@@ -155,9 +173,6 @@ print(
 ## * 'method' -> control$algorithm ?
 ## * translate method = "BFGS" to NLOPT_LD_LBFGS (closest equivalent),
 ##   with warning?
-## * create an RTMB wrapper for R's dnbinom (more robust)? Not necessarily
-##   easy because we don't have a similarly robust implementation of the
-##   gradient handy ...
 
 ## https://github.com/astamm/nloptr/blob/6d4943aff5a47bd3b3914f86acaa5d6eeeccaa77/R/is.nloptr.R#L65-L79
 list_algorithms <- c(
@@ -184,52 +199,6 @@ stringr::str_extract(list_algorithms, "(?<=_)[^_]+(?=_)") |> table()
 ## N= derivative-free, D = derivative-dependent
 
 
-
-
-### part 2. Testing RTMB's functions as theta→ infty
-
-## MR saw some numerical instability in nbinom2
-# # underdispersed NB likelihood
-# n <- 50
-# x <- rep(3, 50)
-#
-# RTMB::dnbinom2(3, 3, 3+1e-9, log = TRUE)
-# RTMB::dnbinom2(3, 3, 3+1e-11, log = TRUE)
-# RTMB::dnbinom2(3, 3, 3+1e-12, log = TRUE)
-# RTMB::dnbinom2(3, 3, 3+1e-13, log = TRUE)
-# RTMB::dnbinom2(3, 3, 3+1e-14, log = TRUE)
-# RTMB::dnbinom2(3, 3, 3, log = TRUE)
-
-x <- 1; mu <- 1
-var_minus_mu <- 10^seq(-20, 0, length = 101)
-## var = mu*(1+mu/theta) -> var_minus_mu = mu^2/theta -> theta = mu^2/var_minus_mu
-thetavec <- mu^2/var_minus_mu
-varvec <- mu + var_minus_mu ## will underflow ...
-
-fixtmb <- function(x) Im(unclass(x))
-v1 <- dnbinom(x = x, mu = mu, size = thetavec, log = TRUE)
-v2 <- RTMB::dnbinom2(x = x, mu = mu, var = varvec, log = TRUE) |> fixtmb()
-v3 <- RTMB::dnbinom_robust(x = x, log_mu = log(mu),
-                           log_var_minus_mu = log(var_minus_mu),
-                           log = TRUE) |> fixtmb()
-
-par(las = 1, bty = "l")
-matplot(thetavec, cbind(v1, v2, v3), type = "l", log = "x",
-        ylim = c(-2, 0), lwd = 2, col = c(1,2,4),
-        ylab = "log LL")
-abline(h = dpois(1, 1, log = TRUE), lty = 2)
-
-comb <- Map(\(nll, nm) data.frame(nm, theta = thetavec, nll),
-    list(v1, v2, v3),
-    c("dnbinom", "RTMB::dnbinom2", "RTMB::dnbinom_robust")) |>
-    do.call(what=rbind)
-
-## not sure why color spec isn't working?
-# Are those colorblind-friendly colors?
-tinyplot(nll ~ theta | nm, data = comb, type = "l",
-         log = "x", lwd = 2,
-         col = c(1,2,4),
-         ylim = c(-2, 0))
 
 # rather than cutting out the functions here just use this script in a makerule:x
 saveEnvironment()

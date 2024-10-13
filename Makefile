@@ -55,6 +55,9 @@ why_low_kappa.Rout: why_low_kappa.R
 ## Robust maximum likelihood estimation when kappa is near boundary
 nbinom_z.Rout: nbinom_z.R
 
+## experiments with nbinom numerics as theta → ∞ (kappa → 0)
+nbinom_stability.Rout: nbinom_stability.R
+
 ## Different versions of early mle attempts
 MLESketch.Rout: MLESketch.R
 mleRepeat.Rout: mleRepeat.R
