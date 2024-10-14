@@ -51,6 +51,10 @@ IBM_faster.Rout: IBM_faster.R
 
 why_low_kappa.Rout: why_low_kappa.R
 
+## Rose investigations
+
+sculpt.Rout: sculpt.R
+
 ######################################################################
 ## Robust maximum likelihood estimation when kappa is near boundary
 nbinom_z.Rout: nbinom_z.R
