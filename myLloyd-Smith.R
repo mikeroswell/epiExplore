@@ -2,6 +2,7 @@
 
 # load libraries
 library(dplyr)
+library(tidyr)
 library(purrr)
 library(ggplot2)
 
@@ -76,8 +77,8 @@ Kappas %>%
     geom_point() +
     theme_classic() +
     scale_x_log10() +
-    scale_color_manual(values = c("purple3", "lightseagreen"))
-    scale_y_log10()
+    scale_color_manual(values = c("purple3", "lightseagreen")) # +
+    # scale_y_log10()
 
 
 # Plots are for a counter-factual universe where we imagine the offspring

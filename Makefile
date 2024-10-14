@@ -69,6 +69,13 @@ geometric.Rout: geometric.R
 
 nbtest.Rout: nbtest.R
 
+#######################################################################
+## plots for MS?
+
+spreadHelpers.Rout: spreadHelpers.R
+pdfFromRates.Rout: pdfFromRates.R
+ineqPlots_for_emergent.Rout: ineqPlots_for_emergent.R spreadHelpers.rda kappas_in_3-class.rda pdfFromRates.rda
+
 Ignore += *.html
 
 Sources += GiniKappaK.Rmd

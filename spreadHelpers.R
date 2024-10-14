@@ -1,5 +1,9 @@
 # a few little functions to make superspreading stuff easier
 
+library(shellpipes)
+manageConflicts()
+
+
 # normalize
 nrmlz <- function(x){x/sum(x, na.rm = TRUE)}
 
@@ -8,14 +12,14 @@ cumFrac <- function(dist){
     cumsum(sort(dist, decreasing = TRUE))/sum(dist, na.rm = TRUE)
 }
 
-# odds to probability, i.e. the way to think about the probability parameters 
+# odds to probability, i.e. the way to think about the probability parameters
 # for a geometric distribution and its relationship to the rate parameter of an
-# exponential (or, more generally, a gamma) 
-# W.R.T. ODE SIR models, this function converts from rate = R0 to an infected's 
-# probability of recovery, Beta/(Beta + Gamma) -- where Beta is the transmission  
+# exponential (or, more generally, a gamma)
+# W.R.T. ODE SIR models, this function converts from rate = R0 to an infected's
+# probability of recovery, Beta/(Beta + Gamma) -- where Beta is the transmission
 # rate and Gamma the recovery rate. )
 
-makeP <- function(rate){rate/(1+rate)} 
+makeP <- function(rate){rate/(1+rate)}
 
 # and the inverse:
 makeRate <- function(p){
@@ -25,7 +29,7 @@ makeRate <- function(p){
 
 makeDistData <- function(v){
     n <- length(v)
-    realiz <- rpois(n, lambda = v) 
+    realiz <- rpois(n, lambda = v)
     cFIdeal <- cumFrac(v)
     cFRealiz <- cumFrac(realiz)
     q  <- (1:n)/n
@@ -37,7 +41,7 @@ makeDistData <- function(v){
 
 # get t20 or tX
 tX <- function(DD, X, q = "q", cF = "cFIdeal"){
-    DD[which(DD[, eval(q)]>=X)[1], eval(cF)]    
+    DD[which(DD[, eval(q)]>=X)[1], eval(cF)]
 }
 
 
@@ -78,3 +82,5 @@ ehm <- function(dat){
     R0Real <- mean(dat$real)
     return(data.frame(kapCont, kapDisc, tx20Cont, tx20Disc, R0Ideal, R0Real))
 }
+
+saveEnvironment()
