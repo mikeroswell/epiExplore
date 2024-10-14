@@ -16,3 +16,5 @@ exponential & gamma distributions and their realizations as discrete geometric
 and negative binomials.
 
 `two_speeds.R` is my `R` implementation of a little sketch JSW shared in matlab. 
+
+quadraticNotes.md JD wanted to try to trick the machinery by using CV scale instead of kappa scale, this does not Just Work and so may not be worth the effort

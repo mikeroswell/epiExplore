@@ -52,3 +52,10 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+
+*~
+*.Rout
+*.Rout.args
+*.Rlog
+
