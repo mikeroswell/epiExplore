@@ -1,6 +1,12 @@
 library(RTMB)
 library(DPQ) ## for logspace.add
 
+update_pkg <- function() {
+    library(remotes)
+    install_github('kaskr/adcomp/TMB', ref = github_pull(402))
+    install.packages('RTMB', type = 'source')
+}
+
 ## test extreme value to make sure we have the version of TMB with dnbinom_robust fixed
 fixtmb <- function(x) Im(unclass(x))
 ## **not** robust with x=3, mu=3
@@ -13,19 +19,13 @@ calc0 <- function(x=1, mu=1, size=1e15) {
     return(c(d1,d2))
 }
 
-print(res0 <- abs(diff(calc0())))
+print(res0 <- abs(diff(calc0(x=3, mu=3))))
 
 if (res0 > 0.1) {
     stop("consider \"library(remotes); install_github('kaskr/adcomp/TMB', ref = github_pull(402)); install.packages('RTMB', type = 'source')\"")
 }
 
-## uh-oh
-calc0(x=3, mu = 3)
-
-## why/where do we run into trouble with x=3, mu=3 while x=1, mu=1 is OK?
-## x=1, mu=1, size=1e15 → log_var_minus_mu = -34.53878, log_mu = 0
-## x=3, mu=3, size=1e15 → log_var_minus_mu = -32.34155, log_mu = 1.098612
-
+## exploring calc
 do_calc <- function(x, mu, size) {
     log_mu <- log(mu)
     log_var_minus_mu <- 2*log_mu - log(size)
