@@ -68,10 +68,10 @@ loadEnvironments()
 
 set.seed(1912)
 # function to compute MLE kappa with CI
-kapEst <- function(dd, z){
+kapEst <- function(dd, z, ste = 0.1){
   mlefit <- fit_kappaNB(dd, z)
   est <- as.numeric(coef(mlefit)[1])
-  ci <- confint(profile(mlefit))
+  ci <- confint(profile(mlefit, method = "uniroot", std.err = ste))
   return(list(est = exp(est)
               , lower = exp(ci[1])
               , upper = exp(ci[3])) )
@@ -148,7 +148,10 @@ mysim <- map(1:nreps, function(nr){
 sum(mysim$est<1)/length(mysim$est)
 sum(mysim$est>1)/length(mysim$est)
 mysim |>
-  mutate(upper = if_else(upper>20, Inf, upper)) |>
+  # mutate(lower = if_else(is.na(lower), 0, lower)
+         #, upper = if_else(upper>20, Inf, upper)
+  # ) |>
                   rangePlot(target = 1
                    , opacity = 1
-                   , targNum = 200)
+                   , targNum = 200) +
+  ylim(c(-1, 20))

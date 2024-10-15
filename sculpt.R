@@ -17,7 +17,8 @@ cvLam0 <- function(q, lam){
 	v <- c2/c0 - m^2
 	return(c(
 		n = c0
-		, m=m, v=v
+		, m = m
+		, v = v
 		, kap = v/m^2
 	))
 }
@@ -44,3 +45,4 @@ cvPlot(qbeta(p, shape1=0.5, shape2=0.5), lam)
 cvPlot(qlnorm(p, meanlog=log(0.4), sdlog=1), lam)
 cvPlot(qlnorm(p, meanlog=log(0.4), sdlog=0.5), lam)
 cvPlot(qnorm(p, mean=0.4, sd=0.04), lam)
+cvPlot(qnorm(p, mean=4, sd=0.04), lam)
