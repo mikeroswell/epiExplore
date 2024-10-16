@@ -71,7 +71,7 @@ set.seed(1912)
 kapEst <- function(dd, z, ste = 0.1){
   mlefit <- fit_kappaNB(dd, z)
   est <- as.numeric(coef(mlefit)[2])
-  p0 <- profile(mlefit, method = "uniroot", std.err = ste)
+  p0 <- profile(mlefit, method = "uniroot", std.err = ste, maxsteps = 1e5)
   # print(p0)
   ci <- confint(p0)
   # return(list(est = exp(est)
@@ -172,3 +172,5 @@ mysim |>
                    , opacity = 1
                    , targNum = 200) #+
   # ylim(c(-1, 20))
+
+
