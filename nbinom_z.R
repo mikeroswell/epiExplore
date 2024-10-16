@@ -56,8 +56,8 @@ dnbinom_cv <- function(x, mu, cv, ...) {
     return(dnbinom(x, mu = mu, size = 1/cv^2, ...))
 }
 
-# make the fit a fuction
-fit_kappaNB <- function(dd, z = z){
+# make the fit a function
+fit_kappaNB <- function(dd, z = "z"){
   mle2(z ~ dnbinom_kappa(exp(logmu), kappa),
      data = dd,
      skip.hessian = TRUE,

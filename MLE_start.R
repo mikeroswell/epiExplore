@@ -70,11 +70,18 @@ set.seed(1912)
 # function to compute MLE kappa with CI
 kapEst <- function(dd, z, ste = 0.1){
   mlefit <- fit_kappaNB(dd, z)
-  est <- as.numeric(coef(mlefit)[1])
-  ci <- confint(profile(mlefit, method = "uniroot", std.err = ste))
-  return(list(est = exp(est)
-              , lower = exp(ci[1])
-              , upper = exp(ci[3])) )
+  est <- as.numeric(coef(mlefit)[2])
+  p0 <- profile(mlefit, method = "uniroot", std.err = ste)
+  # print(p0)
+  ci <- confint(p0)
+  # return(list(est = exp(est)
+  #             , lower = exp(ci[1])
+  #             , upper = exp(ci[3])) )
+  return(list(est = est
+              , lower = ci[2]
+              , upper = ci[4]
+              )
+         )
 }
 # kapEst2 <- function(x){
 #   mlefit <- bbmle::mle2(kapNB2
@@ -109,20 +116,25 @@ kapEst <- function(dd, z, ste = 0.1){
 #               , lower = exp(ci[1])
 #               , upper = exp(ci[3])) )
 # }
+
+
 nreps <- 200
 
 mysim <- map(1:nreps, function(nr){
   n <- 6
   gamm <- 1/3
   rtimes <-rexp(n = n, gamm)
-  rtimes
-
   cd <- data.frame(z = rpois(n = n, rtimes))
-  mu <- mean(cd)
-  V <- var(cd)
+  mu <- mean(cd$z)
+  V <- var(cd$z)
   kapNaive <- (V-mu)/mu^2
-  kapMLE <- kapEst(cd, z)
+  kapMLE <- kapEst(cd, "z")
   # k2 <- kapEst2(cd)
+  # print(fit_kappaNB(cd))
+  if(is.na(kapMLE$upper)){
+    print(cd)
+    break
+  }
   return(data.frame(nr
                     , mu
                     , V
@@ -140,18 +152,23 @@ mysim <- map(1:nreps, function(nr){
 
 # mysim |>
 #   filter(est > upper | est<lower)
-
+mysim
 # mysim |>
 #   filter(upper > 20)
+# mysim |>
+#   ggplot(aes(est, kapNaive)) +
+#   geom_point() +
+#   theme_classic()
 
 # return bias
+mysim[mysim$est<0,]
 sum(mysim$est<1)/length(mysim$est)
 sum(mysim$est>1)/length(mysim$est)
 mysim |>
-  # mutate(lower = if_else(is.na(lower), 0, lower)
-         #, upper = if_else(upper>20, Inf, upper)
-  # ) |>
+  mutate(lower = if_else(is.na(lower), 0, lower)
+  , upper = if_else(upper>20, Inf, upper)
+  ) |>
                   rangePlot(target = 1
                    , opacity = 1
-                   , targNum = 200) +
-  ylim(c(-1, 20))
+                   , targNum = 200) #+
+  # ylim(c(-1, 20))
