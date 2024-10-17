@@ -1,6 +1,7 @@
 library(shellpipes)
 manageConflicts()
 startGraphics()
+if (!require("checkPlotR")) stop("please install checkPlotR via remotes::install_github('dushoff/checkPlots')")
 library(checkPlotR) # checkPlots repo (Dushoff owner)
 # https://github.com/dushoff/checkPlots.git
 library(purrr)
@@ -8,6 +9,8 @@ library(bbmle, mask.ok = "slice")
 library(ggplot2)
 library(RTMB)
 library(nloptr)
+rpcall("MLE_start.Rout MLE_start.pipestar MLE_start.R kapWrap.rda")
+
 loadEnvironments()
 
 # # define NLL for kappa
@@ -133,7 +136,9 @@ bsci <- function(x, alpha = 0.05, N){
 # N <- 399
 nreps <- 200
 
-mysim <- map(1:nreps, function(nr){
+loopfun <- function(nr) {
+  set.seed(1000 + nr)
+  if (nr %% 10 == 0) cat(".")
   n <- 6
   gamm <- 1/3
   rtimes <-rexp(n = n, gamm)
@@ -165,8 +170,19 @@ mysim <- map(1:nreps, function(nr){
                     # , u2 = k2$upper
                     )
          )
-}) |>
+}
+cur_rep <- NA
+mysim <- map(1:nreps, loopfun) |>
   list_rbind()
+
+## fails in step 3
+## debug(loopfun)
+## debug(nbEstCI)
+##loopfun(3)
+dnbinom2(3, mu = 1, var = 1, log = TRUE)  ## NaN
+dnbinom_robust(3, log_mu = 0, log_var_minus_mu = -200, log = TRUE) ## OK
+dnbinom_robust(3, log_mu = 0, log_var_minus_mu = -700, log = TRUE) ## OK
+dnbinom_robust(3, log_mu = 0, log_var_minus_mu = -Inf, log = TRUE) ## NaN
 
 # mysim |>
 #   filter(est > upper | est<lower)
