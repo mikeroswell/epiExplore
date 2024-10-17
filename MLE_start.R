@@ -117,7 +117,20 @@ kapEst <- function(dd, z, ste = 0.1){
 #               , upper = exp(ci[3])) )
 # }
 
+bsci <- function(x, alpha = 0.05, N){
+  s <- replicate(N, sample(x, length(x), replace = TRUE))
+  m <- apply(s, 2, mean)
+  v <- apply(s, 2, var)
+  kn <- ifelse(v + m == 0, 0, (v-m)/m^2)
+  M <- mean(x)
+  V <- var(x)
+  est <- ifelse(M+V == 0, 0, (V-M)/M^2)
+  lcl <- quantile(kn, alpha/2)
+  ucl <- quantile(kn, 1-alpha/2)
+  return(list(est = est, lcl = lcl, ucl = ucl))
+}
 
+N <- 399
 nreps <- 200
 
 mysim <- map(1:nreps, function(nr){
@@ -127,13 +140,13 @@ mysim <- map(1:nreps, function(nr){
   cd <- data.frame(z = rpois(n = n, rtimes))
   mu <- mean(cd$z)
   V <- var(cd$z)
+  kapBS <- bsci(cd$z, N = N)
   kapNaive <- (V-mu)/mu^2
   kapMLE <- kapEst(cd, "z")
   # k2 <- kapEst2(cd)
   # print(fit_kappaNB(cd))
   if(is.na(kapMLE$upper)){
     print(cd)
-    break
   }
   return(data.frame(nr
                     , mu
@@ -142,6 +155,9 @@ mysim <- map(1:nreps, function(nr){
                     , est = kapMLE$est
                     , lower = if_else(is.na(kapMLE$lower), 0, kapMLE$lower)
                     , upper = kapMLE$upper
+                    , estbs = kapBS$est
+                    , uclbs = kapBS$ucl
+                    , lclbs = kapBS$lcl
                     # , e2 = k2$est
                     # , l2 = k2$lower
                     # , u2 = k2$upper
@@ -173,4 +189,12 @@ mysim |>
                    , targNum = 200) #+
   # ylim(c(-1, 20))
 
-
+mysim |>
+  mutate(lower = lclbs
+         , upper = uclbs
+         , est = estbs
+  ) |>
+  rangePlot(target = 1
+            , opacity = 1
+            , targNum = 200) +
+  labs(title = "Bootstrap")
