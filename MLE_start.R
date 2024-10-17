@@ -130,19 +130,20 @@ bsci <- function(x, alpha = 0.05, N){
   return(list(est = est, lcl = lcl, ucl = ucl))
 }
 
-N <- 399
+# N <- 399
 nreps <- 200
 
 mysim <- map(1:nreps, function(nr){
   n <- 6
   gamm <- 1/3
   rtimes <-rexp(n = n, gamm)
-  cd <- data.frame(z = rpois(n = n, rtimes))
-  mu <- mean(cd$z)
-  V <- var(cd$z)
-  kapBS <- bsci(cd$z, N = N)
+  cd <- rpois(n = n, rtimes)
+  mu <- mean(cd)
+  V <- var(cd)
+  tmb_data <<- list(x = cd)
+  # kapBS <- bsci(cd, N = N)
   kapNaive <- (V-mu)/mu^2
-  kapMLE <- kapEst(cd, "z")
+  kapMLE <- nbEstCI()
   # k2 <- kapEst2(cd)
   # print(fit_kappaNB(cd))
   if(is.na(kapMLE$upper)){
@@ -155,9 +156,9 @@ mysim <- map(1:nreps, function(nr){
                     , est = kapMLE$est
                     , lower = if_else(is.na(kapMLE$lower), 0, kapMLE$lower)
                     , upper = kapMLE$upper
-                    , estbs = kapBS$est
-                    , uclbs = kapBS$ucl
-                    , lclbs = kapBS$lcl
+                    # , estbs = kapBS$est
+                    # , uclbs = kapBS$ucl
+                    # , lclbs = kapBS$lcl
                     # , e2 = k2$est
                     # , l2 = k2$lower
                     # , u2 = k2$upper
@@ -189,12 +190,12 @@ mysim |>
                    , targNum = 200) #+
   # ylim(c(-1, 20))
 
-mysim |>
-  mutate(lower = lclbs
-         , upper = uclbs
-         , est = estbs
-  ) |>
-  rangePlot(target = 1
-            , opacity = 1
-            , targNum = 200) +
-  labs(title = "Bootstrap")
+# mysim |>
+#   mutate(lower = lclbs
+#          , upper = uclbs
+#          , est = estbs
+#   ) |>
+#   rangePlot(target = 1
+#             , opacity = 1
+#             , targNum = 200) +
+#   labs(title = "Bootstrap")

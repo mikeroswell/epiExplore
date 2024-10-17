@@ -58,6 +58,7 @@ sculpt.Rout: sculpt.R
 ######################################################################
 ## Robust maximum likelihood estimation when kappa is near boundary
 nbinom_z.Rout: nbinom_z.R
+kapWrap.Rout: kapWrap.R
 
 ## experiments with nbinom numerics as theta → ∞ (kappa → 0)
 nbinom_stability.Rout: nbinom_stability.R
@@ -65,7 +66,7 @@ nbinom_stability.Rout: nbinom_stability.R
 ## Different versions of early mle attempts
 MLESketch.Rout: MLESketch.R
 mleRepeat.Rout: mleRepeat.R
-MLE_start.Rout: MLE_start.R nbinom_z.rda
+MLE_start.Rout: MLE_start.R kapWrap.rda
 
 ## Questions for Ben
 maxstepsIssue.Rout: maxstepsIssue.r nbinom_z.rda
