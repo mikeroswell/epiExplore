@@ -60,6 +60,8 @@ sculpt.Rout: sculpt.R
 nbinom_z.Rout: nbinom_z.R
 kapWrap.Rout: kapWrap.R
 
+
+
 ## experiments with nbinom numerics as theta → ∞ (kappa → 0)
 nbinom_stability.Rout: nbinom_stability.R
 
@@ -69,6 +71,7 @@ mleRepeat.Rout: mleRepeat.R
 MLE_start.Rout: MLE_start.R kapWrap.rda
 
 ## Questions for Ben
+breakTMB.Rout: breakTMB.R kapWrap.rda nbinom_z.rda
 maxstepsIssue.Rout: maxstepsIssue.r nbinom_z.rda
 ######################################################################
 

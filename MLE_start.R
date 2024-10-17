@@ -143,6 +143,7 @@ mysim <- map(1:nreps, function(nr){
   tmb_data <<- list(x = cd)
   # kapBS <- bsci(cd, N = N)
   kapNaive <- (V-mu)/mu^2
+  if(nr ==10){ print(cd)}
   kapMLE <- nbEstCI()
   # k2 <- kapEst2(cd)
   # print(fit_kappaNB(cd))
