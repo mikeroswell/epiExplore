@@ -69,7 +69,7 @@ loadEnvironments()
 #   )
 
 
-set.seed(1912)
+# set.seed(1912)
 # function to compute MLE kappa with CI
 kapEst <- function(dd, z, ste = 0.1){
   mlefit <- fit_kappaNB(dd, z)
@@ -145,11 +145,11 @@ loopfun <- function(nr) {
   cd <- rpois(n = n, rtimes)
   mu <- mean(cd)
   V <- var(cd)
-  tmb_data <<- list(x = cd)
+  # tmb_data <<- list(x = cd)
   # kapBS <- bsci(cd, N = N)
   kapNaive <- (V-mu)/mu^2
   if(nr ==10){ print(cd)}
-  kapMLE <- nbEstCI()
+  kapMLE <- kapEst(data.frame(z = cd), z = "z") # nbEstCI()
   # k2 <- kapEst2(cd)
   # print(fit_kappaNB(cd))
   if(is.na(kapMLE$upper)){
@@ -183,6 +183,9 @@ dnbinom2(3, mu = 1, var = 1, log = TRUE)  ## NaN
 dnbinom_robust(3, log_mu = 0, log_var_minus_mu = -200, log = TRUE) ## OK
 dnbinom_robust(3, log_mu = 0, log_var_minus_mu = -700, log = TRUE) ## OK
 dnbinom_robust(3, log_mu = 0, log_var_minus_mu = -Inf, log = TRUE) ## NaN
+dnbinom(3, mu = 1, size = 0, log = TRUE) #- Inf, which is what we want
+dnbinom(3, mu = 1, size = exp(-700), log = TRUE ) # big negative number, great
+dnbinom(3, mu = 1, size = exp(-2700), log = TRUE ) # -Inf
 
 # mysim |>
 #   filter(est > upper | est<lower)
