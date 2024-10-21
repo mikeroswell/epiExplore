@@ -12,7 +12,7 @@ vim_session:
 
 Sources += $(wildcard *.R)
 
-autopipeR = defined
+autopipeRcall = defined
 
 ######################################################################
 
@@ -26,8 +26,6 @@ Sources += $(wildcard *.md)
 
 myLloyd-Smith.Rout: myLloyd-Smith.R
 myMeehan.Rout: myMeehan.R
-
-pass.Rout: pass.R
 
 ######################################################################
 
