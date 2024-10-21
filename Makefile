@@ -29,7 +29,6 @@ myMeehan.Rout: myMeehan.R
 
 ######################################################################
 
-
 # kappa mystery
 why_low_kappa.Rout: why_low_kappa.R
 
@@ -58,9 +57,6 @@ sculpt.Rout: sculpt.R
 nbinom_z.Rout: nbinom_z.R
 kapWrap.Rout: kapWrap.R
 
-
-
-
 ## experiments with nbinom numerics as theta → ∞ (kappa → 0)
 nbinom_stability.Rout: nbinom_stability.R
 
@@ -70,12 +66,16 @@ sim_lnorm.Rout: sim_lnorm.R
 ## Different versions of early mle attempts
 MLESketch.Rout: MLESketch.R
 mleRepeat.Rout: mleRepeat.R
-MLE_start.pln.Rout: MLE_start.R kapWrap.rda nbinom_z.rda sim_lnorm.rda
-MLE_start.nb.Rout: MLE_start.R kapWrap.rda nbinom_z.rda sim_exp.rda
+
+## MLE_start.lnorm.Rout: MLE_start.R sim_lnorm.R
+## MLE_start.exp.Rout: MLE_start.R sim_exp.R
+MLE_start.%.Rout: MLE_start.R kapWrap.rda nbinom_z.rda sim_%.rda
+	$(pipeRcall)
 
 ## Questions for Ben
 breakTMB.Rout: breakTMB.R kapWrap.rda nbinom_z.rda
 maxstepsIssue.Rout: maxstepsIssue.r nbinom_z.rda
+
 ######################################################################
 
 ## General distribution stuff

@@ -1,4 +1,5 @@
 library(shellpipes)
+rpcall("nbinom_z.Rout nbinom_z.R")
 manageConflicts()
 startGraphics()
 library(bbmle)

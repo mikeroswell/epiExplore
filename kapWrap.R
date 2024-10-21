@@ -1,4 +1,5 @@
 library(shellpipes)
+rpcall("kapWrap.Rout kapWrap.R")
 manageConflicts()
 library(RTMB)
 library(bbmle)

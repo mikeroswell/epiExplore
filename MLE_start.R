@@ -1,4 +1,7 @@
 library(shellpipes)
+rpcall("MLE_start.nb.Rout MLE_start.R kapWrap.rda nbinom_z.rda sim_exp.rda")
+rpcall("MLE_start.lnorm.Rout MLE_start.R kapWrap.rda nbinom_z.rda sim_lnorm.rda")
+rpcall("MLE_start.exp.Rout MLE_start.R kapWrap.rda nbinom_z.rda sim_exp.rda")
 manageConflicts()
 startGraphics()
 if (!require("checkPlotR")) stop("please install checkPlotR via remotes::install_github('dushoff/checkPlots')")
@@ -137,11 +140,11 @@ bsci <- function(x, alpha = 0.05, N){
 nreps <- 200
 simfun <- function(simDist, mu, n){
   if(simDist == "rexp"){
-    rexp(n, 1/mu)
+    return(rexp(n, 1/mu))
   }
   if(simDist == "lnorm"){
-    # fix kappa to 1
-    rlnorm(n, meanlog = log(mu), sdlog = sqrt(log(2)))
+    # fix kappa to 1 ☺
+    return(rlnorm(n, meanlog = log(mu), sdlog = sqrt(log(2))))
   }
 }
 
@@ -178,6 +181,7 @@ loopfun <- function(nr) {
                     )
          )
 }
+
 cur_rep <- NA
 mysim <- map(1:nreps, loopfun) |>
   list_rbind()
