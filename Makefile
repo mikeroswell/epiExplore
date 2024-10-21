@@ -62,13 +62,18 @@ kapWrap.Rout: kapWrap.R
 
 
 
+
 ## experiments with nbinom numerics as theta → ∞ (kappa → 0)
 nbinom_stability.Rout: nbinom_stability.R
+
+# input simulation distributions
+sim_lnorm.Rout: sim_lnorm.R
 
 ## Different versions of early mle attempts
 MLESketch.Rout: MLESketch.R
 mleRepeat.Rout: mleRepeat.R
-MLE_start.Rout: MLE_start.R kapWrap.rda
+MLE_start.pln.Rout: MLE_start.R kapWrap.rda nbinom_z.rda sim_lnorm.rda
+MLE_start.nb.Rout: MLE_start.R kapWrap.rda nbinom_z.rda sim_exp.rda
 
 ## Questions for Ben
 breakTMB.Rout: breakTMB.R kapWrap.rda nbinom_z.rda

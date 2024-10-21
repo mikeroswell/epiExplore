@@ -135,33 +135,26 @@ bsci <- function(x, alpha = 0.05, N){
 
 # N <- 399
 nreps <- 200
-simfun <- function(simDist, mu, n){
-  if(simDist == "rexp"){
-    rexp(n, 1/mu)
-  }
-  if(simDist == "lnorm"){
-    # fix kappa to 1
-    rlnorm(n, meanlog = log(mu), sdlog = sqrt(log(2)))
-  }
-}
 
 loopfun <- function(nr) {
   set.seed(1000 + nr)
   if (nr %% 10 == 0) cat(".")
   n <- 6
   gamm <- 1/3
-  rtimes <- simfun(simDist = simDist, mu = 1/gamm, n = n)
+  # rtimes <-rexp(n = n, gamm)
+  rtimes <- rlnorm(n = n, meanlog = log(gamm))
   cd <- rpois(n = n, rtimes)
   mu <- mean(cd)
   V <- var(cd)
   # tmb_data <<- list(x = cd)
   # kapBS <- bsci(cd, N = N)
   kapNaive <- (V-mu)/mu^2
-  if(nr ==10){ print(cd)}
-  kapMLE <- kapEst(data.frame(z = cd), z = "z") # nbEstCI()
-  # k2 <- kapEst2(cd)
-  # print(fit_kappaNB(cd))
 
+  kapMLE <- kapEst(data.frame(z = cd), z = "z") # nbEstCI()
+
+  if(is.na(kapMLE$upper)){
+    print(cd)
+  }
   return(data.frame(nr
                     , mu
                     , V
