@@ -49,15 +49,33 @@ IBM_faster.Rout: IBM_faster.R
 
 why_low_kappa.Rout: why_low_kappa.R
 
+## Rose investigations
+
+sculpt.Rout: sculpt.R
+
 ######################################################################
 ## Robust maximum likelihood estimation when kappa is near boundary
 nbinom_z.Rout: nbinom_z.R
+kapWrap.Rout: kapWrap.R
+
+
+
+
+## experiments with nbinom numerics as theta → ∞ (kappa → 0)
+nbinom_stability.Rout: nbinom_stability.R
+
+# input simulation distributions
+sim_lnorm.Rout: sim_lnorm.R
 
 ## Different versions of early mle attempts
 MLESketch.Rout: MLESketch.R
 mleRepeat.Rout: mleRepeat.R
-MLE_start.Rout: MLE_start.R nbinom_z.rda
+MLE_start.pln.Rout: MLE_start.R kapWrap.rda nbinom_z.rda sim_lnorm.rda
+MLE_start.nb.Rout: MLE_start.R kapWrap.rda nbinom_z.rda sim_exp.rda
 
+## Questions for Ben
+breakTMB.Rout: breakTMB.R kapWrap.rda nbinom_z.rda
+maxstepsIssue.Rout: maxstepsIssue.r nbinom_z.rda
 ######################################################################
 
 ## General distribution stuff
@@ -66,6 +84,13 @@ Learn_distributions.Rout: Learn_distributions.R
 geometric.Rout: geometric.R
 
 nbtest.Rout: nbtest.R
+
+#######################################################################
+## plots for MS?
+
+spreadHelpers.Rout: spreadHelpers.R
+pdfFromRates.Rout: pdfFromRates.R
+ineqPlots_for_emergent.Rout: ineqPlots_for_emergent.R spreadHelpers.rda kappas_in_3-class.rda pdfFromRates.rda
 
 Ignore += *.html
 
