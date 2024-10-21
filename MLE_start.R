@@ -77,7 +77,7 @@ loadEnvironments()
 kapEst <- function(dd, z, ste = 0.1){
   mlefit <- fit_kappaNB(dd, z)
   est <- as.numeric(coef(mlefit)[2])
-  p0 <- profile(mlefit, method = "uniroot", std.err = ste, maxsteps = 1e5)
+  p0 <- profile(mlefit, method = "uniroot", std.err = ste, maxsteps = 1e4)
   # print(p0)
   ci <- confint(p0)
   # return(list(est = exp(est)
@@ -136,7 +136,7 @@ bsci <- function(x, alpha = 0.05, N){
   return(list(est = est, lcl = lcl, ucl = ucl))
 }
 
-# N <- 399
+N <- 399
 nreps <- 200
 simfun <- function(simDist, mu, n){
   if(simDist == "rexp"){
@@ -149,7 +149,7 @@ simfun <- function(simDist, mu, n){
 }
 
 loopfun <- function(nr) {
-  set.seed(1000 + nr)
+  set.seed(1001 + nr)
   if (nr %% 10 == 0) cat(".")
   n <- 6
   gamm <- 1/3
@@ -158,7 +158,7 @@ loopfun <- function(nr) {
   mu <- mean(cd)
   V <- var(cd)
   # tmb_data <<- list(x = cd)
-  # kapBS <- bsci(cd, N = N)
+  kapBS <- bsci(cd, N = N)
   kapNaive <- (V-mu)/mu^2
   if(nr ==10){ print(cd)}
   kapMLE <- kapEst(data.frame(z = cd), z = "z") # nbEstCI()
@@ -172,9 +172,9 @@ loopfun <- function(nr) {
                     , est = kapMLE$est
                     , lower = if_else(is.na(kapMLE$lower), 0, kapMLE$lower)
                     , upper = kapMLE$upper
-                    # , estbs = kapBS$est
-                    # , uclbs = kapBS$ucl
-                    # , lclbs = kapBS$lcl
+                    , estbs = kapBS$est
+                    , uclbs = kapBS$ucl
+                    , lclbs = kapBS$lcl
                     # , e2 = k2$est
                     # , l2 = k2$lower
                     # , u2 = k2$upper
@@ -221,12 +221,12 @@ mysim |>
                    , targNum = 200) #+
   # ylim(c(-1, 20))
 
-# mysim |>
-#   mutate(lower = lclbs
-#          , upper = uclbs
-#          , est = estbs
-#   ) |>
-#   rangePlot(target = 1
-#             , opacity = 1
-#             , targNum = 200) +
-#   labs(title = "Bootstrap")
+mysim |>
+  mutate(lower = lclbs
+         , upper = uclbs
+         , est = estbs
+  ) |>
+  rangePlot(target = 1
+            , opacity = 1
+            , targNum = 200) +
+  labs(title = "Bootstrap")
