@@ -18,6 +18,8 @@ makePDF <- function(x, pars = pars){
 
 }
 
+makePDF <- Vectorize(makePDF, x)
+
 getHigh <- function(x, pars = pars){
   list2env(pars, envir = environment())
   phigh <- sum(sapply(1:length(fracs), function(i){
