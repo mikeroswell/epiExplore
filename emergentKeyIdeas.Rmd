@@ -1,0 +1,82 @@
+---
+title: 'Emergent Heterogeneity: Key Ideas'
+author: "Michael Roswell"
+date: "12/09/2024"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(magrittr)
+library(dplyr)
+```
+
+# Purpose
+
+This is a place to organize key ideas so I can make figures for the
+emergent heterogeneity MS. We have learned a fair bit about inference,
+about the differences in realized versus idealized distributions, about
+rules for computing (in a branching-process world) heterogeneity from
+compartmental models (c.f. Meehan et al), and about the ways that
+dynamics in the face of susceptible depletion come into play already.
+But we don't yet have a crystal clear idea of what the point of the MS
+is. I'm going to try to write down some key ideas and maybe illustrate
+them with figures here.
+
+# Different degrees of heterogeneity manifest in data based on R_0 -- potentially complicating bridge to compartmental model, or for that matter, between realized and idealized distributions in the classical NB superspreading paradigm.
+
+## fig: realized distributions have different inequality with same kappa
+
+(inequality curves for diseases with kappa =1 (i.e., SIR diseases except
+no susceptible depletion, with exponential activities distribution) but
+different R_0.)
+
+JLS et al. 2005 link the cases-per-case reversed CDFs ("inequality
+plots") to $\kappa$ in a negative binomial parameterized by
+$\mathcal{R_0}, \kappa$. This is totally valid, but potentially
+confusing, because their inequality plots are of not-yet
+discretized/de-poissonified expected "activity" distributions, and not
+of the negative-binomially distributed "data" the branching process
+model would generate. The inequality plot for the negative binomial
+depends on **both** $\kappa$ *and* $\mathcal{R_0}$, while the inequality
+plot for the underlying gamma ($\mathcal{R_0}, \kappa$) (which is what
+JLS are plotting, but kind of cryptically) does not. The key upshot is
+that *data* from the JLS nb-branching process will have different
+inequality curves for the same $\kappa$, and perhaps not in the way most
+would intuit. As$\mathcal{R_0}$ falls, inequality grows; one way to
+think of this is by focusing on the zeroes, which grow as a proportion
+of the data as the poisson (or nb) mean falls.
+
+## fig: SIR-like models with multiple infectious classes can have high heterogeneity with few classes
+
+We're mostly interested in superspreading early in outbreaks (as that's when
+superspreading can determine if outbreaks go extinct or take off, and when
+initial decisions about controlling disease are made). So when we ask about how
+much superspreading is encoded in compartmental models, we're talking about
+initial phases when S is essentially constant, and we can treat dynamics as if
+they arose from time-invariant branching processes. If we do that, it's pretty
+straightforward to compute the heterogeneity in cases-per-case if we take rates
+from a box model and turn them into a branching process (Meehan et al. 2021).
+Then, we can assert how much superspreading is built into a compartmental model.
+This assertion may or may not be reconcilable with data, explored below, but it
+seems like a useful kind of checksum. To illustrate this idea, we show how a
+compartmental model with 3 classes can generate high levels of heterogeneity in
+cases per case, without invoking heterogeneity in mixing rates nor, within
+compartments, any individual-level variation in susceptibility, recovery rates,
+or transmission rates. 
+
+We can normalize the variation we see across models and measure heterogeneity as
+$\kappa$, providing a common currency that generalizes beyond the gamma-negative
+binomial framework.
+
+## fig: Even though $\kappa$ can be computed from moments that can be estimated without bias, it seems hard to estimate it without bias. 
+
+- We can't simply compute $\kappa$ from the moments without bias; squaring and ratios
+- MLE for negative binomial works ok once samples get large enough, but has strong bias
+- If we assume negative binomial but it's not, what happens? 

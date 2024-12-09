@@ -1,6 +1,7 @@
 # script to begin dreaming simulation up
 
 library(shellpipes)
+rpcall("IBM_3-way.Rout IBM_3-way.R kappas_in_3-class.rda")
 manageConflicts()
 startGraphics()
 library(dplyr)
@@ -9,7 +10,7 @@ library(tidyr)
 library(ggplot2)
 library(patchwork)
 
-set.seed(127)
+set.seed(1227)
 
 # note dependency on params and functions in kappas_in_3-class.R
 loadEnvironments()
@@ -28,7 +29,7 @@ loadEnvironments()
 tMax <- 2e2 # measured in days, assume for most things I'll do 1 year is plenty
 popSize <- 1e4
 
-R_0 <- 3 # much higher than in current fig 1 but maybe necessarily so to enable
+R_0 <- 12 # much higher than in current fig 1 but maybe necessarily so to enable
 # outbreak with high probability
 # generate ODE model parameters or something (shd be SIR)
 mod <- cmptMod(0.2, xChoice = "low", R_0 = R_0, scaleRNum = 1) #scaleRNum[2])
@@ -228,6 +229,19 @@ ktdt <- function(startT, deltaT){
   return(data.frame(n, kappa_discrete, kappa_naive, mu, V, startT))
 }
 
+# get all the affected individuals
+fit_kappaNB(dd= data.frame(z = caseTally[states!=1]))
+par(mfrow= c(2,1))
+
+plot(sort(caseTally[states!=1]), sort(rgeom(length(caseTally[states!=1]), 0.5)))
+
+hist(caseTally[states!=1])
+hist(rgeom(9000, 0.5))
+m <- mean(caseTally[states!=1])
+v <- var(caseTally[states!=1])
+(v-m)/m^2
+m
+
 # hist(iTime[iTime< tMax])
 # plot(sapply(seq(0, 40, 1), function(st){
 #   ktdt(st, 10)cat
@@ -257,5 +271,5 @@ keff |>
 # dev.off()
 #confirm kappa
 kd(caseTally[states != Sstate])
-
+saveEnvironment()
 

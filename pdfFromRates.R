@@ -1,4 +1,5 @@
 library(shellpipes)
+rpcall("pdfFromRates.Rout pdfFromRates.R")
 manageConflicts()
 startGraphics()
 library(dplyr)
@@ -18,7 +19,7 @@ makePDF <- function(x, pars = pars){
 
 }
 
-makePDF <- Vectorize(makePDF, x)
+makePDF <- Vectorize(makePDF, "x")
 
 getHigh <- function(x, pars = pars){
   list2env(pars, envir = environment())

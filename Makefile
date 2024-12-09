@@ -43,6 +43,7 @@ Sources += IBM_sketch.md
 
 ## Dushoff is confused today and he already finished his extra coffee!
 IBM_3-way.Rout: IBM_3-way.R kappas_in_3-class.rda
+	$(pipeRcall)
 IBM_sketch_sketch.Rout: IBM_sketch_sketch.R
 IBM_faster.Rout: IBM_faster.R
 
@@ -91,8 +92,16 @@ nbtest.Rout: nbtest.R
 spreadHelpers.Rout: spreadHelpers.R
 pdfFromRates.Rout: pdfFromRates.R
 ineqPlots_for_emergent.Rout: ineqPlots_for_emergent.R spreadHelpers.rda kappas_in_3-class.rda pdfFromRates.rda
+	$(pipeRcall)
 
 Ignore += *.html
+
+
+Sources += emergentKeyIdeas.Rmd
+## Roswell attempt to get a paper outline
+
+emergentKeyIdeas.html: emergentKeyIdeas.Rmd
+	$(rmdh_r)
 
 Sources += GiniKappaK.Rmd
 ## Roswell notes on $a$, the nb/realized dispersion parameter (inverse),

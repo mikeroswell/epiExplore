@@ -2,6 +2,7 @@
 
 # load libraries
 library(shellpipes)
+rpcall("ineqPlots_for_emergent.Rout ineqPlots_for_emergent.R spreadHelpers.rda kappas_in_3-class.rda pdfFromRates.rda")
 manageConflicts()
 startGraphics()
 
@@ -84,7 +85,7 @@ cFracs %>%
 # They probably said exactly that...
 
 cFracs |>
-    ggplot(aes(qp, cFRealiz, color = brn)) +
+    ggplot(aes(qp, cFRealiz, color = as.factor(brn))) +
     # facet_wrap(~round(ishape,2)) +
     geom_point(size = 0.1) +
     # geom_line(aes(linewidth = 0.05)) +
@@ -92,7 +93,7 @@ cFracs |>
     # geom_point(aes(x = q, y = cFIdeal), color = "red", size = 0.05) +
     geom_hline(yintercept = 0.8, color = "grey") +
     geom_vline(xintercept = 0.2, color = "grey") +
-    scale_color_viridis_c() + #trans= "log") +
+    scale_color_viridis_d() + #trans= "log") +
     labs(x = "fraction of infectors contributing\n"
          , "(those with no infectees removed)"
          , y = "fraction of new infections"
@@ -123,7 +124,7 @@ cfThree <- map_dfr(exp(seq(log(0.95), log(0.05), length.out = 5)), function(x){
 })
 
 cfThree |>
-    ggplot(aes(q, cf, color =phigh)) +
+    ggplot(aes(q, cf, color =as.factor(phigh))) +
     geom_point(size = 0.3) +
     geom_hline(yintercept = 0.8, color = "grey") +
     geom_vline(xintercept = 0.2, color = "grey") +
@@ -133,7 +134,7 @@ cfThree |>
          , color = "fraction going\nto most\ninfectious\nclass"
          , title = "Inequality in \"realized\" infectiousness in three-class SIR models\nwith fixed R0 = 10, varying the fraction going to the most infectious class"
     ) +
-    scale_color_viridis_c(option = "C"
+    scale_color_viridis_d(option = "C"
                           #, direction = -1
                           )
 
@@ -167,7 +168,7 @@ threeClass <- map_dfr(seq(0.025, 0.95, 0.025), function(x){
 })
 
 
-threeClass
+# threeClass
 
 tXPlot <- threeClass |>
     pivot_longer(names_to = "ineqName", values_to = "inequality"
