@@ -1,5 +1,6 @@
 # gut check on low kappas
 library(shellpipes)
+rpcall("why_low_kappa.Rout why_low_kappa.R")
 manageConflicts()
 startGraphics()
 library(purrr)

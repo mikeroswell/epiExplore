@@ -41,7 +41,7 @@ plotEmergent.Rout: plotEmergent.R kappas_in_3-class.rda
 IBM_sketch.Rout: IBM_sketch.R
 Sources += IBM_sketch.md
 
-## Dushoff is confused today and he already finished his extra coffee!
+## Do a simple sim (but with three activity levels)
 IBM_3-way.Rout: IBM_3-way.R kappas_in_3-class.rda
 	$(pipeRcall)
 IBM_sketch_sketch.Rout: IBM_sketch_sketch.R
@@ -125,6 +125,7 @@ eightyPercentGeometric.Rout: eightyPercentGeometric.R
 ## JD show that the relationship between $1/a$, $\kappa$ generally holds between
 ## activity distributions and the Poisson-process realized distributions
 kappaSims.Rout: kappaSims.R
+	$(wrapR)
 
 saturate.Rout: saturate.R
 
