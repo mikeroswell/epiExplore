@@ -1,12 +1,13 @@
 
-JD: I am at war with Dropbox, so am updating on something called macdrive now; let me know if we should figure out how to share it
-
 ## Unannotated things
 
-New (CV estimateion)
+CV estimation
 * drop/Albatineh_etal_population_CV_CI.pdf
 * drop/Albrecher_etal_2010_sample_CV_theory.pdf
 * drop/Breunig_2001_Kappa_estimator.pdf
+
+Household het study
+* drop/AndersonNande2023.pdf
 
 Older
 * drop/Woolhouse_etal_1997_transmission_heterogeneity.pdf
