@@ -71,6 +71,10 @@ cases per case, without invoking heterogeneity in mixing rates nor, within
 compartments, any individual-level variation in susceptibility, recovery rates,
 or transmission rates. 
 
+We should make a bit of progress on more realism either through calculus and/or
+simulations. For simulations, we have our IBM, but we might get at least as far
+using branching process with a shrinking N/S class.
+
 We can normalize the variation we see across models and measure heterogeneity as
 $\kappa$, providing a common currency that generalizes beyond the gamma-negative
 binomial framework.
