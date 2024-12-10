@@ -21,23 +21,39 @@ Sources += $(wildcard *.md)
 ## mirrors += drop
 
 ######################################################################
+## utilities
+spreadHelpers.Rout: spreadHelpers.R
+secondaryDistributionPlots.Rout: secondaryDistributionPlots.R
+### generateds distribution functions assuming branching process
+pdfFromRates.Rout: pdfFromRates.R
+
 
 ## Lloyd
+### reproduces main conceptual ideas from Lloyd-Smith et al. 2005, plots
+### realized and idealized inequality curves given kappa
+myLloyd-Smith.Rout: myLloyd-Smith.R spreadHelpers.rda
+	$(pipeRcall)
 
-myLloyd-Smith.Rout: myLloyd-Smith.R
-myMeehan.Rout: myMeehan.R
-
+## Meehan
+### uses the branching process reasoning from Meehan et al. 2021. Caution, slow.
+### this was an early attempt and there are more recent files below that use the
+### same logic but might produce more relevant outputs. However, plot from
+### MPOPHC grant generated here.
+myMeehan.Rout: myMeehan.R spreadHelpers.rda secondaryDistributionPlots.rda
+	$(pipeRcall)
 ######################################################################
 
-# kappa mystery
+## kappa mystery: naive kappa estimation is downwards biased
+### superceded, I suspect, but note error likely in optim
 why_low_kappa.Rout: why_low_kappa.R
-
+### show that navie kappa is no good, and synthetic kappa is fine
 low_kappa.Rout: low_kappa.R
 
 ## emergent heterogeneity in compartmental models
 kappas_in_3-class.Rout: kappas_in_3-class.R
 plotEmergent.Rout: plotEmergent.R kappas_in_3-class.rda
 
+## foray into individual-based stochastic compartmental models
 IBM_sketch.Rout: IBM_sketch.R
 Sources += IBM_sketch.md
 
@@ -46,8 +62,6 @@ IBM_3-way.Rout: IBM_3-way.R kappas_in_3-class.rda
 	$(pipeRcall)
 IBM_sketch_sketch.Rout: IBM_sketch_sketch.R
 IBM_faster.Rout: IBM_faster.R
-
-why_low_kappa.Rout: why_low_kappa.R
 
 ## Rose investigations
 
@@ -61,7 +75,7 @@ kapWrap.Rout: kapWrap.R
 ## experiments with nbinom numerics as theta → ∞ (kappa → 0)
 nbinom_stability.Rout: nbinom_stability.R
 
-# input simulation distributions
+## input simulation distributions
 sim_lnorm.Rout: sim_lnorm.R
 
 ## Different versions of early mle attempts
@@ -89,8 +103,7 @@ nbtest.Rout: nbtest.R
 #######################################################################
 ## plots for MS?
 
-spreadHelpers.Rout: spreadHelpers.R
-pdfFromRates.Rout: pdfFromRates.R
+
 ineqPlots_for_emergent.Rout: ineqPlots_for_emergent.R spreadHelpers.rda kappas_in_3-class.rda pdfFromRates.rda
 	$(pipeRcall)
 

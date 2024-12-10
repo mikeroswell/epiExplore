@@ -1,14 +1,14 @@
 # Code to recapitulate Meehan et al. models and look at inequalities
 
 # load functions and libraries
-# computing
-source("spreadHelpers.R")
-# plotting
-source("secondaryDistributionPlots.R")
+library(shellpipes)
+rpcall("myMeehan.Rout myMeehan.R spreadHelpers.rda secondaryDistributionPlots.rda")
 library(ggplot2)
 library(patchwork)
 library(dplyr)
 library(purrr)
+loadEnvironments()
+startGraphics()
 
 # R0 <- 2
 # iRat <- 0 # ratio of the reproductive number in the first serial compartment(s)
@@ -317,10 +317,10 @@ ineq <- cFracs %>%
 #     facet_wrap(~model_description, ncol = 1)
 
 
-pdf(file = "MPOPHC_emergent.pdf", width = 4, height = 2)
+# pdf(file = "MPOPHC_emergent.pdf", width = 4, height = 2)
 # quartz(width = 4, height = 2)
 ineq  + densPlot
-dev.off()
+# dev.off()
 
 # twostage
 # makeDistData(sampleV(pars = pars.twostage)) %>%

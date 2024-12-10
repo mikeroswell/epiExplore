@@ -1,13 +1,16 @@
 # do some lloyd-smith stuff
 
 # load libraries
+library(shellpipes)
+rpcall("myLloyd-Smith.Rout myLloyd-Smith.R spreadHelpers.rda")
 library(dplyr)
 library(tidyr)
 library(purrr)
 library(ggplot2)
+loadEnvironments()
+startGraphics()
 
-# a few utility functions
-source("spreadHelpers.R")
+
 
 # set some integer population size; keep it small for plotting
 n <- 3e3

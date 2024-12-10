@@ -6,6 +6,7 @@ startGraphics()
 library(purrr)
 library(ggplot2)
 library(bbmle)
+library(RTMB)
 
 # define NLL for kappa
 kapNB <- function(x, kap, M){

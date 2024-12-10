@@ -1,4 +1,5 @@
 library(shellpipes)
+rpcall("low_kappa.Rout low_kappa.R")
 manageConflicts()
 
 library(purrr)
