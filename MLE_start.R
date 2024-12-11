@@ -1,7 +1,8 @@
 library(shellpipes)
-rpcall("MLE_start.nb.Rout MLE_start.R kapWrap.rda nbinom_z.rda sim_exp.rda")
-rpcall("MLE_start.lnorm.Rout MLE_start.R kapWrap.rda nbinom_z.rda sim_lnorm.rda")
 rpcall("MLE_start.exp.Rout MLE_start.R kapWrap.rda nbinom_z.rda sim_exp.rda")
+rpcall("MLE_start.lnorm.Rout MLE_start.R kapWrap.rda nbinom_z.rda sim_lnorm.rda")
+rpcall("MLE_start.gamma.Rout MLE_start.R kapWrap.rda nbinom_z.rda sim_gamma.rda")
+
 manageConflicts()
 startGraphics()
 if (!require("checkPlotR")) stop("please install checkPlotR via remotes::install_github('dushoff/checkPlots')")
@@ -12,7 +13,6 @@ library(bbmle, mask.ok = "slice")
 library(ggplot2)
 library(RTMB)
 library(nloptr)
-rpcall("MLE_start.Rout MLE_start.pipestar MLE_start.R kapWrap.rda nbinom_z.rda")
 
 loadEnvironments()
 
@@ -146,6 +146,10 @@ simfun <- function(simDist, mu, n){
     # fix kappa to 1 ☺
     return(rlnorm(n, meanlog = log(mu), sdlog = sqrt(log(2))))
   }
+  if(simDist == "gamma"){
+    # set kappa to 2 for kicks
+    return(rgamma(n, shape = 1/2, scale = 2/mu))
+  }
 }
 
 loopfun <- function(nr) {
@@ -154,6 +158,7 @@ loopfun <- function(nr) {
   n <- 6
   gamm <- 1/3
   rtimes <- simfun(simDist = simDist, mu = 1/gamm, n = n)
+  print(rtimes)
   cd <- rpois(n = n, rtimes)
   mu <- mean(cd)
   V <- var(cd)
@@ -216,9 +221,10 @@ mysim |>
   mutate(lower = if_else(is.na(lower), 0, lower)
   , upper = if_else(upper>20, Inf, upper)
   ) |>
-                  rangePlot(target = 1
+                  rangePlot(target = ifelse(simDist == "gamma", 2, 1)
                    , opacity = 1
-                   , targNum = 200) #+
+                   , targNum = 200) +
+  labs(title = paste0("Check plot for 6 ", simDist, " deviates"))
   # ylim(c(-1, 20))
 
 mysim |>
@@ -230,3 +236,4 @@ mysim |>
             , opacity = 1
             , targNum = 200) +
   labs(title = "Bootstrap")
+
