@@ -7,6 +7,7 @@
 ##############################################################
 # load some packages
 library(shellpipes)
+rpcall("kappas_in_3-class.Rout kappas_in_3-class.R")
 manageConflicts()
 # startGraphics()
 library(dplyr)

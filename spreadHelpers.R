@@ -1,6 +1,7 @@
 # a few little functions to make superspreading stuff easier
 
 library(shellpipes)
+rpcall("spreadHelpers.Rout spreadHelpers.R")
 manageConflicts()
 
 

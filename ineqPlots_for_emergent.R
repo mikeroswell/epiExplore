@@ -57,14 +57,14 @@ cFracs <- map_dfr(R0, function(brn){
 # by the poisson sampling--- but when the dispersion is higher, everything looks
 # dispersed regardless of R0
 cFracs %>%
-    ggplot(aes(q, cFRealiz, color = brn)) +
+    ggplot(aes(q, cFRealiz, color = as.factor(brn))) +
     # facet_wrap(~round(ishape,2)) +
-    geom_point(size = 0.1) +
+    geom_point(size = 0.3) +
     # geom_point(aes(x = q, y = cFIdeal), color = "red", size = 0.05) +
     theme_classic() +
     geom_hline(yintercept = 0.8, color = "grey") +
     geom_vline(xintercept = 0.2, color = "grey") +
-    scale_color_viridis_c() + #trans = "log") +
+    scale_color_viridis_d() + #trans = "log") +
     labs(x = "fraction contributing"
          , y = "fraction of new infections"
          , color = "R0"

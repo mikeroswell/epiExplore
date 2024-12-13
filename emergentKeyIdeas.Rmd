@@ -3,9 +3,8 @@ title: 'Emergent Heterogeneity: Key Ideas'
 author: "Michael Roswell"
 date: "12/09/2024"
 output:
-  pdf_document: default
-  html_document:
-    df_print: paged
+  pdf_document: bookdown::pdf_document2
+  html_document: bookdown::html_document2
 editor_options: 
   markdown: 
     wrap: 72
@@ -29,74 +28,100 @@ But we don't yet have a crystal clear idea of what the point of the MS
 is. I'm going to try to write down some key ideas and maybe illustrate
 them with figures here.
 
-# Different degrees of heterogeneity manifest in data based on R_0 -- potentially complicating bridge to compartmental model, or for that matter, between realized and idealized distributions in the classical NB superspreading paradigm.
+# Clarifying the link between realized and activity distributions
 
-## fig: realized distributions have different inequality with same kappa
+## Realized distributions have different inequality with same shape parameter (i.e., $1/\kappa$)
 
-(inequality curves for diseases with kappa =1 (i.e., SIR diseases except
-no susceptible depletion, with exponential activities distribution) but
-different R_0.)
+```{r fig Realized distributions, echo=FALSE}
+capRealized <- c("Although the inequality in the activity distribution does not depend on R0, the inequality in \"realized\" infectiousness from a branching process model with an exponential activity distribution depends on R0. Perhaps unintuitively, observed inequality grows as R0 falls; one way of thinking of this is the increasing proportion of infectees that transmit to nobody with lower R0)")
+```
 
-JLS et al. 2005 link the cases-per-case reversed CDFs ("inequality
-plots") to $\kappa$ in a negative binomial parameterized by
-$\mathcal{R_0}, \kappa$. This is totally valid, but potentially
-confusing, because their inequality plots are of not-yet
-discretized/de-poissonified expected "activity" distributions, and not
-of the negative-binomially distributed "data" the branching process
-model would generate. The inequality plot for the negative binomial
-depends on **both** $\kappa$ *and* $\mathcal{R_0}$, while the inequality
-plot for the underlying gamma ($\mathcal{R_0}, \kappa$) (which is what
-JLS are plotting, but kind of cryptically) does not. The key upshot is
-that *data* from the JLS nb-branching process will have different
-inequality curves for the same $\kappa$, and perhaps not in the way most
-would intuit. As$\mathcal{R_0}$ falls, inequality grows; one way to
-think of this is by focusing on the zeroes, which grow as a proportion
-of the data as the poisson (or nb) mean falls.
+```{r Realized, out.width="0.9\\linewidth", fig.cap=c(capRealized), echo=FALSE}
+knitr::include_graphics("ineqPlots_for_emergent.Rout.pdf")
+```
 
-## fig: SIR-like models with multiple infectious classes can have high heterogeneity with few classes
 
-We're mostly interested in superspreading early in outbreaks (as that's when
-superspreading can determine if outbreaks go extinct or take off, and when
-initial decisions about controlling disease are made). So when we ask about how
-much superspreading is encoded in compartmental models, we're talking about
-initial phases when S is essentially constant, and we can treat dynamics as if
-they arose from time-invariant branching processes. If we do that, it's pretty
-straightforward to compute the heterogeneity in cases-per-case if we take rates
-from a box model and turn them into a branching process (Meehan et al. 2021).
-Then, we can assert how much superspreading is built into a compartmental model.
-This assertion may or may not be reconcilable with data, explored below, but it
-seems like a useful kind of checksum. To illustrate this idea, we show how a
-compartmental model with 3 classes can generate high levels of heterogeneity in
-cases per case, without invoking heterogeneity in mixing rates nor, within
-compartments, any individual-level variation in susceptibility, recovery rates,
-or transmission rates. 
+Lloyd-Smith et al. 2005 _Nature_ link the cases-per-case reversed CDFs
+("inequality plots") to $\kappa$ in a negative binomial parameterized by
+$\mathcal{R_0}, \kappa$. This is totally valid, but potentially confusing,
+because their inequality plots (fig 1) are of expected [gamma] "activity"
+distributions, and not of the negative-binomially distributed "data" the
+branching process model would generate. The inequality plot for a realized
+negative binomial (i.e., the Poissonified distribution) depends on
+**both** $\kappa$ *and* $\mathcal{R_0}$, while the inequality plot for the
+underlying gamma ($\mathcal{R_0}, \kappa$) (which is what JLS are plotting, but
+kind of cryptically) only depends on $\kappa$. (Fig. \@ref(fig:Realized))
 
-We should make a bit of progress on more realism either through calculus and/or
-simulations. For simulations, we have our IBM, but we might get at least as far
-using branching process with a shrinking N/S class.
+The key upshot is that *data* from the JLS nb-branching process could have
+different inequality curves for the same $\kappa$, and perhaps not in the way
+most would intuit. As $\mathcal{R_0}$ falls, inequality grows; one way to think
+of this is by focusing on the zeroes, which grow as a proportion of the data as
+the mean falls.
 
-We can normalize the variation we see across models and measure heterogeneity as
-$\kappa$, providing a common currency that generalizes beyond the gamma-negative
-binomial framework.
+## $\kappa_discrete$ lets us bridge We have proved that mixing a Poisson
+distribution with any distribution adds a precise amount to the variance of the
+original ("mixing") distribution: it increases the variance of the mixing
+distribution by the mean of the mixing distribution. Of course, mixing with the
+Poisson preserves the mean of the mixing distribution. Thus, given the mean and
+variance of the Poisson/mixing mixture (realized distribution), we can compute
+$\kappa = V/\mu^2$ of the mixing (activity) distribution (where $\mu$ and $V$
+are the mixture distribution's mean and variance). In principle, this means we
+can estimate an activity distribution's $\kappa$ (c.f. Lloyd-Smith et al. 2005)
+directly from the moments of the secondary case distribution.
 
-## fig: Even though $\kappa$ can be computed from moments that can be estimated without bias, it seems hard to estimate it without bias. 
+
+## Caution: Even though $\kappa$ can be computed from moments that can be estimated without bias, it seems hard to estimate $\kappa$. 
 
 - We can't simply compute $\kappa$ from the moments without bias; squaring and ratios
 - MLE for negative binomial works ok once samples get large enough, but has strong bias at low SS
+(Fig. \@ref(fig:expCheck))
 
 ```{r set fig cap MLE exp, echo=FALSE}
 cap1 <- c("MLE for kappa (inverse shape parameter) for a negative binomial is downward biased and bias may be severe with small samples. Here, n = 6. Blue line represents the true kappa (1), point estimates and CI from each sample of 6 are ranked and plotted against their \"quantile\". CI that do not overlap the target are colored red. For valid CI, the bottom 2.5% fall entirely below the target and top 2.5% above, and the rest contain the target.")
 ```
-```{r, out.width="0.9\\linewidth", fig.cap=c(cap1), echo=FALSE}
+```{r expCheck, out.width="0.9\\linewidth", fig.cap=c(cap1), echo=FALSE}
 knitr::include_graphics("MLE_start.exp.Rout.pdf")
 ```
 
-- If we assume negative binomial but it's not, the situation may well be worse. 
+- If we assume negative binomial but it's not, the situation may well be worse.
+Here, for example, we generate the data with a log-normal, rather than
+exponential activity distribution. (Fig. \@ref(fig:lnormCheck))
 
 ```{r set fig cap MLE lnorm, echo=FALSE}
 cap2 <- c("MLE (i.e., assuming a negative binomial) for kappa-discrete (i.e., CV squared for the mixture mean for the Poisson deviates), when the data are generated by a different process (i.e., without an underlying gamma) will be downward biased for positively-skewed data, and bias may be severe and persistent with largers samples. Here, n = 6, and the data are random deviates from a Poisson-lognormal mixture. Blue line represents the true kappa (1), point estimates and CI from each sample of 6 are ranked and plotted against their \"quantile\". CI that do not overlap the target are colored red. For valid CI, the bottom 2.5% fall entirely below the target and top 2.5% above, and the rest contain the target.")
 ```
 
-```{r, out.width="0.9\\linewidth", fig.cap=c(cap2), echo=FALSE}
+```{r lnormCheck, out.width="0.9\\linewidth", fig.cap=c(cap2), echo=FALSE}
 knitr::include_graphics("MLE_start.lnorm.Rout.pdf")
 ```
+
+## SIR-like models with multiple infectious classes can have high heterogeneity with few classes
+In principle, computing heterogeneity in the activity distribution does not rely
+on a gamma-distributed activities distribution. In fact, we measure
+heterogeneity for an arbitrary mmodel with $\kappa = V/\mu^2$, providing a
+common currency that generalizes beyond the gamma-negative binomial framework.
+As discussed above, irrespective of the activities distribution, we can always
+link the realized secondary distribution back to $\kappa$ for the activities
+distribution, accounting for the variance contributed by the Markov process.
+
+We're mostly interested in superspreading early in outbreaks (as that's when
+superspreading can determine if outbreaks go extinct or take off, and when
+initial decisions about controlling disease are made). So when we ask about how
+much superspreading is encoded in compartmental models, we're essentially
+talking about initial phases when S is effectively constant, and we can treat
+dynamics as if they arose from time-invariant branching processes.
+
+If we do that, it's pretty straightforward to compute the heterogeneity in
+cases-per-case if we take rates from a box model and turn them into a branching
+process (Meehan et al. 2021). Then, we can assert how much superspreading is
+built into a compartmental model. This assertion may or may not be reconcilable
+with data, (see above regarding estimation), but it seems like a useful kind of
+checksum. To illustrate this idea, we show how a compartmental model with 3
+classes can generate high levels of heterogeneity in cases per case, without
+invoking heterogeneity in mixing rates nor, within compartments, any
+individual-level variation in susceptibility, recovery rates, or transmission
+rates.
+
+We should make a bit of progress on more realism either through calculus and/or
+simulations. For simulations, we have our IBM, but we might get at least as far
+using branching process with a shrinking N/S class.
