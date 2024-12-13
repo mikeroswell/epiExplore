@@ -6,7 +6,7 @@ current: target
 -include makestuff/perl.def
 
 vim_session:
-	bash -cl "vmt drop.md"
+	bash -cl "vmt README.md drop.md"
 
 ######################################################################
 
@@ -19,6 +19,7 @@ autopipeRcall = defined
 Sources += $(wildcard *.md)
 ## drop.filemerge: drop.md
 ## mirrors += drop
+
 
 ######################################################################
 ## utilities
