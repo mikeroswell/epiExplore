@@ -5,6 +5,7 @@
 # load some libraries
 library(shellpipes)
 rpcall("IBM.base.Rout IBM_minimal.R IBM_base_pars.rda")
+rpcall("IBM.highR.Rout IBM_minimal.R IBM_highR_pars.rda")
 manageConflicts()
 library(dplyr)
 # library(purrr)

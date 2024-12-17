@@ -1,5 +1,6 @@
 library(shellpipes)
 rpcall("conjecture.base.Rout conjecture.R IBM.base.rda")
+rpcall("conjecture.highR.Rout conjecture.R IBM.highR.rda")
 loadEnvironments()
 # check Kappa
 kd <- function(x){(sd(x)^2-mean(x))/mean(x)^2}
@@ -40,5 +41,6 @@ ktdt <- function(startT, deltaT){
 # kd(caseTally[states != Sstate])
 
 ktdt(0, dayz)
+print(paste("seed =", seed))
 saveEnvironment()
 
