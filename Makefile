@@ -110,7 +110,7 @@ Ignore += *.html
 Sources += emergentKeyIdeas.Rmd
 ## Roswell attempt to get a paper outline
 
-emergentKeyIdeas.html: emergentKeyIdeas.Rmd
+emergentKeyIdeas.html: emergentKeyIdeas.Rmd ineqPlots_for_emergent.Rout.pdf
 	$(rmdh_r)
 
 Sources += GiniKappaK.Rmd
