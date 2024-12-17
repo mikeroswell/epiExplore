@@ -13,6 +13,9 @@ Older
 * drop/Woolhouse_etal_1997_transmission_heterogeneity.pdf
 * drop/parkPropagating.pdf
 
+Non-drop links
+* https://epiverse-trace.github.io/epichains/index.html
+
 ----------------------------------------------------------------------
 
 Replicating superspreader dynamics with compartmental models

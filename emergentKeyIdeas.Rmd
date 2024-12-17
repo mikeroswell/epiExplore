@@ -82,7 +82,7 @@ good, clear ideas that we hope to spread.
 ## Caution: Even though $\kappa$ can be computed from moments that can be estimated without bias, it seems hard to estimate $\kappa$. 
 
 - We can't simply compute $\kappa$ from the moments without bias
-The unbiased estimates $m$ and $v$  are both subject to sampling noise, and
+The unbiased estimates $m$ and $V$  are both subject to sampling noise, and
 biase arises from squaring the mean, and from taking the ratio that includes the
 mean-offsetting of the variance.
 
