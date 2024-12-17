@@ -20,14 +20,12 @@ Sources += $(wildcard *.md)
 ## drop.filemerge: drop.md
 ## mirrors += drop
 
-
 ######################################################################
 ## utilities
 spreadHelpers.Rout: spreadHelpers.R
 secondaryDistributionPlots.Rout: secondaryDistributionPlots.R
 ### generateds distribution functions assuming branching process
 pdfFromRates.Rout: pdfFromRates.R
-
 
 ## Lloyd
 ### reproduces main conceptual ideas from Lloyd-Smith et al. 2005, plots
@@ -104,17 +102,16 @@ nbtest.Rout: nbtest.R
 #######################################################################
 ## plots for MS?
 
-
 ineqPlots_for_emergent.Rout: ineqPlots_for_emergent.R spreadHelpers.rda kappas_in_3-class.rda pdfFromRates.rda
 	$(pipeRcall)
 
 Ignore += *.html
 
-
 Sources += emergentKeyIdeas.Rmd
 ## Roswell attempt to get a paper outline
 
-emergentKeyIdeas.html: emergentKeyIdeas.Rmd
+Ignore += emergentKeyIdeas.tex emergentKeyIdeas.log
+emergentKeyIdeas.html: emergentKeyIdeas.Rmd ineqPlots_for_emergent.Rout.pdf
 	$(rmdh_r)
 
 Sources += GiniKappaK.Rmd
