@@ -1,4 +1,5 @@
 library(shellpipes)
+rpcall("conjecture.base.Rout conjecture.R IBM.base.rda")
 loadEnvironments()
 # check Kappa
 kd <- function(x){(sd(x)^2-mean(x))/mean(x)^2}
@@ -11,9 +12,9 @@ ktdt <- function(startT, deltaT){
   secDist <- caseTally[who]
   kappa_discrete = kd(secDist)
   mu <- mean(secDist)
-  sig <- sd(secDist)
-  kappa_naive = sig^2/mu^2
-  return(data.frame(n, kappa_discrete, kappa_naive, mu, sig, startT))
+  v <- var(secDist)
+  kappa_naive = v/mu^2
+  return(data.frame(n, kappa_discrete, kappa_naive, mu, v, startT))
 }
 
 # hist(iTime[iTime< tMax])

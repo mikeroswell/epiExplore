@@ -153,5 +153,7 @@ for(i in 1:length(contactOrder[,3])){
  )
    break}
 }
+# questionable move to save storage
+rm(list= c("rateFrame", "rateInds", "contactOrder", "contInd", "contTime" ))
 
 saveEnvironment()
