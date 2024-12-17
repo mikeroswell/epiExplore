@@ -88,6 +88,11 @@ mean-offsetting of the variance.
 
 - MLE for negative binomial works ok once samples get large enough, but has strong bias at low SS
 (Fig. \@ref(fig:expCheck))
+Some methods notes on this: We compute the MLE using **bbmle**, with the
+likelihood given by the base-R `dnbinom`. The bbmle profiling function
+`bbmle::proffun()` generates a likelihood profile, and we compute the upper and
+lower confidence limits with that profile by finding the place where the signed
+square root deviance difference is ± 1.96. We should talk to Ben about this. 
 
 ```{r set fig cap MLE exp, echo=FALSE}
 cap1 <- c("MLE for kappa (inverse shape parameter) for a negative binomial is downward biased and bias may be severe with small samples. Here, n = 6. Blue line represents the true kappa (1), point estimates and CI from each sample of 6 are ranked and plotted against their \"quantile\". CI that do not overlap the target are colored red. For valid CI, the bottom 2.5% fall entirely below the target and top 2.5% above, and the rest contain the target.")

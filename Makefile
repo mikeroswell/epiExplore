@@ -81,6 +81,8 @@ sim_lnorm.Rout: sim_lnorm.R
 MLESketch.Rout: MLESketch.R
 mleRepeat.Rout: mleRepeat.R
 
+## heads up that `maxsteps = 1e4` here means this can take approximately forever
+## decent for lnorm and exp but terrible for current "gamma" (nb with kappa>1)
 ## MLE_start.lnorm.Rout: MLE_start.R sim_lnorm.R
 ## MLE_start.exp.Rout: MLE_start.R sim_exp.R
 MLE_start.%.Rout: MLE_start.R kapWrap.rda nbinom_z.rda sim_%.rda
