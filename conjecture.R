@@ -1,0 +1,43 @@
+library(shellpipes)
+loadEnvironments()
+# check Kappa
+kd <- function(x){(sd(x)^2-mean(x))/mean(x)^2}
+# is this the way to think about kappa? or do we only want to focus on recovered individuals during the epidemic? What is kappa_effective?
+
+
+ktdt <- function(startT, deltaT){
+  who <- which(startT <= iTime & iTime < startT+deltaT)
+  n <- sum(startT <= iTime & iTime < startT+deltaT)
+  secDist <- caseTally[who]
+  kappa_discrete = kd(secDist)
+  mu <- mean(secDist)
+  sig <- sd(secDist)
+  kappa_naive = sig^2/mu^2
+  return(data.frame(n, kappa_discrete, kappa_naive, mu, sig, startT))
+}
+
+# hist(iTime[iTime< tMax])
+# plot(sapply(seq(0, 40, 1), function(st){
+#   ktdt(st, 10)
+# }))
+
+# keff <- purrr::map_dfr(0:33, function(d){
+#   ktdt(d, 6)
+# })
+#
+#
+# keff |>
+#   pivot_longer(cols = c("kappa_discrete", "kappa_naive"), names_to = "kappa_approximation", values_to = "Kappa") |>
+#   ggplot(aes(startT, Kappa, color = kappa_approximation)) +
+#   geom_point() +
+#   geom_hline(yintercept = 1, color = "blue") +
+#   scale_y_log10()+
+#   theme_classic() +
+#   labs(x = "day", y = "kappa")
+#
+# #confirm kappa
+# kd(caseTally[states != Sstate])
+
+ktdt(0, dayz)
+saveEnvironment()
+
