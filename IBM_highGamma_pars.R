@@ -1,4 +1,5 @@
 library(shellpipes)
+rpcall("IBM_highGamma_pars.Rout IBM_highGamma_pars.R")
 # get event timings: here is when each individual contact occurs
 # Initialization
 tMax <- 2e3

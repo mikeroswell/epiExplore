@@ -66,13 +66,34 @@ IBM_faster.Rout: IBM_faster.R
 IBM.%.pars.Rout: IBM_%_pars.R
 	$(pipeRcall)
 
+## IBM.highGamma.Rout: IBM.R 
 IBM.%.Rout: IBM_minimal.R IBM_%_pars.rda
 	$(pipeRcall)
 
+## conjecture.highGamma.Rout: conjecture.R 
 conjecture.%.Rout: conjecture.R IBM.%.rda
 	$(pipeRcall)
 
+######################################################################
 
+## Weird chaining stuff
+
+## Looks like you did everything right; make has some ancient rules that stop it from chaining sometimes (to avoid infinite recursion)
+## I always get around this with the same idiom (but there are other ways).
+## impmakeR calls some deep machinery in pipeR.mk
+## It might be worth investigating if we can just turn off this behaviour from make!
+
+## IBM.highGamma.Rout: IBM.R 
+impmakeR += IBM
+%.IBM.Rout: IBM_minimal.R IBM_%_pars.rda
+	$(pipeRcall)
+
+impmakeR += conjecture
+## highGamma.conjecture.Rout: conjecture.R 
+%.conjecture.Rout: conjecture.R %.IBM.rda
+	$(pipeRcall)
+
+######################################################################
 
 ## Rose investigations
 
