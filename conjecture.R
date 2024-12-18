@@ -1,7 +1,9 @@
 library(shellpipes)
 rpcall("conjecture.base.Rout conjecture.R IBM.base.rda")
 rpcall("conjecture.highR.Rout conjecture.R IBM.highR.rda")
+rpcall("conjecture.lowGamma.Rout conjecture.R IBM.lowGamma.rda")
 loadEnvironments()
+manageConflicts()
 # check Kappa
 kd <- function(x){(sd(x)^2-mean(x))/mean(x)^2}
 # is this the way to think about kappa? or do we only want to focus on recovered individuals during the epidemic? What is kappa_effective?

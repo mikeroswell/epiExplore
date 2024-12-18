@@ -1,12 +1,11 @@
 library(shellpipes)
-rpcall("IBM_highR_pars.Rout IBM_highR_pars.R")
 # get event timings: here is when each individual contact occurs
 # Initialization
 tMax <- 2e3
 # epidemic parameters
 
-setBeta <- 8
-setGamma <- 1/3
+setBeta <- 0.05
+setGamma <- 10
 tProb <- 0.075
 
 # daily per-person interactions

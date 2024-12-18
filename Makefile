@@ -65,11 +65,14 @@ IBM_faster.Rout: IBM_faster.R
 ## use IBM to check conjecture that secondary case dist variance = 2 (kappa_discrete = 1)
 IBM.%.pars.Rout: IBM_%_pars.R
 	$(pipeRcall)
+
 IBM.%.Rout: IBM_minimal.R IBM_%_pars.rda
 	$(pipeRcall)
 
 conjecture.%.Rout: conjecture.R IBM.%.rda
 	$(pipeRcall)
+
+
 
 ## Rose investigations
 
