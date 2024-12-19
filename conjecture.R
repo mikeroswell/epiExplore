@@ -4,6 +4,7 @@ rpcall("conjecture.highR.Rout conjecture.R IBM.highR.rda")
 rpcall("conjecture.lowGamma.Rout conjecture.R IBM.lowGamma.rda")
 rpcall("conjecture.highGamma.Rout conjecture.R IBM.highGamma.rda")
 rpcall("highGamma.conjecture.Rout conjecture.R highGamma.IBM.rda")
+rpcall("base.conjecture.Rout conjecture.R base.IBM.rda")
 loadEnvironments()
 manageConflicts()
 # check Kappa

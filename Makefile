@@ -66,10 +66,12 @@ IBM_faster.Rout: IBM_faster.R
 IBM.%.pars.Rout: IBM_%_pars.R
 	$(pipeRcall)
 
+## Can we delete these in favor of the idiomatic ones?
 ## IBM.highGamma.Rout: IBM.R 
 IBM.%.Rout: IBM_minimal.R IBM_%_pars.rda
 	$(pipeRcall)
 
+## conjecture.highGamma.Rout: conjecture.R 
 ## conjecture.highGamma.Rout: conjecture.R 
 conjecture.%.Rout: conjecture.R IBM.%.rda
 	$(pipeRcall)
@@ -89,7 +91,8 @@ impmakeR += IBM
 	$(pipeRcall)
 
 impmakeR += conjecture
-## highGamma.conjecture.Rout: conjecture.R 
+## highGamma.conjecture.Rout: conjecture.R
+## base.conjecture.Rout: conjecture.R
 %.conjecture.Rout: conjecture.R %.IBM.rda
 	$(pipeRcall)
 
