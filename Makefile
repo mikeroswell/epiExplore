@@ -83,7 +83,7 @@ conjecture.%.Rout: conjecture.R IBM.%.rda
 ## impmakeR calls some deep machinery in pipeR.mk
 ## It might be worth investigating if we can just turn off this behaviour from make!
 
-## IBM.highGamma.Rout: IBM.R 
+## IBM.highGamma.Rout: IBM_minimal.R
 impmakeR += IBM
 %.IBM.Rout: IBM_minimal.R IBM_%_pars.rda
 	$(pipeRcall)
