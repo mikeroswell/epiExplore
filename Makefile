@@ -99,6 +99,10 @@ impmakeR += conjecture
 
 sculpt.Rout: sculpt.R
 
+######################################################################
+
+Sources += $(wildcard *.tex)
+
 ## Notes on mean and variance in R_c
 
 ## RcNotes.pdf: RcNotes.tex
