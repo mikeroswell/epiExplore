@@ -99,6 +99,10 @@ impmakeR += conjecture
 
 sculpt.Rout: sculpt.R
 
+## Notes on mean and variance in R_c
+
+## RcNotes.pdf: RcNotes.tex
+
 ######################################################################
 ## Robust maximum likelihood estimation when kappa is near boundary
 nbinom_z.Rout: nbinom_z.R
@@ -200,6 +204,7 @@ makestuff/Makefile:
 -include makestuff/os.mk
 
 -include makestuff/pipeR.mk
+-include makestuff/texj.mk
 -include makestuff/rmd.mk
 ## -include makestuff/ldrop.mk
 -include makestuff/mirror.mk
