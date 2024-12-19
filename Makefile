@@ -83,7 +83,7 @@ conjecture.%.Rout: conjecture.R IBM.%.rda
 ## impmakeR calls some deep machinery in pipeR.mk
 ## It might be worth investigating if we can just turn off this behaviour from make!
 
-## IBM.highGamma.Rout: IBM.R 
+## IBM.highGamma.Rout: IBM_minimal.R
 impmakeR += IBM
 %.IBM.Rout: IBM_minimal.R IBM_%_pars.rda
 	$(pipeRcall)
@@ -98,6 +98,14 @@ impmakeR += conjecture
 ## Rose investigations
 
 sculpt.Rout: sculpt.R
+
+######################################################################
+
+Sources += $(wildcard *.tex)
+
+## Notes on mean and variance in R_c
+
+## RcNotes.pdf: RcNotes.tex
 
 ######################################################################
 ## Robust maximum likelihood estimation when kappa is near boundary
@@ -200,6 +208,7 @@ makestuff/Makefile:
 -include makestuff/os.mk
 
 -include makestuff/pipeR.mk
+-include makestuff/texj.mk
 -include makestuff/rmd.mk
 ## -include makestuff/ldrop.mk
 -include makestuff/mirror.mk
