@@ -17,6 +17,19 @@ Non-drop links
 * https://epiverse-trace.github.io/epichains/index.html
 
 ----------------------------------------------------------------------
+Superspreading and the effect of individual variation on disease emergence
+* drop/Lloyd-Smith_etal_2005_superspreading.pdf
+* drop/Lloyd-Smith_etal_2005_superspreading_supp-text.pdf
+
+Lloyd-Smith et al. did a lot of careful work around ML fitting of NB kappa and 
+have citations to follow in the supplement. 
+
+Meehan et al. (see below) are focused on the issue described in this sentence:
+> The geometric model has considerable support for several data sets, which
+indicates significant individual variation in transmission rates because real
+infectious periods are less dispersed than the exponential distribution
+
+----------------------------------------------------------------------
 
 Replicating superspreader dynamics with compartmental models
 * drop/meehan.pdf

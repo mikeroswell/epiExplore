@@ -15,6 +15,7 @@ Most of the scripts here are set up to use **shellpipes** and be called from the
 
 Write up notes on what we learned about biased estimation
 * Does this fit into MS 1?
+* Read papers cited in Lloyd-Smith et al. 2005 superspreading supplement, and forward citation search for progress.
 
 Make a simple, slick machine to do SIR IBMs with one class and see what we can learn about the Roswell conjecture (variance of individual R's ≈ 1)
 
