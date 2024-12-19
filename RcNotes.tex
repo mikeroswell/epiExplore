@@ -18,6 +18,18 @@ where $Z$ is the size of the epidemic.
 
 We can write
 
-$$C(t) = 
+$$C(t) = B \int{d\delta\, x(t+\delta) \exp(-\delta)}$$
+
+If we also solve the $\dot y$ equation and write 
+
+$$ y(t) = \int{d\tau\, i(t)\exp(-\tau)}$$
+
+\emph{and} had any patience with integrals, we could presumably expand and substitute and get something like: 
+
+$$
+	Z \bar C  = B \int{dt\, x(t) y(t)} = \int{dt\, i(t)}.
+$$
+
+This seems to be what I wanted, but also seems to be a dead end. It's hard to imagine any tricks to try if we squared the whole integral for $C(t)$ and plugged \emph{that} in.
 
 \end{document}
