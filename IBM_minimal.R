@@ -11,17 +11,17 @@ rpcall("IBM.highGamma.Rout IBM_minimal.R IBM_highGamma_pars.rda")
 rpcall("highGamma.IBM.Rout IBM_minimal.R IBM_highGamma_pars.rda")
 rpcall("base.IBM.Rout IBM_minimal.R IBM_base_pars.rda")
 manageConflicts()
+
 library(dplyr)
 # library(purrr)
 library(tidyr)
 loadEnvironments()
 
-
 #This is a script to streamline the IBM script for single-class SIR models.
 set.seed(seed)
 
 # first, play with this mixing idea
-popSize <- 1e4
+popSize <- 1e3
 # some shape parameter
 
 # combn is very slow with big numbers
@@ -100,10 +100,10 @@ S <- sum(states == Sstate)
 # and Days
 dayz <- 1
 
-
 ####
 # Think about if this gets params as inputs too.
-for(i in 1:length(contactOrder[,3])){
+
+for(i in 1:nrow(contactOrder)){
   co <- contactOrder[i,]
 # a bunch of stuff I want to do for each row...
   # check if anyone is infectious
