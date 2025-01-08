@@ -8,8 +8,8 @@ rpcall("IBM.base.Rout IBM_minimal.R IBM_base_pars.rda")
 rpcall("IBM.lowGamma.Rout IBM_minimal.R IBM_lowGamma_pars.rda")
 rpcall("IBM.highGamma.Rout IBM_minimal.R IBM_highGamma_pars.rda")
 rpcall("highGamma.IBM.Rout IBM_minimal.R IBM_highGamma_pars.rda")
-rpcall("base.IBM.Rout IBM_minimal.R IBM_base_pars.rda")
 rpcall("highR.IBM.Rout IBM_minimal.R IBM_highR_pars.rda")
+rpcall("base.IBM.Rout IBM_minimal.R IBM_base_pars.rda")
 rpcall("lowGamma.IBM.Rout IBM_minimal.R IBM_lowGamma_pars.rda")
 manageConflicts()
 
@@ -118,7 +118,7 @@ for(i in 1:nrow(contactOrder)){
     # remove them
     states[co[1:2]][recVec] <- Rstate
     # if one is infectious AND one is susceptible, lots to do
-    if(sum(states[co[1:2]]) == (Istate+Sstate)){
+    if(any(states[co[1:2]] == Istate) & any(states[co[1:2]] == Sstate)){
       # first flip the coin
      if(rbinom(1,1, prob = tProb)){
        # cat("infection")
