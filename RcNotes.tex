@@ -6,7 +6,7 @@ Start with the normalized SIR:
 
 $$ i = Bxy; \dot x = -i; \dot y = i-y $$
 
-If $C$ is the case reproductive number for an individual (the same for all individuals infected at an instant), then the overall mean is:
+If $C(t)$ is the case reproductive number for an individual infected at time $t$, then the overall mean is:
 
 $$
 	\bar C 
@@ -16,13 +16,13 @@ $$
 
 where $Z$ is the size of the epidemic.
 
-We can write
+We can integrate over time since infection $\delta$, and write:
 
 $$C(t) = B \int{d\delta\, x(t+\delta) \exp(-\delta)}$$
 
-If we also solve the $\dot y$ equation and write 
+If we also solve the $\dot y$ equation, by looking at who has come in $\tau$ time ago and how many of them survived, and write:
 
-$$ y(t) = \int{d\tau\, i(t)\exp(-\tau)}$$
+$$ y(t) = \int{d\tau\, i(t-\tau)\exp(-\tau)}$$
 
 \emph{and} had any patience with integrals, we could presumably expand and substitute and get something like: 
 

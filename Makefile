@@ -64,35 +64,19 @@ IBM_3-way.Rout: IBM_3-way.R kappas_in_3-class.rda
 	$(pipeRcall)
 IBM_sketch_sketch.Rout: IBM_sketch_sketch.R
 IBM_faster.Rout: IBM_faster.R
-
-## use IBM to check conjecture that secondary case dist variance = 2 (kappa_discrete = 1)
-IBM.%.pars.Rout: IBM_%_pars.R
-	$(pipeRcall)
-
-## IBM.highGamma.Rout: IBM.R
-IBM.%.Rout: IBM_minimal.R IBM_%_pars.rda
-	$(pipeRcall)
-
-## conjecture.highGamma.Rout: conjecture.R
-conjecture.%.Rout: conjecture.R IBM.%.rda
-	$(pipeRcall)
-
 ######################################################################
 
-## Weird chaining stuff
+## use IBM to check conjecture that secondary case dist variance = 2 (kappa_discrete = 1)
 
-## Looks like you did everything right; make has some ancient rules that stop it from chaining sometimes (to avoid infinite recursion)
-## I always get around this with the same idiom (but there are other ways).
-## impmakeR calls some deep machinery in pipeR.mk
-## It might be worth investigating if we can just turn off this behaviour from make!
-
-## IBM.highGamma.Rout: IBM_minimal.R
+## highGamma.Rout: IBM_minimal.R
 impmakeR += IBM
+## base.IBM.Rout: IBM_minimal.R IBM_base_pars.rda
 %.IBM.Rout: IBM_minimal.R IBM_%_pars.rda
 	$(pipeRcall)
 
 impmakeR += conjecture
-## highGamma.conjecture.Rout: conjecture.R
+## lowGamma.conjecture.Rout: conjecture.R
+## base.conjecture.Rout: conjecture.R
 %.conjecture.Rout: conjecture.R %.IBM.rda
 	$(pipeRcall)
 
