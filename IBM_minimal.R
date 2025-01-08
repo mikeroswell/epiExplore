@@ -126,12 +126,12 @@ for(i in 1:nrow(contactOrder)){
         I <- I + 1
         S <- S - 1
         # count the win
-        caseTally[co[1:2][states[co[1:2]] == 2]] <- caseTally[co[1:2][states[co[1:2]] == 2]] + 1
+        caseTally[co[1:2][states[co[1:2]] == Istate]] <- caseTally[co[1:2][states[co[1:2]] == Istate]] + 1
 
         # record the infection time
-        iTime[co[1:2][states[co[1:2]] == 1]] <- tCur
+        iTime[co[1:2][states[co[1:2]] == Sstate]] <- tCur
         # update the states
-        states[co[1:2][states[co[1:2]] == 1]] <- Istate
+        states[co[1:2][states[co[1:2]] == Sstate]] <- Istate
 
     }
   }
