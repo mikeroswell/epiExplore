@@ -48,6 +48,9 @@ why_low_kappa.Rout: why_low_kappa.R
 ### show that navie kappa is no good, and synthetic kappa is fine
 low_kappa.Rout: low_kappa.R
 
+## dead simple emergent plots
+deadSimple.Rout: deadSimple.R spreadHelpers.rda
+
 ## emergent heterogeneity in compartmental models
 kappas_in_3-class.Rout: kappas_in_3-class.R
 plotEmergent.Rout: plotEmergent.R kappas_in_3-class.rda
@@ -66,11 +69,11 @@ IBM_faster.Rout: IBM_faster.R
 IBM.%.pars.Rout: IBM_%_pars.R
 	$(pipeRcall)
 
-## IBM.highGamma.Rout: IBM.R 
+## IBM.highGamma.Rout: IBM.R
 IBM.%.Rout: IBM_minimal.R IBM_%_pars.rda
 	$(pipeRcall)
 
-## conjecture.highGamma.Rout: conjecture.R 
+## conjecture.highGamma.Rout: conjecture.R
 conjecture.%.Rout: conjecture.R IBM.%.rda
 	$(pipeRcall)
 
@@ -89,7 +92,7 @@ impmakeR += IBM
 	$(pipeRcall)
 
 impmakeR += conjecture
-## highGamma.conjecture.Rout: conjecture.R 
+## highGamma.conjecture.Rout: conjecture.R
 %.conjecture.Rout: conjecture.R %.IBM.rda
 	$(pipeRcall)
 
