@@ -54,7 +54,7 @@ secHist <- function(n, act){
 #                        , sec_1 = secDist(betaT, act1)
 #                        , sec_2 = secDist(betaT, act2)
 #                        )
-n <- 6e4
+n <- 2e4
 histDat <- data.frame(ind = 1:n
                       , activity_1 = actHist(n, act1)
                       , activity_2 = actHist(n, act2)
@@ -62,113 +62,112 @@ histDat <- data.frame(ind = 1:n
                       , secondary_2 = secHist(n, act2)
                       )
 
-# Custom StatBinNoZeros implementation
-# Adapted with assistance from OpenAI's ChatGPT for filtering zero-count bins in ggplot2
-# Conversation date: January 16, 2025
-{
-StatBinNoZeros <- ggproto(
-  "StatBinNoZeros", StatBin,
-  compute_group = function(data, scales, binwidth = NULL, bins = 30, breaks = NULL, self = NULL, ...) {
-    # Check and set default for bins
-    if (is.null(bins)) bins <- 30
-
-    # Call the parent's compute_group explicitly
-    bin_data <- ggproto_parent(StatBin, StatBinNoZeros)$compute_group(
-      data = data, scales = scales, binwidth = binwidth, bins = bins, breaks = breaks, ...
-    )
-
-    # Filter out bins with zero count
-    if (!"count" %in% names(bin_data)) {
-      stop("The computed data does not contain a 'count' column. Ensure proper mapping.")
-    }
-    bin_data <- bin_data[bin_data$count > 0, ]
-    return(bin_data)
-  }
-)
-
-stat_bin_no_zeros <- function(mapping = NULL, data = NULL, geom = "bar",
-                              position = "identity", ..., binwidth = NULL,
-                              bins = 30, breaks = NULL, na.rm = FALSE,
-                              show.legend = NA, inherit.aes = TRUE) {
-  layer(
-    stat = StatBinNoZeros, data = data, mapping = mapping, geom = geom,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(binwidth = binwidth, bins = bins, breaks = breaks, na.rm = na.rm, ...)
-  )
-}
-}
-
-
-
-# histDat |>
-#   pivot_longer(cols = 2:5, values_to = "val", names_sep = "_", names_to = c("distType", "distParms") ) |>
-#   # mutate(fillgrp = paste(distType, distParms)) |>
-#   ggplot(aes(val, fill = distParms, color = distParms, shape = distParms, group = distType)) + # , color = fillgrp, color = distParms,
-#   geom_histogram(aes(alpha =  0.7*as.numeric(as.factor(distType))), position = "identity", bins = 100, linewidth = 0) + #, color = "black"
-#   stat_count(geom = "point", aes(alpha =  as.numeric(as.factor(distType))-1, size = 5*(as.numeric(as.factor(distType))-1))) +
-#   scale_alpha_identity() +
-#   xlim(c(NA, 5)) +
-#   scale_fill_brewer(palette = "Dark2", name = "beta", labels = c(beta1, beta2)) +
-#   scale_color_brewer(palette = "Dark2", name = "beta", labels = c(beta1, beta2)) +
-#   # scale_color_manual(values = c("orange","darkorange", "blue", "navy")) +
-#   # scale_fill_manual(values = c( "orange","darkorange", "blue", "navy")) +
-#   labs(color = "distribution", fill = "distribution", x = "cases per case", y = "infectors (of 5000)",  ) +
-#   scale_size(range = c(0,2)) +
-#   scale_y_continuous(sec.axis = sec_axis(name = "% infectors", transform = function(x){100*x/max(x)})) +
-#   theme_classic()
 
 bins <- 100
 xupper <- 30
 
-histDat |>
+probDist <- histDat |>
   pivot_longer(cols = 2:5, values_to = "val", names_sep = "_", names_to = c("distType", "distParms") ) |>
   mutate(higherGroup = paste(distType, distParms, sep = "_") )|>
-  # mutate(fillgrp = paste(distType, distParms)) |>
-  ggplot(aes(val, fill = distParms, color = distParms, shape = distParms)) + # , color = fillgrp, color = distParms,
-  # geom_histogram(alpha = 0, position = "identity", bins = 100, linewidth = 0, aes(group = higherGroup)) + #, color = "black"
+  filter(val <= xupper+xupper/bins) |>
+  ggplot(aes(val, fill = distParms, color = distParms, shape = distParms)) +
+  # # highlight the tops of the bars with points
+  stat_count(geom = "point"
+             , aes(alpha =  (as.numeric(as.factor(distType))-1)
+                   , group = higherGroup
+                   ,  y = after_stat(count / tapply(count, group, sum)[group])
+             )
+             # , key_glyph = 'point'
+             , position = "identity"
+
+  ) +
+   # plot PMFs as bars with "unit" width and normalized counts
   stat_count(geom = "bar"
              , aes(alpha =  0.7*(as.numeric(as.factor(distType))-1)
                    , group = higherGroup
-                   ,  y = after_stat(count / sum(count)) )
-           , color = scales::alpha("white", alpha = 0)
-            , position = "identity"
+                   ,  y = after_stat(count / tapply(count, group, sum)[group])
+                   )
+           # , color = scales::alpha("white", alpha = 0)
+           , linewidth = 0.3
+           , position = "identity"
            , width = (xupper+1) / bins
+           # , key_glyph = 'rect'
                ) +
+
+  # create a shaded region for the PDFs using geom_bar
   stat_bin(geom = "bar"
            , aes(alpha =  0.3*(2-as.numeric(as.factor(distType)))
                  , group = higherGroup
-                 ,  y = after_stat(count / sum(count)) )
+                 ,  y = after_stat(count / tapply(count, group, sum)[group])
+           )
            , color = scales::alpha("white", alpha = 0)
            , breaks = seq(0, xupper, length.out = bins)
            , position = "identity"
            , bins = bins
+           , key_glyph = 'polygon'
   ) +
-  stat_count(geom = "point"
-                    , aes(alpha =  (as.numeric(as.factor(distType))-1)
-                          , group = higherGroup
-                          ,  y = after_stat(count / sum(count))
-                    )
-
-                    , position = "identity"
-
-  ) +
+# provide an outline for the PDFs
   stat_bin(geom = "line"
              , aes(alpha = 0.85*(2-as.numeric(as.factor(distType)))
                  , group = higherGroup
-                 ,  y = after_stat(count / sum(count)))
-             ,  position = "identity"
+                 ,  y = after_stat(count / tapply(count, group, sum)[group])
+             )
+           ,  position = "identity"
+           , key_glyph = "blank"
            , bins = bins
            , breaks = seq(0, xupper, length.out = bins)
-           , linewidth = 1) +
-  scale_alpha_identity() +
-  xlim(c(NA, xupper)) +
+           , linewidth = 0.7
+           ) +
+
+  scale_alpha_identity(
+    guide = "legend"
+    , name = "distribution type"
+    , breaks = c(0.3, 0.7)
+    , labels = c("activity (shaded areas with lines)", "secondary case (bars with points)")
+    ) + # clear is clear
+  xlim(c(NA, xupper)) + # truncate the PDFs (this may lead to slight inaccuracies in area integrations)
   scale_fill_brewer(palette = "Dark2", name = "beta", labels = c(beta1, beta2)) +
   scale_color_brewer(palette = "Dark2", name = "beta", labels = c(beta1, beta2)) +
   scale_shape_discrete(name = "beta", labels = c(beta1, beta2)) +
-  # scale_color_manual(values = c("orange","darkorange", "blue", "navy")) +
-  # scale_fill_manual(values = c( "orange","darkorange", "blue", "navy")) +
-  labs(color = "distribution", fill = "distribution", x = "cases per case", y = "fraction of infectors"  ) +
-  scale_size(range = c(0,2)) +
-  # scale_y_continuous(sec.axis = sec_axis(name = "% infectors", transform = function(x){100*x/max(x)})) +
+  labs(color = "none", fill = "distribution", x = "cases per case", y = "fraction of infectors"  ) +
+  guides(
+    alpha = guide_legend(
+      override.aes = list(
+     fill = c(scales::alpha("grey", 30), scales::alpha("grey", 70) )
+     , color = "black"
+     , linewidth = c(0.7, 0)
+     , size = c(0,2)
+     , shape = 17
+
+      )
+
+    )
+
+
+  ) +
+  scale_size(range = c(0,2)) + # for whatever reason, controlling the point size here
   theme_classic()
+
+
+##############
+
+# now we want to build the inequality plots
+R0ineq<- histDat |>
+  mutate(across(.cols = 2:5, .fns = cumFrac, .names ="{.col}_{.fn}")) |>
+  slice(which(row_number() %% 500 == 1)) |>
+  mutate(frac = row_number(ind)/length(ind)) |>
+  pivot_longer(cols = 6:9, names_sep = "_", names_to = c("distType", "distParms", "valType"), values_to = "val") |>
+
+  ggplot(aes(frac, val, color = distParms, linetype = distType)) +
+  geom_hline(yintercept = 0.8, linewidth = 0.5, color = "grey") +
+  geom_vline(xintercept = 0.2, linewidth = 0.5, color = "grey") +
+  geom_line(linewidth = 1
+            #, alpha = 0.8
+            ) +
+  theme_classic() +
+  scale_color_brewer(palette = "Dark2", name = "beta", labels = c(beta1, beta2)) +
+  labs(x = "fraction of infectors (ranked)", y = "fraction of new infections attributable to x", linetype = "distribution type")
+
+probDist / R0ineq + plot_annotation(tag_levels = 'a')
+
 
