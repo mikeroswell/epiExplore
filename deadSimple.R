@@ -54,7 +54,7 @@ secHist <- function(n, act){
 #                        , sec_1 = secDist(betaT, act1)
 #                        , sec_2 = secDist(betaT, act2)
 #                        )
-n <- 5e4
+n <- 6e4
 histDat <- data.frame(ind = 1:n
                       , activity_1 = actHist(n, act1)
                       , activity_2 = actHist(n, act2)
@@ -117,6 +117,8 @@ stat_bin_no_zeros <- function(mapping = NULL, data = NULL, geom = "bar",
 #   scale_y_continuous(sec.axis = sec_axis(name = "% infectors", transform = function(x){100*x/max(x)})) +
 #   theme_classic()
 
+bins <- 100
+xupper <- 30
 
 histDat |>
   pivot_longer(cols = 2:5, values_to = "val", names_sep = "_", names_to = c("distType", "distParms") ) |>
@@ -124,126 +126,49 @@ histDat |>
   # mutate(fillgrp = paste(distType, distParms)) |>
   ggplot(aes(val, fill = distParms, color = distParms, shape = distParms)) + # , color = fillgrp, color = distParms,
   # geom_histogram(alpha = 0, position = "identity", bins = 100, linewidth = 0, aes(group = higherGroup)) + #, color = "black"
-  stat_bin(geom = "bar"
+  stat_count(geom = "bar"
              , aes(alpha =  0.7*(as.numeric(as.factor(distType))-1)
-                   , group = higherGroup)
+                   , group = higherGroup
+                   ,  y = after_stat(count / sum(count)) )
            , color = scales::alpha("white", alpha = 0)
-             , position = "identity"
-           , bins = 100
+            , position = "identity"
+           , width = (xupper+1) / bins
                ) +
   stat_bin(geom = "bar"
            , aes(alpha =  0.3*(2-as.numeric(as.factor(distType)))
-                 , group = higherGroup)
+                 , group = higherGroup
+                 ,  y = after_stat(count / sum(count)) )
            , color = scales::alpha("white", alpha = 0)
+           , breaks = seq(0, xupper, length.out = bins)
            , position = "identity"
-           , bins = 100
+           , bins = bins
   ) +
-  stat_bin_no_zeros(geom = "point"
-           , aes(alpha =  (as.numeric(as.factor(distType))-1)
-                  , group = higherGroup
-                , y = after_stat(count)
-                 )
-           # , color = "white"
-           , position = "identity"
-           # , label = "-"
-           , bins = 100
+  stat_count(geom = "point"
+                    , aes(alpha =  (as.numeric(as.factor(distType))-1)
+                          , group = higherGroup
+                          ,  y = after_stat(count / sum(count))
+                    )
+
+                    , position = "identity"
+
   ) +
   stat_bin(geom = "line"
-             , aes(alpha = 0.7*(2-as.numeric(as.factor(distType)))
-                 , group = higherGroup)
+             , aes(alpha = 0.85*(2-as.numeric(as.factor(distType)))
+                 , group = higherGroup
+                 ,  y = after_stat(count / sum(count)))
              ,  position = "identity"
-           , bins = 100) +
+           , bins = bins
+           , breaks = seq(0, xupper, length.out = bins)
+           , linewidth = 1) +
   scale_alpha_identity() +
-  xlim(c(NA, 30)) +
+  xlim(c(NA, xupper)) +
   scale_fill_brewer(palette = "Dark2", name = "beta", labels = c(beta1, beta2)) +
   scale_color_brewer(palette = "Dark2", name = "beta", labels = c(beta1, beta2)) +
   scale_shape_discrete(name = "beta", labels = c(beta1, beta2)) +
   # scale_color_manual(values = c("orange","darkorange", "blue", "navy")) +
   # scale_fill_manual(values = c( "orange","darkorange", "blue", "navy")) +
-  labs(color = "distribution", fill = "distribution", x = "cases per case", y = "infectors (of 5000)",  ) +
+  labs(color = "distribution", fill = "distribution", x = "cases per case", y = "fraction of infectors"  ) +
   scale_size(range = c(0,2)) +
-  scale_y_continuous(sec.axis = sec_axis(name = "% infectors", transform = function(x){100*x/max(x)})) +
+  # scale_y_continuous(sec.axis = sec_axis(name = "% infectors", transform = function(x){100*x/max(x)})) +
   theme_classic()
 
-# scalor <- 2
-#
-# deadDat |>
-#   # ggplot()+
-#   # geom_freqpoly(aes(x= act_1),  color = "red", bins = 250, stat = "bin") +
-#   # geom_point(aes(x = sec_2), color = "maroon", stat = "count") +
-#   # geom_freqpoly(aes(x = act_2), color = "maroon", bins = 250, stat= "bin", closed = "left") +
-#   # geom_point(aes(x = sec_1), color = "red", stat= "count")+# , geom = "point")+
-#   #
-#   pivot_longer(cols = 2:5, values_to = "val", names_sep = "_", names_to = c("distType", "distParms") ) |>
-#   mutate(val = if_else(val ==0, NA, val)) |>
-#   ggplot(aes(betaT, val,  color = distParms, fill = distParms, shape = distParms) )+ # , color = distParms,
-#   xlim(c(NA,4)) +
-#   # scale_fill_brewer() +
-#   # geom_histogram(bins = 50, position = position_identity(), alpha = 0.5)+
-#   # geom_line(linewidth = 0.2)+
-#
-#   # scale_shape_manual(values = c(20, 16 )) +
-#   geom_area(position= "identity", aes(alpha = 0.8*(as.numeric(as.factor(distType)))), na.rm = TRUE, linewidth = 0)+ #data = deadDat[deadDat$distType == "act",]
-#   geom_point( aes(y =  val * max(val, na.rm = TRUE) * scalor
-#         , size = 0.5* (as.numeric(as.factor(distType))-1)
-#         , alpha =  (as.numeric(as.factor(distType))-1)
-#                   )
-#   ) +
-#   # # geom_line() +
-#   # geom_col(position = "identity", alpha = 0.7, linewidth = 0.2) +
-#   scale_fill_brewer(palette = "Dark2", name = "beta", labels = c(beta1, beta2)) +
-#   scale_color_brewer(palette = "Dark2", name = "beta", labels = c(beta1, beta2)) +
-#   # scale_fill_manual(values = c(0, 0, "red", "blue")) +
-#   theme_classic() +
-#   scale_size(range = c(0,3)) +
-#   scale_alpha_identity() +
-#   # scale_shape_manual(values = 16) +
-#   labs(x = "cases per case", y = "density of infectors (curves)") +
-#   guides(size = "none"
-#          # , alpha = "none"
-#
-#   ) +
-#
-#   scale_y_continuous(limits = c(NA, 40)
-#                      , sec.axis = sec_axis(name = "fraction infectors (points)", transform = function(x){x/max(x)}))
-#
-#   # v1
-# deadDat |>
-#   # ggplot()+
-#   # geom_freqpoly(aes(x= act_1),  color = "red", bins = 250, stat = "bin") +
-#   # geom_point(aes(x = sec_2), color = "maroon", stat = "count") +
-#   # geom_freqpoly(aes(x = act_2), color = "maroon", bins = 250, stat= "bin", closed = "left") +
-#   # geom_point(aes(x = sec_1), color = "red", stat= "count")+# , geom = "point")+
-#   #
-#   pivot_longer(cols = 2:5, values_to = "val", names_sep = "_", names_to = c("distType", "distParms") ) |>
-#   group_by(distType, distParms) |>
-#   mutate(  val = val/sum(val),
-#             val = if_else(val==0, NA, val)
-#            ) |>
-#   ggplot(aes(betaT, val,  color = distParms, fill = distParms) )+ # , color = distParms,
-#   xlim(c(NA,4)) +
-#   # scale_fill_brewer() +
-#   # geom_histogram(bins = 50, position = position_identity(), alpha = 0.5)+
-#   # geom_line(linewidth = 0.2)+
-#
-#   # scale_shape_manual(values = c(20, 16 )) +
-#   geom_area(position= "identity", aes(alpha = 0.8*(as.numeric(as.factor(distType)))), na.rm = TRUE, linewidth = 0)+ #data = deadDat[deadDat$distType == "act",]
-#   geom_point( aes(size = 0.5* (as.numeric(as.factor(distType))-1)
-#                   , alpha =  (as.numeric(as.factor(distType))-1)
-#   )) +
-#   # # geom_line() +
-#   # geom_col(position = "identity", alpha = 0.7, linewidth = 0.2) +
-#   scale_fill_brewer(palette = "Dark2", name = "beta", labels = c(beta1, beta2)) +
-#   scale_color_brewer(palette = "Dark2", name = "beta", labels = c(beta1, beta2)) +
-#   # scale_fill_manual(values = c(0, 0, "red", "blue")) +
-#   theme_classic() +
-#   scale_size(range = c(0,2)) +
-#   scale_alpha_identity() +
-#   # scale_shape_manual(values = 16) +
-#   labs(x = "cases per case", y = "Fraction of infectors (points)") +
-#   guides(size = "none"
-#          # , alpha = "none"
-#
-#   ) +
-#   scale_y_continuous(sec.axis = sec_axis(name = "% infectors", transform = function(x){100*x/max(x)}))
-#
