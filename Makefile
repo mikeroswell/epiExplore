@@ -40,6 +40,14 @@ myLloyd-Smith.Rout: myLloyd-Smith.R spreadHelpers.rda
 ### MPOPHC grant generated here.
 myMeehan.Rout: myMeehan.R spreadHelpers.rda secondaryDistributionPlots.rda
 	$(pipeRcall)
+
+plotMPOPHC.Rout: plotMPOPHC.R myMeehan.rda
+	$(pipeRcall)
+
+impmakeR += plotPMF_PDF_ineq
+
+plotPMF_PDF_ineq.Rout: plotPMF_PDF_ineq.R myMeehan.rda deadSimple.rda
+	$(pipeRcall)
 ######################################################################
 
 ## kappa mystery: naive kappa estimation is downwards biased
@@ -50,6 +58,10 @@ low_kappa.Rout: low_kappa.R
 
 ## dead simple emergent plots
 deadSimple.Rout: deadSimple.R spreadHelpers.rda
+	$(pipeRcall)
+
+plotPMF_PDF_ineq.Rout: plotPMF_PDF_ineq.R	 deadSimple.rda
+	$(pipeRcall)
 
 ## emergent heterogeneity in compartmental models
 kappas_in_3-class.Rout: kappas_in_3-class.R
