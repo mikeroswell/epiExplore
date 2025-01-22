@@ -26,6 +26,7 @@ spreadHelpers.Rout: spreadHelpers.R
 secondaryDistributionPlots.Rout: secondaryDistributionPlots.R
 ### generateds distribution functions assuming branching process
 pdfFromRates.Rout: pdfFromRates.R
+kappaFns.Rout: kappaFns.R
 
 ## Lloyd
 ### reproduces main conceptual ideas from Lloyd-Smith et al. 2005, plots
@@ -49,6 +50,15 @@ impmakeR += plotPMF_PDF_ineq
 plotPMF_PDF_ineq.Rout: plotPMF_PDF_ineq.R myMeehan.rda deadSimple.rda
 	$(pipeRcall)
 ######################################################################
+
+
+## epichains
+### learn how the package epichains works and whether it provides the mechanisms
+### for susceptible depletion that I feel we need to better link the two worlds:
+### branching processes for (early-phase outbreak) superspreading, and
+### compartmental models, for longer-term, deterministic trajectories.
+loseSus.Rout: loseSus.R kappaFns.rda
+	$(pipeRcall)
 
 ## kappa mystery: naive kappa estimation is downwards biased
 ### superceded, I suspect, but note error likely in optim

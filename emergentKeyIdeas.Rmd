@@ -28,16 +28,16 @@ But we don't yet have a crystal clear idea of what the point of the MS
 is. I'm going to try to write down some key ideas and maybe illustrate
 them with figures here.
 
-# Clarifying the link between realized and activity distributions
+# Clarifying the link between realized and activity distributions in branching process models without susceptible depletion
 
 ## Realized distributions have different inequality with same shape parameter (i.e., $1/\kappa$)
 
 ```{r fig Realized distributions, echo=FALSE}
-capRealized <- c("Although the inequality in the activity distribution does not depend on R0, the inequality in \"realized\" infectiousness from a branching process model with an exponential activity distribution depends on R0. Perhaps unintuitively, observed inequality grows as R0 falls; one way of thinking of this is the increasing proportion of infectees that transmit to nobody with lower R0")
+capRealized <- c("[to be expanded]Although the inequality in the activity distribution does not depend on R0, the inequality in \"realized\" infectiousness from a branching process model with an exponential activity distribution depends on R0. Perhaps unintuitively, observed inequality grows as R0 falls; one way of thinking of this is the increasing proportion of infectees that transmit to nobody with lower R0")
 ```
 
 ```{r Realized, out.width="0.9\\linewidth", fig.cap=c(capRealized), echo=FALSE}
-knitr::include_graphics("ineqPlots_for_emergent.Rout.pdf")
+knitr::include_graphics("plotPMF_PDF_ineq.Rout.pdf")
 ```
 
 
@@ -99,7 +99,7 @@ Lloyd-Smith et al. 2005 supplement has a pile of
 notes and references on this topic. I need to take a look at the refs
 especially, and do a forward search on key ones.
 
-Lloyd-Smith et al. also focus on N≥20; we should figure out what sample sizes we 
+Lloyd-Smith et al. also focus on $N \geq 20$; we should figure out what sample sizes we 
 care about for this project. 
 
 ```{r set fig cap MLE exp, echo=FALSE}

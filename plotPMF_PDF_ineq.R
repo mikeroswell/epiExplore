@@ -5,7 +5,7 @@ library(dplyr)
 library(tidyr)
 library(patchwork)
 loadEnvironments()
-startGraphics()
+startGraphics(height = 6, width = 11)
 
 bins <- 100
 
