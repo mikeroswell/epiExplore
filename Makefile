@@ -71,9 +71,6 @@ low_kappa.Rout: low_kappa.R
 deadSimple.Rout: deadSimple.R spreadHelpers.rda
 	$(pipeRcall)
 
-plotPMF_PDF_ineq.Rout: plotPMF_PDF_ineq.R	 deadSimple.rda
-	$(pipeRcall)
-
 ## emergent heterogeneity in compartmental models
 kappas_in_3-class.Rout: kappas_in_3-class.R
 plotEmergent.Rout: plotEmergent.R kappas_in_3-class.rda
