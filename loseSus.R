@@ -74,6 +74,7 @@ caseCount <- sim_chains_with_pop |>
   summarize(out = kapSum(cases)) |>
   tidyr::unpack(cols = out)
 
+
 summary(fastSimOut)
 cor(fastSimOut )
 

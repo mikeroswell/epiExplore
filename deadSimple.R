@@ -13,19 +13,21 @@ beta1 <- 0.15
 beta2 <- 0.8
 gamm <- 1/10
 
-# # how many slices?
-# n <- 151
-# # range
-# betaT <- c(seq(0, 6, length.out = n), 0.0001, 0.9999, 1.0001, 1.9999, 2.001, 2.9999, 3.0001, 3.9999, 4.0001)
+# how many slices?
+n <- 300
+xmax <- 30
+
 
 act1 <- beta1/gamm
 act2 <- beta2/gamm
 
 
-actDist <- function(betaT, act){
-  d <- dexp(betaT, rate = 1/act)
+actDist <- function(low = 0, high = 30, n = n, act){
+  x <- seq(low, high, length.out = n)
+  d <- dexp(x, rate = 1/act)
+  inpt_name <- paste0("act_", deparse(substitute(act)))
    # d/sum(d)
-  d
+  return(data.frame(x, d,  distr = rep(inpt_name, length(x))))
 }
 
 # deviates to sample
@@ -36,11 +38,13 @@ actHist <- function(n, act){
   return(d)
 }
 
-secDist <- function(betaT, act){
-  d <- dgeom(betaT, prob = makeP(1/act))
+secDist <- function(high = 30, act){
+  x <- 0:high
+  d <- dgeom(x, prob = makeP(1/act))
+  inpt_name <- paste0("scnd_", deparse(substitute(act)))
   # d/sum(d)
   # d*length(betaT)
-  d
+  return(data.frame(x, d, distr = rep(inpt_name, length(x))))
 }
 
 secHist <- function(n, act){
@@ -48,12 +52,11 @@ secHist <- function(n, act){
   return(d)
 }
 
-# deadDat <- data.frame( betaT = betaT
-#                        , act_1 = actDist(betaT, act1)
-#                        , act_2 = actDist(betaT, act2)
-#                        , sec_1 = secDist(betaT, act1)
-#                        , sec_2 = secDist(betaT, act2)
-#                        )
+deadDat <- bind_rows( actDist(low = 0, high = xmax, n = n, act = act1)
+                       , actDist(low = 0, high = xmax, n = n, act = act2)
+                       , secDist(high = xmax, act = act1)
+                       , secDist(high = xmax, act = act2)
+                       )
 n <- 2e4
 histDat <- data.frame(ind = 1:n
                       , activity_1 = actHist(n, act1)

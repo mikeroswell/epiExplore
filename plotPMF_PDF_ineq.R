@@ -1,11 +1,57 @@
 library(shellpipes)
-rpcall("plotPMF_PDF_ineq.Rout plotPMF_PDF_ineq.R deadSimple.rda myMeehan.rda")
+rpcall("plotPMF_PDF_ineq.Rout plotPMF_PDF_ineq.R myMeehan.rda deadSimple.rda")
 library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(patchwork)
 loadEnvironments()
 startGraphics(height = 6, width = 11)
+
+
+
+# try again using density, as originally planned
+
+deadDat |>
+  separate(distr, into = c("distType", "distParms"), sep = "_") |>
+  ggplot(aes(x = x, y = d, color = distParms, shape = distParms)) +
+  geom_line(aes(alpha = distType == "act")) +
+  geom_point(aes(alpha = distType != "act"), size = 2) +
+  scale_alpha_discrete(breaks = c(0,1)
+                       , range = c(0,1)
+                       , labels = c("activity", "secondary case")
+                       , guide = guide_legend(title = "distribution type"
+                                              , override.aes = list(
+                                                linewidth = c(0.7, 0)
+                                                , size = c(0,2)
+                                                , alpha = c(1, 1)
+                                              )
+                       )
+  ) +
+  labs(x = "new cases per infector", y = "density", title = "incommensurate, but densities") +
+  theme_classic()
+
+deadDat |>
+  separate(distr, into = c("distType", "distParms"), sep = "_", remove = FALSE) |>
+  ggplot(aes(x = x, y = d, color = distParms, shape = distParms, fill = distParms)) +
+  geom_line(aes(alpha = as.numeric(distType == "act"), group = distr)) +
+  geom_ribbon(aes(ymax = d, ymin = 0, alpha = 0.2*as.numeric(distType == "act"), group = distr), linewidth = 0) +
+  geom_col(aes(alpha = 0.5* as.numeric(distType != "act"), group = distr), position = "identity", color = scales::alpha("white", alpha = 0), width = 1) +
+  scale_alpha_identity(breaks = c(0,1)
+                        # , range = c(0,1)
+                       , labels = c("activity", "secondary case")
+                       , guide = guide_legend(title = "distribution type"
+                                              , override.aes = list(
+                                                linewidth = c(0.5, 0)
+                                                , color = c("black", "white")
+                                                # , size = c(0,2)
+                                                , alpha = c(0.2, 0.6)
+                                              )
+                       )
+  ) +
+  scale_linewidth(range = c(0,1)) +
+  labs(x = "new cases per infector", y = "density", title = "incommensurate, but densities") +
+  theme_classic()
+
 
 bins <- 100
 
