@@ -49,7 +49,7 @@ deadDat |>
                        )
   ) +
   scale_linewidth(range = c(0,1)) +
-  labs(x = "new cases per infector", y = "density", title = "incommensurate, but densities") +
+  labs(x = "new cases per infector", y = "density", title = "area to area (ish?)") +
   theme_classic()
 
 
