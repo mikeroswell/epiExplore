@@ -22,7 +22,7 @@ loadEnvironments()
 set.seed(seed)
 
 # first, play with this mixing idea
-popSize <- 1e3
+popSize <- 1e4
 # some shape parameter
 
 # combn is very slow with big numbers
