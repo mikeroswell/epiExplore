@@ -4,15 +4,15 @@ rpcall("conjecture.lowGamma.Rout conjecture.R IBM.lowGamma.rda")
 rpcall("conjecture.highGamma.Rout conjecture.R IBM.highGamma.rda")
 rpcall("highGamma.conjecture.Rout conjecture.R highGamma.IBM.rda")
 rpcall("conjecture.highR.Rout conjecture.R IBM.highR.rda")
-rpcall("base.conjecture.Rout conjecture.R base.IBM.rda")
 rpcall("highR.conjecture.Rout conjecture.R highR.IBM.rda")
 rpcall("lowGamma.conjecture.Rout conjecture.R lowGamma.IBM.rda")
+rpcall("base.conjecture.Rout conjecture.R base.IBM.rda")
 loadEnvironments()
 manageConflicts()
+
 # check Kappa
 kd <- function(x){(sd(x)^2-mean(x))/mean(x)^2}
 # is this the way to think about kappa? or do we only want to focus on recovered individuals during the epidemic? What is kappa_effective?
-
 
 ktdt <- function(startT, deltaT){
   who <- which(startT <= iTime & iTime < startT+deltaT)
