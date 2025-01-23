@@ -11,5 +11,5 @@ tProb <- 0.075
 
 # daily per-person interactions
 dailyRate <- setBeta/tProb
-seed <- floor(runif(1, 0, 1e4))
+seed <- 242
 saveEnvironment()
