@@ -32,10 +32,18 @@ deadDat |>
 
 deadDat |>
   separate(distr, into = c("distType", "distParms"), sep = "_", remove = FALSE) |>
+  # create a bar widths layer that has a narrower width at x = 0
+  mutate(barWidth = 0.5 + 0.5*(x>0)) |>
+  mutate(d = if_else(distType == "scnd", if_else(x == 0, 2*d, d), d)
+         ) |>
   ggplot(aes(x = x, y = d, color = distParms, shape = distParms, fill = distParms)) +
   geom_line(aes(alpha = as.numeric(distType == "act"), group = distr)) +
-  geom_ribbon(aes(ymax = d, ymin = 0, alpha = 0.2*as.numeric(distType == "act"), group = distr), linewidth = 0) +
-  geom_col(aes(alpha = 0.5* as.numeric(distType != "act"), group = distr), position = "identity", color = scales::alpha("white", alpha = 0), width = 1) +
+  # geom_ribbon(aes(ymax = d, ymin = 0, alpha = 0.2*as.numeric(distType == "act"), group = distr), linewidth = 0) +
+  geom_bar(aes(alpha = 0.5* as.numeric(distType != "act"), width = barWidth, group = distr)
+           , stat = "identity"
+           , position = "identity"
+           , color = scales::alpha("white", alpha = 0)
+           ) +
   scale_alpha_identity(breaks = c(0,1)
                         # , range = c(0,1)
                        , labels = c("activity", "secondary case")
@@ -49,9 +57,40 @@ deadDat |>
                        )
   ) +
   scale_linewidth(range = c(0,1)) +
-  labs(x = "new cases per infector", y = "density", title = "area to area (ish?)") +
+  labs(x = "new cases per infector", y = "density", title = "half_width_zero") +
   theme_classic()
 
+
+deadDat |>
+  separate(distr, into = c("distType", "distParms"), sep = "_", remove = FALSE) |>
+  # create a bar widths layer that has a narrower width at x = 0
+  mutate(barWidth = 0.5 + 0.5*(x>0)) |>
+  mutate(d = if_else(distType == "scnd", if_else(x == 0, 2*d, d), d)
+         , x = if_else(distType == "scnd", if_else(x == 0, 0.25, x), x)
+         ) |>
+  ggplot(aes(x = x, y = d, color = distParms, shape = distParms, fill = distParms)) +
+  geom_line(aes(alpha = as.numeric(distType == "act"), group = distr)) +
+  # geom_ribbon(aes(ymax = d, ymin = 0, alpha = 0.2*as.numeric(distType == "act"), group = distr), linewidth = 0) +
+  geom_bar(aes(alpha = 0.5* as.numeric(distType != "act"), width = barWidth, group = distr)
+           , stat = "identity"
+           , position = "identity"
+           , color = scales::alpha("white", alpha = 0)
+  ) +
+  scale_alpha_identity(breaks = c(0,1)
+                       # , range = c(0,1)
+                       , labels = c("activity", "secondary case")
+                       , guide = guide_legend(title = "distribution type"
+                                              , override.aes = list(
+                                                linewidth = c(0.5, 0)
+                                                , color = c("black", "white")
+                                                # , size = c(0,2)
+                                                , alpha = c(0.2, 0.6)
+                                              )
+                       )
+  ) +
+  scale_linewidth(range = c(0,1)) +
+  labs(x = "new cases per infector", y = "density", title = "half_width_025") +
+  theme_classic()
 
 bins <- 100
 

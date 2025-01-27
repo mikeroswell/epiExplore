@@ -15,7 +15,7 @@ gamm <- 1/10
 
 # how many slices?
 n <- 300
-xmax <- 30
+xmax <- 30.5
 
 
 act1 <- beta1/gamm
