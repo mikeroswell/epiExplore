@@ -27,6 +27,8 @@ secondaryDistributionPlots.Rout: secondaryDistributionPlots.R
 ### generateds distribution functions assuming branching process
 pdfFromRates.Rout: pdfFromRates.R
 kappaFns.Rout: kappaFns.R
+### plotting
+densHist.Rout: densHist.R
 
 ## Lloyd
 ### reproduces main conceptual ideas from Lloyd-Smith et al. 2005, plots
@@ -47,7 +49,7 @@ plotMPOPHC.Rout: plotMPOPHC.R myMeehan.rda
 
 impmakeR += plotPMF_PDF_ineq
 
-plotPMF_PDF_ineq.Rout: plotPMF_PDF_ineq.R myMeehan.rda deadSimple.rda
+plotPMF_PDF_ineq.Rout: plotPMF_PDF_ineq.R myMeehan.rda deadSimple.rda densHist.rda
 	$(pipeRcall)
 
 ######################################################################
