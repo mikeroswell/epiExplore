@@ -5,7 +5,7 @@ library(dplyr)
 library(tidyr)
 library(patchwork)
 loadEnvironments()
-startGraphics(height = 6, width = 11)
+startGraphics(height = 4, width = 11)
 
 
 
