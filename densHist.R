@@ -25,6 +25,7 @@ densHist <- function(.data
              , stat = "identity"
              , position = "identity"
              , color = scales::alpha("white", alpha = 0)
+             # , key_glyph = "point"
 
     ) +
     # set up a guide for the plotting type, using the alpha scale that renders
@@ -33,23 +34,29 @@ densHist <- function(.data
                          # , range = c(0,1)
                          , labels = c("activity", "secondary case")
                          , guide = guide_legend(title = "distribution type"
+                                                , order = 2
                                                 , override.aes = list(
-                                                  linewidth = c(0.8, 0)
-                                                  , shape = c(15, 21)
-                                                  , linetype = c("solid", "blank")
-                                                  , fill = c(NA, "grey")
-                                                  , size = c(0,2)
-                                                  , alpha = c(1)
-                                                  # , order = 1
+                                                  linewidth = 0.5
+                                                  , linetype = c("solid", "32")
+                                                  , shape = 22
+                                                  , size = c(0, 6)
+                                                  , fill = c(NA
+                                                             , "grey60"
+
+                                                  )
+                                                  , alpha = 0.7
+                                                  # , color = NA
+                                                  #
                                                 )
                          )
     ) +
     scale_fill_brewer(palette = "Dark2", name = colorLab, labels = colorVals
-                      # , guide = guide_legend(order = 2)
+                      , guide = guide_legend(order = 1)
                       ) +
     scale_color_brewer(palette = "Dark2", name = colorLab, labels = colorVals
-                       # , guide = guide_legend(order = 2)
+                       , guide = guide_legend(order = 1)
                        ) +
+    scale_size_area() +
     theme_classic() +
     labs(x = xlab
          , y = ylab
