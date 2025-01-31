@@ -65,6 +65,8 @@ densHist <- function(.data
     )
 }
 
+# look around at the draw_key functions to see how to make a split rect with two colors.
+
 # now we want to build the inequality plots
 ineq <- function(dat, colorVar = "beta", colorVals = c(beta1, beta2)){
   dat |>
@@ -77,7 +79,7 @@ ineq <- function(dat, colorVar = "beta", colorVals = c(beta1, beta2)){
     theme_classic() +
     scale_color_brewer(palette = "Dark2", name = colorVar, labels = colorVals) +
     labs(x = "fraction of infectors (ranked)"
-         , y = "cumulative fraction of new infections"
+         , y = "\ncumulative fraction of new infections"
          , linetype = "distribution type")
 }
 

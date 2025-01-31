@@ -209,15 +209,15 @@ twoDistPlot <- densDat |>
   densHist(colorLab = "model structure"
            , colorVar = "parSet"
            , groupVar = "distr"
-           , colorVals = c("homogeneous", "23% are 6.67x more transmissive")) +
+           , colorVals = c("homogeneous", "23% are\n6.67x more transmissive")) +
   scale_color_manual(name = "model structure"
                         , labels = c("homogeneous"
-                                     , "23% are 6.67x more transmissive")
+                                     , "23% are 6.67x\nmore transmissive")
                     , values = c("#d95f02", "#7570b3")
                     ) +
   scale_fill_manual(name = "model structure"
                        , labels = c("homogeneous"
-                                    , "23% are 6.67x more transmissive")
+                                    , "23% are 6.67x\nmore transmissive")
                        , values = c("#d95f02", "#7570b3")
   )
 
@@ -245,24 +245,31 @@ ineqTwoPlot <- twoClassIneq |>
   filter(distParms !=3) |>
   ineq(colorVar = "model structure"
        , colorVals = c("homogeneous"
-                       , "23% are 6.67x more transmissive")
+                       , "23% are 6.67x\nmore transmissive")
        ) +
   scale_linetype_discrete(labels =c("activity", "secondary cases")) +
   scale_color_manual(name = "model structure"
                         , labels = c("homogeneous"
-                                     , "23% are 6.67x more transmissive")
+                                     , "23% are 6.67x\nmore transmissive")
                      , values = c("#d95f02", "#7570b3"))+
   scale_fill_manual(name = "model structure"
                        , labels = c("homogeneous"
-                                    , "23% are 6.67x more transmissive")
+                                    , "23% are 6.67x\nmore transmissive")
                     , values = c("#d95f02", "#7570b3")       )
 
 
 # pdf("draftFig1.pdf", width = 11, height =6)
 
-(deadDistPlot + ineqDeadPlot + theme(legend.position = "none")) /(
-  twoDistPlot + guides(alpha = "none") +
-    ineqTwoPlot + theme(legend.position = "none")) +
-  plot_annotation(tag_levels = 'a')
+(deadDistPlot+ theme(legend.position = c(0.6, 0.6)
+                     , legend.justification = "left"
+  #,
+  # legend.position.inside = c(0.5, 0.1)
+                     ) +
+    ineqDeadPlot + theme(legend.position = "none")) /(
+      twoDistPlot + guides(alpha = "none") + theme(legend.position = c(0.6, 0.6)
+                                                   , legend.justification = "left") +
+        ineqTwoPlot + theme(legend.position = "none")) +
+  plot_annotation(tag_levels = 'a', tag_suffix = ") ")
 # dev.off()
+
 

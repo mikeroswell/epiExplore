@@ -101,4 +101,16 @@ ehm <- function(dat){
     return(data.frame(kapCont, kapDisc, tx20Cont, tx20Disc, R0Ideal, R0Real))
 }
 
+# not sure this will be useful, but computes a rescaled beta with max = R0 and
+# mean = 1, subject to alpha
+betaPars <- function(R0, alph){
+  bet <- aeph*(R0-1)
+  return(list(alph = aleph, bet = bet, R0 = R0))
+}
+
+
+
+
+
 saveEnvironment()
+
