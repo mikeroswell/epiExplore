@@ -34,7 +34,7 @@ getV <- function(R0, sRat, pRat, iRat, myR, v = v){
    (exp(-v/myR)/myR) * (exp(-iRat*v/myR)-exp(-v/(iRat*myR)))
 }
 
-# pars = list(R0 = 2, pRat = 0, sRat = 1, iRat = 0)
+pars = list(R0 = 2, pRat = 0, sRat = 1, iRat = 0)
 
 # do.call(getV, c(pars, myR = do.call(subR,pars), v = 1 ))
 # dexp(1, 0.5)
@@ -59,16 +59,31 @@ probSet <- function(R0, pRat, sRat, iRat
 vProb <- function(pSet, v){
     list2env(pSet, envir = environment())
     list2env(pars, envir = environment())
-    pV <- (1+iRat)/(1-iRat) *
-        ((1-pRat)*do.call(getV, c(pars, R1, v)) + (pRat) * do.call(getV, c(pars, R2, v)))
+    # pV <- (1+iRat)/(1-iRat) *
+    #     ((1-pRat)*do.call(getV, c(pars, R1, v)) + (pRat) * do.call(getV, c(pars, R2, v)))
+    #
+    #
+
+    # pV <- exp(log((1+iRat)/(1-iRat)) +
+    #     log((1-pRat)*do.call(getV, c(pars, R1, v)) + (pRat) * do.call(getV, c(pars, R2, v))))
+
+    pV <- exp(log((1+iRat)/(1-iRat)) +
+                  log(
+                      exp(log(1-pRat) + log(do.call(getV, c(pars, R1, v)))) +
+                          exp(log(pRat) +log( do.call(getV, c(pars, R2, v))))
+                      )
+              )
+
+
     return(pV)
 }
+
 
 # vProb(probSet(pars = pars), 1)
 
 # set a big number at which to truncate
 
-vMax <- 999
+vMax <- 40
 # vProb(pars = pars, v = vMax) # confirm it's a "Big" number
 
 # generate N random deviates using accept/reject
@@ -100,6 +115,7 @@ sampleV <- function(nTarget = 1e3, vMax = 150
 # But I know the PDF, so just get a profile, truncating somehow
 
 vDens <- function(vMax
+                  , dType = "density"
                   , nPoints = 200
                   , R0, pRat, sRat, iRat
                   , pars = NULL
@@ -108,14 +124,30 @@ vDens <- function(vMax
     list2env(pars, envir = environment())
 
     pSet <- probSet(pars = pars)
-    testMax <- vProb(pSet, vMax)
+    newFun <- function(x){vProb(pSet, x)}
+    testMax <- newFun(vMax)
     if(testMax > 1e-12){warning(paste0("p(vMax) = ", testMax, ", consider increasing vMax to avoid truncating distribution"))}
-    vVec <- seq(0, vMax, length.out = nPoints)
-    return(data.frame(X = vVec, pX = sapply(vVec, function(x){vProb(pSet, x)})))
+
+
+
+    if(dType == "density"){
+        vVec <- seq(0, vMax, length.out = nPoints)
+        pX = sapply(vVec, function(x){newFun(x)})
+    }
+    if(dType == "mass"){
+        vVec <- seq(0, vMax, 1)
+        pX = sapply(vVec, function(x){
+            massFun(x, newFun)
+        })
+    }
+
+    return(data.frame(X = vVec, dType = dType, pX = pX ))
 
 }
 
 
+vDens(vMax = vMax, dType = "density", pars = pars)
+vDens(vMax = vMax, dType = "mass", pars = pars)
 # Check that it looks geometric when I make this an S[E]IR model where E is
 # irrelevant for the D0 distribution.
 # n <- 1e3
@@ -173,8 +205,13 @@ pars.heter <- list(R0 = 8, pRat = 0.1, sRat = 0.1, iRat = 0.0)
 
 densDat <- map_dfr(c("pars.homo", "pars.medi", "pars.heter"), function(parSet){
     data.frame(parSet = parSet
-               , vDens(vMax = 900, pars = get(parSet)
-                       , nPoints = 5e3))
+               , bind_rows(vDens(vMax = 90, pars = get(parSet)
+                       , nPoints = 400)
+                       , vDens(vMax = 90, pars = get(parSet)
+                               , dType = "mass"
+                             )
+                       )
+    )
 })
 
 
@@ -216,3 +253,4 @@ cFracs <- bind_rows(cFrac.homo, cFrac.medi, cFrac.heter
                     , .id = "model_description" )
 
 saveEnvironment()
+

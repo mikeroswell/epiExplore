@@ -28,6 +28,23 @@ makeRate <- function(p){
 }
 
 
+# compute poisson mixture PMF from arbitrary PDF
+massFun <- function(k, fx){
+  gx <- Vectorize(fx)
+  toInt <- function(x){
+    # x^k*exp(-x)*gx(x)
+    exp(k*log(x) -x + log(gx(x)))
+  }
+  myInt <- integrate(toInt, 0, Inf)[[1]]
+  myMass <- 1/factorial(k)*myInt
+  return(myMass)
+}
+
+
+massFun(1, dexp)
+dgeom(1, 1)
+
+
 makeDistData <- function(v){
     n <- length(v)
     realiz <- rpois(n, lambda = v)
