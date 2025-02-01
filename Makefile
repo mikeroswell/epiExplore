@@ -98,7 +98,7 @@ impmakeR += IBM
 
 impmakeR += conjecture
 ## lowGamma.conjecture.Rout: conjecture.R
-## base.conjecture.Rout: conjecture.R
+## base.conjecture.Rout: IBM_minimal.R conjecture.R IBM_base_pars.R
 %.conjecture.Rout: conjecture.R %.IBM.rda
 	$(pipeRcall)
 

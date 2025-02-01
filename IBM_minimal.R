@@ -21,10 +21,6 @@ loadEnvironments()
 #This is a script to streamline the IBM script for single-class SIR models.
 set.seed(seed)
 
-# first, play with this mixing idea
-popSize <- 1e4
-# some shape parameter
-
 # combn is very slow with big numbers
 # looks good https://stackoverflow.com/a/49153855/8400969
 comb2.int <- function(n, rep = FALSE){
@@ -45,15 +41,12 @@ comb2.int <- function(n, rep = FALSE){
 }
 rateInds <-comb2.int(popSize)
 
-
 # generate interaction rates by dyad
 rateFrame <- rateInds |>
   rbind(dailyRate/(popSize-1)) |>
   t() |>
   data.frame()
 names(rateFrame)<- c("ind1", "ind2", "mixRate")
-
-
 
 # This is 10% more than the expected number of contacts up to tMax
 toSim <- floor(0.55*dailyRate*popSize*tMax)
@@ -75,8 +68,6 @@ contactOrder <- cbind(t(rateInds)[ contInd,], contTime)
 recDelay <- rexp(1:popSize, rate = setGamma)
 # initialize infection time with a large number for logical testing
 iTime <- rep(tMax, popSize)
-
-
 
 # map integers to infection status
 Sstate <- 1
@@ -120,6 +111,7 @@ for(i in 1:nrow(contactOrder)){
     # if one is infectious AND one is susceptible, lots to do
     if(any(states[co[1:2]] == Istate) & any(states[co[1:2]] == Sstate)){
       # first flip the coin
+	  ## set tProb to 1 for now; more efficient and doesn't matter in this version
      if(rbinom(1,1, prob = tProb)){
        # cat("infection")
        # update cumulative state counters
@@ -132,7 +124,6 @@ for(i in 1:nrow(contactOrder)){
         iTime[co[1:2][states[co[1:2]] == Sstate]] <- tCur
         # update the states
         states[co[1:2][states[co[1:2]] == Sstate]] <- Istate
-
     }
   }
 }

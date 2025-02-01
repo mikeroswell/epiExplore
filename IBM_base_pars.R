@@ -7,9 +7,10 @@ tMax <- 2e3
 
 setBeta <- 1
 setGamma <- 1/3
-tProb <- 0.075
+tProb <- 1
+popSize <- 1e4
 
 # daily per-person interactions
 dailyRate <- setBeta/tProb
-seed <- 242
+seed <- 240
 saveEnvironment()
