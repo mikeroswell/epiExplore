@@ -37,7 +37,7 @@ ggplot(df, aes(x, y, group = grp)) +
   scale_alpha_identity(breaks = c(0,1)
                        , labels = c("A", "B")
                        , guide = guide_legend(title = "type"
-
+                                              , order = 1
                                               , override.aes = list(
                                                 linewidth = c(0.8, 0)
                                                 , shape = c(15, 21)
@@ -45,7 +45,7 @@ ggplot(df, aes(x, y, group = grp)) +
                                                 , fill = c(NA, "grey")
                                                 , size = c(0, sz)
                                                 , alpha = c(1)
-                                                , order = 1
+
                                               )
                        )
   ) +

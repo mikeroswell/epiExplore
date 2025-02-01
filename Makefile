@@ -102,6 +102,10 @@ impmakeR += conjecture
 %.conjecture.Rout: conjecture.R %.IBM.rda
 	$(pipeRcall)
 
+## how does the CV change in an exponential-something mixture
+lognormal_exp_sim.Rout: lognormal_exp_sim.R spreadHelpers.rda
+	$(pipeRcall)
+
 ######################################################################
 
 ## Rose investigations

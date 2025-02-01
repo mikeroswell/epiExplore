@@ -5,7 +5,7 @@ library(dplyr)
 library(tidyr)
 library(patchwork)
 loadEnvironments()
-startGraphics(height = 4, width = 11)
+startGraphics(height = 6, width = 11)
 
 
 
@@ -77,7 +77,7 @@ fancyHist <- deadDat |>
   # double the density for halved bar
   mutate(d = if_else(distType == "scnd", if_else(x == 0, 2*d, d), d)
          # and shift it right to fill the space in the domain
-         , x = if_else(distType == "scnd", if_else(x == 0, 0.25, x), x)
+         # , x = if_else(distType == "scnd", if_else(x == 0, 0.25, x), x)
          )
 
 
@@ -90,6 +90,8 @@ fancyHist <- deadDat |>
 
 # gonna need to think through this one; it's right for a histogram but not for
 # the density!
+
+
 
 twoClass <- cFracs |>
   pivot_longer(cols = c("ideal", "real")
@@ -191,19 +193,31 @@ deadDistPlot <- fancyHist |> densHist(colorVar = "distParms"
                                       )
 
 
-twoDistPlot <- twoClass |> filter(distParms!=3) |>
+
+twoDistPlot <- densDat |>
+  filter(parSet != "pars.heter") |>
+  mutate(distr = paste(parSet, dType, sep = "_")
+         , d = pX
+         , distType = if_else(dType == "density", "act", "scnd")
+         , x = X) |>
+  mutate(barWidth = 0.5 + 0.5*(x>0)) |>
+  # double the density for halved bar
+  mutate(d = if_else(distType == "scnd", if_else(x == 0, 2*d, d), d)
+         # and shift it right to fill the space in the domain
+         # , x = if_else(distType == "scnd", if_else(x == 0, 0.25, x), x)
+  ) |>
   densHist(colorLab = "model structure"
-           , colorVar = "distParms"
+           , colorVar = "parSet"
            , groupVar = "distr"
-           , colorVals = c("homogeneous", "23% are 6.67x more transmissive")) +
+           , colorVals = c("homogeneous", "23% are\n6.67x more transmissive")) +
   scale_color_manual(name = "model structure"
                         , labels = c("homogeneous"
-                                     , "23% are 6.67x more transmissive")
+                                     , "23% are 6.67x\nmore transmissive")
                     , values = c("#d95f02", "#7570b3")
                     ) +
   scale_fill_manual(name = "model structure"
                        , labels = c("homogeneous"
-                                    , "23% are 6.67x more transmissive")
+                                    , "23% are 6.67x\nmore transmissive")
                        , values = c("#d95f02", "#7570b3")
   )
 
@@ -231,21 +245,31 @@ ineqTwoPlot <- twoClassIneq |>
   filter(distParms !=3) |>
   ineq(colorVar = "model structure"
        , colorVals = c("homogeneous"
-                       , "23% are 6.67x more transmissive")
+                       , "23% are 6.67x\nmore transmissive")
        ) +
   scale_linetype_discrete(labels =c("activity", "secondary cases")) +
   scale_color_manual(name = "model structure"
                         , labels = c("homogeneous"
-                                     , "23% are 6.67x more transmissive")
+                                     , "23% are 6.67x\nmore transmissive")
                      , values = c("#d95f02", "#7570b3"))+
   scale_fill_manual(name = "model structure"
                        , labels = c("homogeneous"
-                                    , "23% are 6.67x more transmissive")
+                                    , "23% are 6.67x\nmore transmissive")
                     , values = c("#d95f02", "#7570b3")       )
 
 
 # pdf("draftFig1.pdf", width = 11, height =6)
 
-(deadDistPlot + ineqDeadPlot) + plot_annotation(tag_levels = 'a') #/(twoDistPlot+ineqTwoPlot)
+(deadDistPlot+ theme(legend.position = c(0.6, 0.6)
+                     , legend.justification = "left"
+  #,
+  # legend.position.inside = c(0.5, 0.1)
+                     ) +
+    ineqDeadPlot + theme(legend.position = "none")) /(
+      twoDistPlot + guides(alpha = "none") + theme(legend.position = c(0.6, 0.6)
+                                                   , legend.justification = "left") +
+        ineqTwoPlot + theme(legend.position = "none")) +
+  plot_annotation(tag_levels = 'a', tag_suffix = ") ")
 # dev.off()
+
 
