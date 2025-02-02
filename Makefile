@@ -108,6 +108,16 @@ lognormal_exp_sim.Rout: lognormal_exp_sim.R spreadHelpers.rda
 
 ######################################################################
 
+## JD messes with code
+
+## test.sim.Rout: jdMess.R test.pars.R
+%.sim.Rout: jdMess.R %.pars.rda
+	$(pipeR)
+%.pars.Rout: %.pars.R
+	$(pipeR)
+
+######################################################################
+
 ## Rose investigations
 
 sculpt.Rout: sculpt.R
