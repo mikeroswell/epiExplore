@@ -66,7 +66,7 @@ loseSus.Rout: loseSus.R kappaFns.rda
 ## kappa mystery: naive kappa estimation is downwards biased
 ### superceded, I suspect, but note error likely in optim
 why_low_kappa.Rout: why_low_kappa.R
-### show that navie kappa is no good, and synthetic kappa is fine
+### show that naive kappa is no good, and synthetic kappa is fine
 low_kappa.Rout: low_kappa.R
 
 ## dead simple emergent plots
@@ -103,7 +103,12 @@ impmakeR += conjecture
 	$(pipeRcall)
 
 ## how does the CV change in an exponential-something mixture
-lognormal_exp_sim.Rout: lognormal_exp_sim.R spreadHelpers.rda
+# lognormal_exp_sim.Rout: lognormal_exp_sim.R spreadHelpers.rda
+#	$(pipeRcall)
+
+## show that kappa can be less than 1 when Re is falling
+### linear example
+decreasingRe.Rout: decreasingRe.R spreadHelpers.rda
 	$(pipeRcall)
 
 ######################################################################
