@@ -1,45 +1,39 @@
-# script to begin dreaming simulation up
-
-# random note but I'm committed to using the native R pipe for the first time
-
-# load some libraries
 library(shellpipes)
-rpcall("IBM.base.Rout IBM_minimal.R IBM_base_pars.rda")
-rpcall("IBM.lowGamma.Rout IBM_minimal.R IBM_lowGamma_pars.rda")
-rpcall("IBM.highGamma.Rout IBM_minimal.R IBM_highGamma_pars.rda")
-rpcall("highGamma.IBM.Rout IBM_minimal.R IBM_highGamma_pars.rda")
-rpcall("highR.IBM.Rout IBM_minimal.R IBM_highR_pars.rda")
-rpcall("lowGamma.IBM.Rout IBM_minimal.R IBM_lowGamma_pars.rda")
-rpcall("base.IBM.Rout IBM_minimal.R IBM_base_pars.rda")
 manageConflicts()
-
 library(dplyr)
-# library(purrr)
 library(tidyr)
+
 loadEnvironments()
 
 #This is a script to streamline the IBM script for single-class SIR models.
 set.seed(seed)
 
-# combn is very slow with big numbers
-# looks good https://stackoverflow.com/a/49153855/8400969
-comb2.int <- function(n, rep = FALSE){
-  if(!rep){
-    # e.g. n=3 => (1,2), (1,3), (2,3)
-    x <- rep(1:n,(n:1)-1)
-    i <- seq_along(x)+1
-    o <- c(0,cumsum((n-2):1))
-    y <- i-o[x]
-  }else{
-    # e.g. n=3 => (1,1), (1,2), (1,3), (2,2), (2,3), (3,3)
-    x <- rep(1:n,n:1)
-    i <- seq_along(x)
-    o <- c(0,cumsum(n:2))
-    y <- i-o[x]+x-1
-  }
-  return(rbind(x,y))
+Sstate <- 1
+Istate <- 2
+Rstate <- 3
+
+contactList <- function(pop, beta, timeSpan, t0, q){
+	eventRate <- pop*beta
+	eventNumber <- qpois(q, lambda=timeSpan*eventRate)
+	primary <- sample(1:popSize, eventNumber, replace=TRUE)
+	offset <- sample(1:(popSize-1), eventNumber, replace=TRUE)
+	secondary <- 1 + (primary+offset-1) %% popSize
+	delay <- rexp(eventNumber, rate=eventRate)
+	eTime <- t0 + cumsum(delay)
+	stopifnot(max(eTime)>timeSpan) ## This should happen 1/q of the time; increase q or change seed
+	## stopifnot(sum(primary==secondary)==0) ## This should not happen
+	return(data.frame(
+		primary, secondary, eTime
+	))
 }
-rateInds <-comb2.int(popSize)
+
+## contactList(popSize, beta*popSize, 1, 0, 0.999)
+
+initPop <- function(S, I, R){
+	
+}
+
+quit()
 
 # generate interaction rates by dyad
 rateFrame <- rateInds |>
@@ -70,9 +64,6 @@ recDelay <- rexp(1:popSize, rate = setGamma)
 iTime <- rep(tMax, popSize)
 
 # map integers to infection status
-Sstate <- 1
-Istate <- 2
-Rstate <- 3
 
 states <- rep(Sstate, popSize)
 # initialize with one random infection
@@ -154,3 +145,4 @@ for(i in 1:nrow(contactOrder)){
 rm(list= c("rateFrame", "rateInds", "contactOrder", "contInd", "contTime" ))
 
 saveEnvironment()
+

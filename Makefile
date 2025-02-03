@@ -98,7 +98,7 @@ impmakeR += IBM
 
 impmakeR += conjecture
 ## lowGamma.conjecture.Rout: conjecture.R
-## base.conjecture.Rout: conjecture.R
+## base.conjecture.Rout: IBM_minimal.R conjecture.R IBM_base_pars.R
 %.conjecture.Rout: conjecture.R %.IBM.rda
 	$(pipeRcall)
 
@@ -110,6 +110,16 @@ impmakeR += conjecture
 ### linear example
 decreasingRe.Rout: decreasingRe.R spreadHelpers.rda
 	$(pipeRcall)
+
+######################################################################
+
+## JD messes with code
+
+## test.sim.Rout: jdMess.R test.pars.R
+%.sim.Rout: jdMess.R %.pars.rda
+	$(pipeR)
+%.pars.Rout: %.pars.R
+	$(pipeR)
 
 ######################################################################
 
