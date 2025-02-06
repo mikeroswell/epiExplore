@@ -133,7 +133,7 @@ Sources += $(wildcard *.tex)
 
 ## Notes on mean and variance in R_c
 
-## RcNotes.pdf: RcNotes.tex
+RcNotes.pdf: RcNotes.tex
 
 ######################################################################
 ## Robust maximum likelihood estimation when kappa is near boundary
