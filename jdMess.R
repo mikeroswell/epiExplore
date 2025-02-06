@@ -29,6 +29,9 @@ contactList <- function(pop, beta, timeSpan, t0, q){
 
 ## contactList(popSize, beta*popSize, 1, 0, 0.999)
 
+## Are there any advantages to randomizing here?
+## Conceptually, there shouldn't be, so we probably shouldn't do it
+## (could conceivably hide some sort of flaw)
 initPop <- function(S, I, R){
 	
 }
@@ -103,6 +106,7 @@ for(i in 1:nrow(contactOrder)){
     if(any(states[co[1:2]] == Istate) & any(states[co[1:2]] == Sstate)){
       # first flip the coin
 	  ## set tProb to 1 for now; more efficient and doesn't matter in this version
+	  ## Consider skipping this:
      if(rbinom(1,1, prob = tProb)){
        # cat("infection")
        # update cumulative state counters
@@ -145,4 +149,8 @@ for(i in 1:nrow(contactOrder)){
 rm(list= c("rateFrame", "rateInds", "contactOrder", "contInd", "contTime" ))
 
 saveEnvironment()
+
+## Consider saveVars() or rdsSave()
+
+## loadEnvironments => dat <- rdsRead()
 
