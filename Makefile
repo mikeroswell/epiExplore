@@ -88,6 +88,9 @@ IBM_sketch_sketch.Rout: IBM_sketch_sketch.R
 IBM_faster.Rout: IBM_faster.R
 ######################################################################
 
+## notes on enumerating kappa_c
+# integrationNotes.pdf: integrationNotes.md
+
 ## use IBM to check conjecture that secondary case dist variance = 2 (kappa_discrete = 1)
 
 ## highGamma.Rout: IBM_minimal.R
@@ -133,7 +136,7 @@ Sources += $(wildcard *.tex)
 
 ## Notes on mean and variance in R_c
 
-RcNotes.pdf: RcNotes.tex
+## RcNotes.pdf: RcNotes.tex
 
 ######################################################################
 ## Robust maximum likelihood estimation when kappa is near boundary
