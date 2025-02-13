@@ -89,6 +89,7 @@ IBM_faster.Rout: IBM_faster.R
 ######################################################################
 
 ## notes on enumerating kappa_c
+## Had to do some makestuff hacking to make this rule work; in general fake rules should work
 # integrationNotes.pdf: integrationNotes.md
 
 ## use IBM to check conjecture that secondary case dist variance = 2 (kappa_discrete = 1)
@@ -241,9 +242,9 @@ makestuff/Makefile:
 -include makestuff/pipeR.mk
 -include makestuff/texj.mk
 -include makestuff/rmd.mk
+-include makestuff/pandoc.mk
 ## -include makestuff/ldrop.mk
 -include makestuff/mirror.mk
 
 -include makestuff/git.mk
 -include makestuff/visual.mk
--include makestuff/projdir.mk
