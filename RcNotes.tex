@@ -45,18 +45,13 @@ This works, but seems suspiciously hard to extend. In particular, it probably do
 What if we try? One trick we're using here is that to integrate $f^2(x)$ over a range, we can just take twice the integral of $f(x)f(y)$ over a triangle where we assume we know $x>y$. This allows a similar limit-switching move as above.
 \begin{eqnarray}
 	&& \int{dt\, i(t) C^2(t)}
-	\\ &=& 2B^2 \int{dt\, i(t) \int_{\tau>t}{d\tau\, x(\tau) \exp(t-\tau)}}
-		\int_{\sigma>\tau}{d\sigma\, x(\sigma) \exp(t-\sigma)}
-	\\ &=& 2B^2 \int{d\tau\, x(\tau) \exp(t-\tau)}
-		\int_{\sigma>\tau}{d\sigma\, x(\sigma)}
-		\int_{t>\sigma}{dt\, i(t) \exp(t-\sigma)}
-	\\ &=& 2B^2 \int{d\tau\, x(\tau) \exp(t-\tau)}
-		\int_{\sigma>\tau}{d\sigma\, x(\sigma) y(\sigma)}
-	\\ &=& 2B \int{d\tau\, x(\tau) \exp(t-\tau)}
-		\int_{\sigma>\tau}{d\sigma\, i(\sigma)}
-	\\ &=& 2B \int{d\tau\, x(\tau) \exp(t-\tau) (Z-x(\tau))}
+	\\ &=& 2B^2 \int{dt\, i(t) \int_{\sigma>t}{d\sigma\, x(\sigma) \exp(t-\sigma)}}
+		\int_{\tau>\sigma}{d\tau\, x(\tau) \exp(t-\tau)}
+	\\ &=& 2B^2 \int{d\tau\, x(\tau)}
+		\int_{\sigma<\tau}{d\sigma\, x(\sigma)}
+		\int_{t<\sigma}{dt\, i(t) \exp(t-\sigma) \exp(t-\tau)}
 \end{eqnarray}
 
-It this is correct it could at the least allow us to do much more efficient integration.
+This one looks like a dead end again.
 
 \end{document}
