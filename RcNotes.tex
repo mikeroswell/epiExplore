@@ -20,16 +20,28 @@ We can integrate over time since infection $\delta$, and write:
 
 $$C(t) = B \int{d\delta\, x(t+\delta) \exp(-\delta)}$$
 
-If we also solve the $\dot y$ equation, by looking at who has come in $\tau$ time ago and how many of them survived, and write:
+We can also solve the $\dot y$ equation, by looking at who has come in $\tau$ time ago and how many of them survived:
 
 $$ y(t) = \int{d\tau\, i(t-\tau)\exp(-\tau)}$$
 
-\emph{and} had any patience with integrals, we could presumably expand and substitute and get something like: 
+There should be some good trick for re-arranging this to get $\bar C$, and we're going to work on that, even though it's not at all clear that it would help with $\kappa_C$.
 
-$$
-	Z \bar C  = B \int{dt\, x(t) y(t)} = \int{dt\, i(t)}.
-$$
+JD thought earlier that the next step would be to expand the first integral, so let's try that:
 
-This seems to be what I wanted, but also seems to be a dead end. It's hard to imagine any tricks to try if we squared the whole integral for $C(t)$ and plugged \emph{that} in.
+\begin{eqnarray}
+	Z \bar C \\
+	&=& \int{dt\, i(t) C(t)} \\
+	&=& B \int{dt\, x(t) y(t) C(t)} \\
+	&=& B \int{dt\, x(t) \int{d\tau\, i(t-\tau)\exp(-\tau)} C(t)} \\
+	&=& B^2 \int{dt\, x(t) \int{d\tau\, i(t-\tau)\exp(-\tau)} \int{d\delta\, x(t+\delta) \exp(-\delta)}}
+\end{eqnarray}
+
+The next thing might be to rewrite in terms of event times, e.g., $\sigma=t-\tau$, $\theta=t+\delta$:
+
+\begin{eqnarray}
+	Z \bar C
+	\\ &=& B^2 \int_{\sigma<t<\theta}{dQ\, x(t) i(\sigma)\exp(\sigma-t) x(\theta) \exp(t-\theta)}
+	\\ &=& B^2 \int_{\sigma<t<\theta}{dQ\, x(t) i(\sigma) x(\theta) \exp(\sigma-\theta)}
+\end{eqnarray}
 
 \end{document}

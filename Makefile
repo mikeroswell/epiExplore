@@ -196,6 +196,8 @@ GiniKappaK.html: GiniKappaK.Rmd
 	$(rmdh_r)
 
 ## JD generating function notes
+## Shows that we add Poisson variance to kappa-like variance
+## (this is maybe a proof of an application of the rule of total variance? check)
 phi.html: phi.md
 	pandoc $< --mathjax -s -o $@
 
