@@ -40,11 +40,9 @@ and then expand:
 	\\ &=& Z
 \end{eqnarray}
 
-This works, but seems suspiciously hard to extend. In particular, it probably doesn't make use of the fact that we are using an exponential generation interval, whereas the hard conjecture will need to use that.
+Now try to expand the sum of squares. One trick we're using here is that to integrate $f^2(x)$ over a range, we can just take twice the integral of $f(x)f(y)$ over a triangle where we assume we know $x>y$. This allows a similar limit-switching move as above.
 
-What if we try? One trick we're using here is that to integrate $f^2(x)$ over a range, we can just take twice the integral of $f(x)f(y)$ over a triangle where we assume we know $x>y$. This allows a similar limit-switching move as above.
-
-Expanding was a disaster (not currently shown), so we try a half-expansion (expand one of the two factors of $C$.
+Expanding was a disaster (not currently shown), so we try a half-expansion (expand one of the two factors of $C$).
 \begin{eqnarray}
 	&& \int{dt\, i(t) C^2(t)}
 	\\ &=& 2B^2 \int{dt\, i(t) \int_{\tau>t}{d\tau\, x(\tau) \exp(t-\tau) C(\tau)}}
