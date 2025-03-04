@@ -1,4 +1,5 @@
 \documentclass[12pt]{article}
+\usepackage{amssymb}
 
 \begin{document}
 
@@ -75,5 +76,27 @@ Distributing $B$ we see that this is twice expr. (2) = $2Z$.
 % Wait! Does this prove the Roswell Conjecture‽ It \emph{seems} too simple (we haven't seen how far the “proof” would go with a different infectiousness kernel), but maybe we accidentally leveraged the distribution-matching property of the exponential (infectious period has same distribution as generation interval) – that actually seems plausible.
 %
 % PS: This does balance correctly, fwiw: it yields a squared-sum of $2Z/Z = 2$ to go with the mean of 1, so a variance of 1.
+
+*scribbling
+We said above that the individual cases per case $C_i(t) = B\int_{0}^{\delta}{d\tau\, x(t + \tau)}$ and its expectation for a cohort infected at time $t$ is $C(t) = B\int_{0}^{\infty}{d\delta\, x(t+\delta) \exp(-\delta)}$. Let's work on the second moment for $C_i(t)$ for a sec and see if we can make things line up.
+
+$$\mathbb{E}[C^2_i(t)] = B^2 \mathbb{E}\left[\left(
+  \int_{0}^{\delta}{d\tau\, x(t+\tau)}\right)^2
+  \right]$$
+
+$$ = B^2 \mathbb{E}\left[\left(
+  \int_{0}^{\delta}{d\tau\,\int_{0}^{\delta}{d\tau'\, x(t+\tau) x(t+\tau')}}\right)
+  \right]$$
+
+I think we are allowed to take the expectation over the exponentially distributed durations
+
+$$= B^2 \int_{0}^{\infty}{d\delta\, exp(-\delta)\int_{0}^{\delta}{d\tau\,\int_{0}^{\delta}{d\tau'\, x(t+\tau) x(t+\tau')}}}$$
+
+Do another triangle trick
+
+$$= 2B^2 \int_{0}^{\infty}{d\delta\, exp(-\delta)\int_{0}^{\delta}{d\tau\,\int_{0}^{\tau}{d\tau'\, x(t+\tau) x(t+\tau')}}}$$
+
+Out of tricks...
+
 
 \end{document}
