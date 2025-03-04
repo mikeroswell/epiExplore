@@ -61,7 +61,7 @@ Now, we first integrate over $t$ instead:
   $$ 2B^2 \int{dt\, i(t) \int_{\tau>t}{d\tau\, \int_{\sigma>\tau}{d\sigma\, x(\tau) x(\sigma) \exp(t-\tau)\exp(t-\sigma)}}}$$
   $$ = 2B^2 \int{d\tau\, x(\tau) \int_{\sigma > \tau}{d\sigma\, x(\sigma) \exp(\tau-\sigma)\int_{t<\tau}{dt\, i(t) \exp(t-\tau)}}}$$
 Recognizing that the last $dt$ integral is $y(\tau)$ we re-write:
- $$ 2B^2 \int{d\tau\, y(\tau)x(\tau) \int_{\sigma>\tau}{d\sigma\, x(\sigma) exp(\tau-\sigma)}}$$
+ $$ 2B^2 \int{d\tau\, y(\tau)x(\tau) \int_{\sigma>\tau}{d\sigma\, x(\sigma) \exp(\tau-\sigma)}}$$
 
 Distributing $B$ we see that this is twice expr. (2) = $2Z$.
 
