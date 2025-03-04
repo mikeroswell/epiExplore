@@ -59,7 +59,7 @@ First, we look only at between-cohort variance, so our first step is to expand t
 
 Now, we first integrate over $t$ instead:
   $$ 2B^2 \int{dt\, i(t) \int_{\tau>t}{d\tau\, \int_{\sigma>\tau}{d\sigma\, x(\tau) x(\sigma) \exp(t-\tau)\exp(t-\sigma)}}}$$
-  $$ = 2B^2 \int{d\tau\, x(\tau) \int_{\sigma > \tau}{d\sigma\, x(\sigma) \exp(\tau-\sigma)\int_{t<\tau}{dqt\, i(t) \exp(t-\tau)}}}$$
+  $$ = 2B^2 \int{d\tau\, x(\tau) \int_{\sigma > \tau}{d\sigma\, x(\sigma) \exp(\tau-\sigma)\int_{t<\tau}{dt\, i(t) \exp(t-\tau)}}}$$
 Recognizing that the last $dt$ integral is $y(\tau)$ we re-write:
  $$ 2B^2 \int{d\tau\, y(\tau)x(\tau) \int_{\sigma>\tau}{d\sigma\, x(\sigma) exp(\tau-\sigma)}}$$
 
