@@ -96,7 +96,18 @@ Do another triangle trick
 
 $$= 2B^2 \int_{0}^{\infty}{d\delta\, exp(-\delta)\int_{0}^{\delta}{d\tau\,\int_{0}^{\tau}{d\tau'\, x(t+\tau) x(t+\tau')}}}$$
 
-Out of tricks...
+Try an order of integration trick, integrating over $\tau$ first instead of $\delta$:
+
+$$= 2B^2 \int_{0}^{\infty}{
+  d\tau\, \int_{0}^{\delta}{
+  d\delta\,exp(-\delta) \int_{\tau}^{\infty}{
+  d\tau'\, x(t+\tau) x(t+\tau')}}}$$
+
+Simplify a bit, computing the integral of the exponential function explicitly
+
+$$= 2B^2 \int_{0}^{\infty}{
+  d\tau\, exp(-\tau) \int_{\tau}^{\infty}{
+  d\tau'\, x(t+\tau) x(t+\tau')}}$$
 
 
 \end{document}
