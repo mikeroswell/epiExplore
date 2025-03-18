@@ -92,38 +92,13 @@ $$ S = \alpha 0^2 + (1-\alpha)*(\frac{1}{1-\alpha})^2 = \frac{1}{1-\alpha}$$.
 This (non-SIR-attainable) fraction is at $\alpha = 1/2$.
 Thus, we know that $S \leq 2Z$
 
-Although the SIR model won't give us a bimodal distribution for $C(t)$, we can see that $S$ grows monotonically with $B \geq 1$:
-
-We will rely on the time scaling we've been ignoring to show this. Let's posit $B_2>B_1$ and define the scaling factor
-$k = B_2/B_1$, then
-$x_{B_2}(t) = x_{B_1}(kt)$ etc.
-
-Then we have
-$$C_{B_2}(t) = B_2 \int_{\tau>t}{d\tau\, x_{B_2}(\tau) \exp(t-\tau)} = kB_1\int_{\tau>t}{d\tau\, x_{B_1}(k\tau) \exp(t-\tau)}$$
-
-
-We can also introduce $u = k\tau$. Note that weighting by incidence shouldn't change things because of the same scaling described above.
-
-
-
-for $u$ near $kt$, exp(
-
-
-$$C_{B_2}(t) = B_1 \int_{u>kt}{du\,x_{B_1}(u)\exp(t-u/k)}$$
-$$C_{B_1}(kt) = B_1 \int_{u>kt}{du\,x_{B_1}(u)\exp(kt-u)}$$
-$\exp(t-u/k) > \exp(kt-u)$, so early in the epidemic, those in the $B_2$ epidemic take advantage of a larger fraction of the time when there are susceptibles available, i.e. early, $C_{B_2}(t)>C_{B_1}(kt)$
-Later on (some time after the peak), this cuts the other way: those in $B_1$ world are sick when some susceptibles remain, but in $B_2$ world they stay sick longer relative to the epidemic's dynammics, i.e. more of their infectious time is during periods with low susceptibility.
-
-To put it in simple terms, for both B's, the mean is 1, but with $B_2$ we have higher highs and lower lows.
-This should still be clear when we weight by incidence, which follows the same scaling rules as $x$ and $y$, so $S_{B_2}>S_{B_1}$
-$$S_{B_1} = \frac{1}{k}\int{du\, i_{B_1}(u/k) C^2_{B_1}(uk)}$$
-$$S_{B_2}  = \int{du\, i_{B_1}(u) C^2_{B_2}(u/k)} $$
+Although the SIR model won't give us a bimodal distribution for $C(t)$, we can show that $S$ grows monotonically with $B \geq 1$:
 
 So, I think we know that $S$ grows monotonically with $B \geq 1$, and that $\lim{S} B-> \infty \leq 2Z$.
 
-I don't think we exactly proved that it is 0 for B->1, but we understand that based on the fact that R_effective should not change so there is not any between-cohort variation.
+I don't think we exactly proved that it is 0 for $B->1$, but we understand that based on the fact that $R_e$ should not change so there is not any between-cohort variation.
 
 \section{within-cohort variance component decreases monotonically with B}
-I think we can use a similar logic to prove that the within cohort variance (or sum of squares) decreases monotonically with B. We already know that this is bounded at B ->1 at 1 (or 2Z for SS), and I think we also feel it must decline to 0 as the epidemic speeds up.
+I think we can use a similar logic to prove that the within cohort variance (or sum of squares) decreases monotonically with B. We already know that this is bounded at $B ->1$ at 1 (or Z for SS), and I think we also feel it must decline to 0 as the epidemic strengthens up.
 
 \end{document}
