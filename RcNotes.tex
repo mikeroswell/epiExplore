@@ -50,6 +50,34 @@ and then expand:
 
 Thus, $\bar C = 1$, as expected. [Note: we could presumably fiddle with having a finite $y_0$ by playing with integral limits in the array above to get something like $(Z-x_0)/Z$.]
 
+\subsection{Sub-cohort-based expansion}
+
+2025 Mar 18 (Tue): we want to try the expansion for $\bar C$ in terms of sub-cohorts with the same infection time and duration to see if this provides any downstream insight. Start with with the definition above:
+
+$$C(t, D) = B \int^D{d\delta\, x(t+\delta)}. $$
+
+Each sub-cohort has size $i(t) \exp(-D)$, so the whole integral is:
+\begin{eqnarray}
+	Z \bar C
+	&=& \int{dt\,
+		i(t) \int{dD\,
+			\exp(-D) \int_{\delta<D}{d\delta\,
+				x(t+\delta)
+			}
+		}
+	}
+\end{eqnarray}
+
+If we re-arrange slightly and do the exponential integral now in the middle, we expect to be on the same track as the previous sub-section.
+
+Some questions we would like to ask:
+
+X. Does this provide insight for the double expansion? It kind of seems not: if we follow the path we dimly see, we expect to wind up with the same difficulities as we found with our between-cohort expansion. But maybe worth trying.
+
+X. Is there a different trick that would give us the simplification? It kind of seems unlikely -- there's a bit of weirdness in the two different ways we code infectious period (the cumulative distribution looks the same as the density, but isn't). On the other hand, maybe this weirdness is part of why the Roswell conjecture works.
+
+X. Can we make some progress by generalizing the generation interval? We both think that's the thing to try next (i.e., go up to the top and re-write things in a renewal-equation framework.). Do we want a parallel (i.e., different) document for this?
+
 \section{between-cohort sum of squares expansion}
 Now try to expand the sum of squares. One trick we're using here is that to compute the square of the integral of $f(x)$ over a range, we can just take twice the integral of $f(x)f(y)$ over a triangle where we assume we know $x>y$.
 
