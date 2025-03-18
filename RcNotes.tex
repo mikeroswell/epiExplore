@@ -18,6 +18,7 @@ $$
 where $Z$ is the size of the epidemic.
 
 Individuals in a cohort are effectively assumed to differ only in terms of how long they are infectious. We calculate $C(t)$ as a weighted average over this duration. The probability of having duration $D$ is just $\exp(-\delta)$ in this normalized model, and the reproductive number for this group is given by:
+
 $$C(t, D) = B \int^D{d\delta\, x(t+\delta)}, $$
 
 Since the probability of being infectious for exactly $D$ is $\exp(-D)$:
@@ -49,6 +50,34 @@ and then expand:
 \end{eqnarray}
 
 Thus, $\bar C = 1$, as expected. [Note: we could presumably fiddle with having a finite $y_0$ by playing with integral limits in the array above to get something like $(Z-x_0)/Z$.]
+
+\subsection{Sub-cohort-based expansion}
+
+2025 Mar 18 (Tue): we want to try the expansion for $\bar C$ in terms of sub-cohorts with the same infection time and duration to see if this provides any downstream insight. Start with with the definition above:
+
+$$C(t, D) = B \int^D{d\delta\, x(t+\delta)}. $$
+
+Each sub-cohort has size $i(t) \exp(-D)$, so the whole integral is:
+\begin{eqnarray}
+	Z \bar C
+	&=& \int{dt\,
+		i(t) \int{dD\, 
+			\exp(-D) \int_{\delta<D}{d\delta\,
+				x(t+\delta)
+			}
+		}
+	}
+\end{eqnarray}
+
+If we re-arrange slightly and do the exponential integral now in the middle, we expect to be on the same track as the previous sub-section.
+
+Some questions we would like to ask:
+
+X. Does this provide insight for the double expansion? It kind of seems not: if we follow the path we dimly see, we expect to wind up with the same difficulities as we found with our between-cohort expansion. But maybe worth trying.
+
+X. Is there a different trick that would give us the simplification? It kind of seems unlikely -- there's a bit of weirdness in the two different ways we code infectious period (the cumulative distribution looks the same as the density, but isn't). On the other hand, maybe this weirdness is part of why the Roswell conjecture works.
+
+X. Can we make some progress by generalizing the generation interval? We both think that's the thing to try next (i.e., go up to the top and re-write things in a renewal-equation framework.). Do we want a parallel (i.e., different) document for this?
 
 \section{between-cohort sum of squares expansion}
 Now try to expand the sum of squares. One trick we're using here is that to compute the square of the integral of $f(x)$ over a range, we can just take twice the integral of $f(x)f(y)$ over a triangle where we assume we know $x>y$.
@@ -121,7 +150,7 @@ $$S_{B_2}  = \int{du\, i_{B_1}(u) C^2_{B_2}(u/k)} $$
 
 So, I think we know that $S$ grows monotonically with $B \geq 1$, and that $\lim{S} B-> \infty \leq 2Z$.
 
-I don't think we exactly proved that it is 0 for B->1, but we understand that based on the fact that R_effective should not change so there is not any between-cohort variation.
+I don't think we exactly proved that it is 0 for B->1, but we understand that based on the fact that R-effective should not change so there is not any between-cohort variation.
 
 \section{within-cohort variance component decreases monotonically with B}
 I think we can use a similar logic to prove that the within cohort variance (or sum of squares) decreases monotonically with B. We already know that this is bounded at B ->1 at 1 (or 2Z for SS), and I think we also feel it must decline to 0 as the epidemic speeds up.
