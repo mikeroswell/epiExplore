@@ -13,7 +13,7 @@ We begin with an epidemic model without demographics, with $x$ fraction suscepti
 $$\frac{dx}{dt} = -i(t)$$.
 
 At any given time $t$, we have incidence given by the instantaneous reproduction number, multiplied by the proportion of the population infectious at time $t$, and a generation interval distribution $g(\tau)$:
-% I copied limits of integration from Park et al. 2020 PNAS forward-looking serial intervals, but I don't know why the upper limit is infinity instead of t here (their eq 12)
+
 $$i(t) = \mathcal{R}_{t} \int_{0}^{\infty}{d\tau\, i(t-\tau) g(\tau)}$$
 
 Here, we further assume that infectiousness, which may change over the course of an individuals infection, doesn't otherwise evolve over time, so
@@ -25,8 +25,8 @@ $$\mathcal{R}_{c} = \mathcal{R}_{0} \int_{0}^{\infty}{d\tau\, g(\tau) x(t+\tau)}
 
 ## mean case reproduction number
 
-We feel comfortable (assuming $y(0)$ negligible) that $\bar{\mathcal{R}_{c}} = 1$
-[still not sure why not upper limit of sigma = t]:
+We feel comfortable (assuming $y(0)$ negligible) that $\bar{\mathcal{R}_{c}} = 1$; but we don't yet have clear steps from (3) to (4) below.
+
 \begin{eqnarray}
 Z \bar{\mathcal{R}_{c}} 
   \\ = \mathcal{R}_{0} \int{dt\, i(t) \int_{0}^{\infty}{d\tau\, g(\tau) x(t+\tau)}} 
