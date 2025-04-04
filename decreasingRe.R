@@ -30,4 +30,8 @@ Kappas <- map_dfr(1:reps, function(rep){
   })
 
 sum(Kappas$heavy)
-hist(Kappas$kappa)
+hist(Kappas$kappa, xlab = "kappa = V/mu^2\ncases per case", ylab = "count", main = "kappa < 1" )
+x <- seq(0, 35, 0.2)
+
+plot(x, Re(x), xlab = "t", ylab = "R(t)", type = "line")
+hist(rTimes, main = NULL, xlab = "duration", ylab = "count")

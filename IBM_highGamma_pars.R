@@ -8,7 +8,7 @@ tMax <- 2e3
 setBeta <- 0.05
 setGamma <- 10
 tProb <- 0.075
-
+rPar <- "exp"
 # daily per-person interactions
 dailyRate <- setBeta/tProb
 seed <- floor(runif(1, 0, 1e4))

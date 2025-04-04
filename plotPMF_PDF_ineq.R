@@ -5,7 +5,7 @@ library(dplyr)
 library(tidyr)
 library(patchwork)
 loadEnvironments()
-startGraphics(height = 6, width = 11)
+startGraphics(height = 6, width = 9)
 
 
 
@@ -187,10 +187,17 @@ twoClass <- cFracs |>
 # }
 
 deadDistPlot <- fancyHist |> densHist(colorVar = "distParms"
-                                      , colorVals = c(0.15, 0.8)
-                                      , colorLab = "beta"
+                                      , colorVals = c(1.5, 8)
+                                      , colorLab = "R_0"
                                       , groupVar = "distr"
                                       )
+
+deadDistPlot2 <- fancyHist |> densHist(colorVar = "distParms"
+                                      , colorVals = c(1.5, 8)
+                                      , colorLab = "R_0"
+                                      , groupVar = "distr"
+                                      , clearFill = TRUE
+)
 
 
 
@@ -247,7 +254,7 @@ ineqTwoPlot <- twoClassIneq |>
        , colorVals = c("homogeneous"
                        , "23% are 6.67x\nmore transmissive")
        ) +
-  scale_linetype_discrete(labels =c("activity", "secondary cases")) +
+  scale_linetype_discrete(labels =c("expected infectiousness", "secondary cases")) +
   scale_color_manual(name = "model structure"
                         , labels = c("homogeneous"
                                      , "23% are 6.67x\nmore transmissive")
@@ -258,9 +265,18 @@ ineqTwoPlot <- twoClassIneq |>
                     , values = c("#d95f02", "#7570b3")       )
 
 
+
+# making some sub-plot pieces for a presentation
+
+deadDistPlot+ theme(legend.position.inside = c(0.6, 0.6)
+                    , legend.justification = "left"
+                    #,
+                    # legend.position.inside = c(0.5, 0.1)
+) +
+  scale_fill_manual(values = c(alpha("white", 1), alpha("white", 1)), name = "R_0", )
 # pdf("draftFig1.pdf", width = 11, height =6)
 
-(deadDistPlot+ theme(legend.position = c(0.6, 0.6)
+(deadDistPlot+ theme(legend.position.inside = c(0.6, 0.6)
                      , legend.justification = "left"
   #,
   # legend.position.inside = c(0.5, 0.1)

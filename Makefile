@@ -97,7 +97,7 @@ IBM_faster.Rout: IBM_faster.R
 ## highGamma.Rout: IBM_minimal.R
 impmakeR += IBM
 ## base.IBM.Rout: IBM_minimal.R IBM_base_pars.rda
-%.IBM.Rout: IBM_minimal.R IBM_%_pars.rda
+%.IBM.Rout: IBM_minimal.R recFun.rda IBM_%_pars.rda
 	$(pipeRcall)
 
 impmakeR += conjecture

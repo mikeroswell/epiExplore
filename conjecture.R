@@ -7,6 +7,8 @@ rpcall("conjecture.highR.Rout conjecture.R IBM.highR.rda")
 rpcall("highR.conjecture.Rout conjecture.R highR.IBM.rda")
 rpcall("lowGamma.conjecture.Rout conjecture.R lowGamma.IBM.rda")
 rpcall("base.conjecture.Rout conjecture.R base.IBM.rda")
+rpcall("gamma3.conjecture.Rout conjecture.R gamma3.IBM.rda")
+rpcall("const.conjecture.Rout conjecture.R const.IBM.rda")
 loadEnvironments()
 manageConflicts()
 

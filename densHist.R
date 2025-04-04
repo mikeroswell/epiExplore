@@ -7,9 +7,10 @@ densHist <- function(.data
                      , colorVals = NULL
                      , colorLab = NULL
                      , groupVar = NULL
+                     , clearFill = FALSE
 ){
   if(is.null(colorLab)){colorLab <- colorVar}
-  ggplot(.data, aes(x = x
+  p <- ggplot(.data, aes(x = x
                     , y = d
                     , color = get(eval(colorVar))
                     , fill = get(eval(colorVar))
@@ -21,18 +22,12 @@ densHist <- function(.data
     geom_line(aes(alpha = as.numeric(distType == "act"), group = get(eval(groupVar)))
               # , key_glyph = "path"
     ) +
-    geom_bar(aes(alpha = 0.5* as.numeric(distType != "act"), width = barWidth, group = get(eval(groupVar)))
-             , stat = "identity"
-             , position = "identity"
-             , color = scales::alpha("white", alpha = 0)
-             # , key_glyph = "point"
 
-    ) +
     # set up a guide for the plotting type, using the alpha scale that renders
     # outside type invisible
     scale_alpha_identity(breaks = c(0,1)
                          # , range = c(0,1)
-                         , labels = c("activity", "secondary case")
+                         , labels = c("expected infectiousness", "secondary case")
                          , guide = guide_legend(title = "distribution type"
                                                 , order = 2
                                                 , override.aes = list(
@@ -63,6 +58,15 @@ densHist <- function(.data
          , color = colorLab
          , fill = colorLab
     )
+  if(!clearFill){
+    p <- p + geom_bar(aes(alpha = 0.5* as.numeric(distType != "act"), width = barWidth, group = get(eval(groupVar)))
+             , stat = "identity"
+             , position = "identity"
+             , color = scales::alpha("white", alpha = 0)
+             # , key_glyph = "point"
+
+    )}
+  return(p)
 }
 
 # look around at the draw_key functions to see how to make a split rect with two colors.
@@ -84,3 +88,4 @@ ineq <- function(dat, colorVar = "beta", colorVals = c(beta1, beta2)){
 }
 
 saveEnvironment()
+

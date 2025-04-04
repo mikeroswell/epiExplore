@@ -10,7 +10,9 @@ rpcall("IBM.highGamma.Rout IBM_minimal.R IBM_highGamma_pars.rda")
 rpcall("highGamma.IBM.Rout IBM_minimal.R IBM_highGamma_pars.rda")
 rpcall("highR.IBM.Rout IBM_minimal.R IBM_highR_pars.rda")
 rpcall("lowGamma.IBM.Rout IBM_minimal.R IBM_lowGamma_pars.rda")
-rpcall("base.IBM.Rout IBM_minimal.R IBM_base_pars.rda")
+rpcall("base.IBM.Rout IBM_minimal.R recFun.rda IBM_base_pars.rda")
+rpcall("gamma3.IBM.Rout IBM_minimal.R recFun.rda IBM_gamma3_pars.rda")
+rpcall("const.IBM.Rout IBM_minimal.R recFun.rda IBM_const_pars.rda")
 manageConflicts()
 
 library(dplyr)
@@ -41,6 +43,9 @@ comb2.int <- function(n, rep = FALSE){
 }
 rateInds <-comb2.int(popSize)
 
+# daily per-person interactions
+dailyRate <- setBeta/tProb
+
 # generate interaction rates by dyad
 rateFrame <- rateInds |>
   rbind(dailyRate/(popSize-1)) |>
@@ -62,10 +67,12 @@ contInd <- sample( 1:length(rateFrame$mixRate)
 # save as a data.frame (will be longer than necessary)
 contactOrder <- cbind(t(rateInds)[ contInd,], contTime)
 
-# We will also pre-compute recovery times
-# First lets assume it is exponential to compare to basic model
 
-recDelay <- rexp(1:popSize, rate = setGamma)
+
+# We will also pre-compute recovery times
+# Default assumes an exponential duration distribution
+
+recDelay <- recFun(1:popSize, rPar = rPar)
 # initialize infection time with a large number for logical testing
 iTime <- rep(tMax, popSize)
 
