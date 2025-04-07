@@ -52,7 +52,9 @@ $\rho$ (`sRat`): the ratio of the mean sub-spreader reproductive number to the m
 They use this model to generate the latent distribution $v$, the distribution of idealized individual reproductive numbers at the start of the epidemic, and then use Poisson sampling of $v$ to get integer counts, which they then fit to real-world data.
 
 MISSING: w.r.t. JD's comment about overconfidence, maybe the issue is that they only fit the observed distribution of infections per infectee and not the timeseries of observed incidence, a recorded final size, or any other info that would inform whether the models they fit are any good for the epidemic as a whole vs. just the distribution of $Z ~ Poisson(v)$
+
 ----------------------------------------------------------------------
+
 Finite mixture models of superspreading in epidemics
 * drop/O'Regan_Drake_2025_poisson_mixture_two_classes.pdf
 Analyze completely linearized two-class models with gamma durations, a subset of the Meehan models. Do a decent job of articulating the contribution of the Poisson process to the variance of the mixture vs. the mixing distribution. I'd say they should have found and cited Meehan and didn't add much, though they have some more specific formalizations for final size, outbreak probability, etc. 
