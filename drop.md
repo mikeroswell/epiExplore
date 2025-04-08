@@ -17,6 +17,12 @@ Non-drop links
 * https://epiverse-trace.github.io/epichains/index.html
 
 ----------------------------------------------------------------------
+Maximum Likelihood Estimation of the Negative Binomial Dispersion Parameter for Highly Overdispersed Data, with Applications to Infectious Diseases
+* drop/Lloyd-Smith_2007_negative_binomial_dispersion_Maximum_likelihood
+
+Simulation studies with ML kappa estimates when data generated under NB (with some 0-censoring), showing that with small sample sizes as well as zero censoring, tendency to underestimate kappa with poor CI coverage. I'm pretty sure he used Wald CI (Bottom of page 3 to top of page 4), but our overall findings for the baseline case were similar. 
+
+----------------------------------------------------------------------
 Superspreading and the effect of individual variation on disease emergence
 * drop/Lloyd-Smith_etal_2005_superspreading.pdf
 * drop/Lloyd-Smith_etal_2005_superspreading_supp-text.pdf
