@@ -1,0 +1,67 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb}
+
+\newcommand{\Rx}[1]{\ensuremath{\mathcal{R}_{#1}}}
+\newcommand{\Rc}{\Rx{c}}
+\newcommand{\Ro}{\Rx{0}}
+\newcommand{\Reff}{\Rx{e}}
+\newcommand{\Ri}{\Rx{i}}
+
+\begin{document}
+
+\section{Computing the distribution in cases per case in the deterministic SIR model}
+
+To examine the relationship between individual-level heterogeneity in expected transmission and $\Ro$ in the deterministic SIR model, we computed moments of the distribution of cases per case using numerical SIR solutions. 
+
+We defined the relativized SIR model with mean duration = 1 with 
+
+$x(t)$, the fraction of the population susceptible at time $t$;
+
+$i(t)$, incidence at time $t$; 
+
+$y(t)$, the fraction infectious at time $t$;
+
+and $\Ro = B$ as follows:
+
+$$ i = Bxy; \dot x = -i; \dot y = i-y $$
+
+We then defined the following relationships: 
+
+$\Ri$, the instantaneous reproduction rate, as 
+$\Ri(\tau) = \Ro x(\tau)$.
+
+The fraction of a cohort infected at time $\tau$ still infectious at time $\sigma$ is $\exp(-(\sigma-\tau)$. 
+
+
+Thus, the first moment of the cohort reproduction number (mean cases per case within the cohort) is 
+$$\mathbb{E}\left(\nu(t)\right) = \int{d\tau\, \overbrace{p(-(\tau-t)}^{\text{duration density}}\int_{t}^{\tau}{d\sigma\,  \overbrace{\Ri (\sigma)}^{\text{instantaneous reproduction number}} }}$$
+and the raw second moment is 
+$$\mathbb{E}\left(\nu^2(t)\right) = \int{d\tau\, exp(-(\tau-t)\left(\int_t^\tau{d\sigma\,\Ri (\sigma)} \right)^2}$$
+
+Cohort size ($i(t)$) varies with $t$. Across the entire epidemic, we compute the first moment of the incidence-weighted mean cohort reproduction number as
+
+$$\mathbb{E}(\Rc(t)) = \frac{\int{dt\, i(t) \mathbb{E}\left(\nu(t)\right)}}{\int{dt\, i(t)}}$$
+
+and the raw second moment as 
+
+$$\mathbb{E}(\Rc^2(t)) = \frac{\int{dt\, i(t) \left(\mathbb{E}\left(\nu(t)\right)\right)^2}}{\int{dt\, i(t)}}$$
+
+To compute the total variance in cases per case, we first computed numerical solutions for $x(t)$, $i(t)$, and used these to numerically re-integrate case reproduction numbers over the entire epidemic, expanded here to show how we sum the incidence-weighted within-cohort case reproduction number variances and the total between-cohort variance in case reproduction number: 
+
+\begin{equation}
+    \begin{aligned}
+    &&\\ \overbrace{\left(\frac{\int{
+        dt\, \overbrace{i(t)}^{\text{cohort size}}
+        \overbrace{\mathbb{E}(\nu^2(t))-\left(\mathbb{E}\left(\nu(t)\right)\right)^2}^{\text{within-cohort variance at time $t$}}
+        }} {\underbrace{\int{dt\, i(t)}}_{\text{final size}}}\right)}^{\text{within-cohort contribution to total variance}} + 
+    &&\\ \overbrace{\left(\frac{\int{
+        dt\, \overbrace{i(t)}^{\text{cohort size}}
+        \left(\mathbb{E}\left(\nu(t)\right)\right)^2}
+        }{\underbrace{\int{dt\, i(t)}}_{\text{final size}}}\right)}^{\text{between-cohort sum of squares}} -
+    &&\\ \overbrace{\left(\frac{\int{
+        dt\, \overbrace{i(t)}^{\text{cohort size}}
+        \overbrace{\mathbb{E}\left(\nu(t)\right)}^{\text{\Rc(t)}}
+        }}{\underbrace{\int{dt\, i(t)}}_{\text{final size}}}\right)^2}^{\text{squared expectation of \Rc(t)}}
+    \end{aligned}
+\end{equation}
+\end{document}

@@ -137,6 +137,7 @@ Sources += $(wildcard *.tex)
 
 ## Notes on mean and variance in R_c
 
+## forward.pdf: forward.tex
 ## RcNotes.pdf: RcNotes.tex
 ## RenewalCaseReproduction.pdf: RenewalCaseReproduction.md
 ## RenewalCaseReproduction.html: RenewalCaseReproduction.md
