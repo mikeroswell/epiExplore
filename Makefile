@@ -143,6 +143,8 @@ Sources += $(wildcard *.tex)
 ## RenewalCaseReproduction.html: RenewalCaseReproduction.md
 defineConjecture.pdf: defineConjecture.md
 
+proof.pdf: proof.tex
+
 ######################################################################
 ## Robust maximum likelihood estimation when kappa is near boundary
 nbinom_z.Rout: nbinom_z.R

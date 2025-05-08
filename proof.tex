@@ -1,0 +1,27 @@
+\documentclass[12pt]{article}
+%% \usepackage{amssymb}
+
+\newcommand{\dt}{dt\,}
+\newcommand{\ds}{ds\,}
+\newcommand{\dtau}{d\tau\,}
+\newcommand{\drho}{d\rho\,}
+
+\begin{document}
+
+The Roswell conjecture is true.
+
+The conjecture states that the “excess” (i.e., non-Poisson) variation of individual case reproductive numbers in the standard SIR model outbreak is 1.
+
+We define $x$ as the proportion of the population susceptible, $y$ as the proportion infectious, and incidence $i = Bxy$.
+
+Let $f$ be the distribution of residence times in the infectious compartment. This is exponential in the standard SIR and we will make that assumption later. Define $F$ as the survival distribution function 
+$F(t) 
+	= 1 -\int_{\tau<t} \dtau f(\tau)
+	= \int_{\tau>t} \dtau f(\tau)
+$.
+
+Define the final size $Z = \int\dt i(t)$. Individuals are characterized by their infection time $\tau$ and recovery time $\rho$. The size of each such class is $w(\tau, \rho) = i(\tau) f(\rho)$. Their expected case reproductive number (which we will use to calculate the mean and the excess variance) is $C(\tau, \rho) = B \int_{\tau<t<\rho} \dt$.
+
+Define the raw moments of $C$ as $C_k = \int\int_{\tau<\rho} \dtau\drho w(\tau, \rho) (C(\tau, \rho))^k$. We expect $C_0$ 
+\end{document}
+
