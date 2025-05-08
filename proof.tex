@@ -6,22 +6,44 @@
 \newcommand{\dtau}{d\tau\,}
 \newcommand{\drho}{d\rho\,}
 
+\newcommand{\intint}{{\int\!\!\int}}
+\newcommand{\intintint}{{\int\!\!\int\!\!\int}}
+
 \begin{document}
 
 The Roswell conjecture is true.
 
 The conjecture states that the “excess” (i.e., non-Poisson) variation of individual case reproductive numbers in the standard SIR model outbreak is 1.
 
-We define $x$ as the proportion of the population susceptible, $y$ as the proportion infectious, and incidence $i = Bxy$.
+Define $x$ as the proportion of the population susceptible, $y$ as the proportion infectious, and incidence $i = Bxy$.
 
 Let $f$ be the distribution of residence times in the infectious compartment. This is exponential in the standard SIR and we will make that assumption later. Define $F$ as the survival distribution function 
 $F(t) 
 	= 1 -\int_{\tau<t} \dtau f(\tau)
 	= \int_{\tau>t} \dtau f(\tau)
-$.
+$ (these are equivalent because the full integral of the distribution $f$ is one.
 
-Define the final size $Z = \int\dt i(t)$. Individuals are characterized by their infection time $\tau$ and recovery time $\rho$. The size of each such class is $w(\tau, \rho) = i(\tau) f(\rho)$. Their expected case reproductive number (which we will use to calculate the mean and the excess variance) is $C(\tau, \rho) = B \int_{\tau<t<\rho} \dt$.
+Individuals are characterized by their infection time $\tau$ and recovery time $\rho$. The size of each such class is $w(\tau, \rho) = i(\tau) f(\rho-\tau)$. The expected case reproductive number (which we will use to calculate the mean and the excess variance) is $C(\tau, \rho) = B \int_{\tau<t<\rho} x(t) \dt$.
 
-Define the raw moments of $C$ as $C_k = \int\int_{\tau<\rho} \dtau\drho w(\tau, \rho) (C(\tau, \rho))^k$. We expect $C_0$ 
+Define the raw moments of $C$ as $C_k = \intint_{\tau<\rho} \dtau\drho w(\tau, \rho) (C(\tau, \rho))^k$. 
+We expect $C_0=Z$, where the final size $Z = \int\dt i(t)$. From there, we will calculate $\mu_C = C_1/C_0$, and the squared CV $\kappa_c = C_0C_2/C_1^2-1$. We expect $\mu_C=1$. Thus the conjecture is equivalent to $\kappa_C = 1$.
+
+We have:
+\begin{eqnarray}
+	C_0
+	&=& \intint_{\tau<\rho} \dtau\drho w(\tau, \rho) 
+	\\ &=& \int \dtau i(\tau) \int_{\rho>\tau} \drho f(\rho-\tau)
+	\\ &=& \int \dtau i(\tau), 
+\end{eqnarray}
+as expected.
+
+Next:
+\begin{eqnarray}
+	C_1
+	&=& \intint_{\tau<\rho} \dtau\drho w(\tau, \rho) c(\tau, \rho)
+	\\ &=& \intintint_{\tau<t<\rho} \dtau\dt\drho 
+		i(\tau) f(\rho-\tau) x(t)
+\end{eqnarray}
+
 \end{document}
 
