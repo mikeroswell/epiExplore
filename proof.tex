@@ -8,12 +8,16 @@
 
 \newcommand{\intint}{{\int\!\!\int}}
 \newcommand{\intintint}{{\int\!\!\int\!\!\int}}
+\newcommand{\intintintint}{{\int\!\!\int\!\!\int\!\!\int}}
+
+\newcommand{\eqlab}[1]{\label{eq:#1}}
+\newcommand{\eqref}[1]{(\ref{eq:#1})}
 
 \begin{document}
 
 The Roswell conjecture is true.
 
-The conjecture states that the “excess” (i.e., non-Poisson) variation of individual case reproductive numbers in the standard SIR model outbreak is 1.
+The conjecture asserts that the “excess” (i.e., non-Poisson) variation of individual case reproductive numbers in the standard SIR model outbreak is 1.
 
 Define $x$ as the proportion of the population susceptible, $y$ as the proportion infectious, and incidence $i = Bxy$.
 
@@ -35,15 +39,63 @@ We have:
 	\\ &=& \int \dtau i(\tau) \int_{\rho>\tau} \drho f(\rho-\tau)
 	\\ &=& \int \dtau i(\tau), 
 \end{eqnarray}
-as expected.
+and $\mu_C=1$, as expected.
 
 Next:
 \begin{eqnarray}
 	C_1
-	&=& \intint_{\tau<\rho} \dtau\drho w(\tau, \rho) c(\tau, \rho)
-	\\ &=& \intintint_{\tau<t<\rho} \dtau\dt\drho 
+	&=& \intint_{\tau<\rho} \dtau\drho w(\tau, \rho) C(\tau, \rho)
+	\\ &=& B \intintint_{\tau<t<\rho} \dtau\dt\drho 
 		i(\tau) f(\rho-\tau) x(t)
+	\\ &=& B \intint_{\tau<t} \dtau\dt i(\tau) x(t)
+		\int_{\rho>t} \drho f(\rho-\tau) 
+	\\ &=& B \intint_{\tau<t} \dtau\dt i(\tau) x(t) F(t-\tau)
+	\\ &=& B \int \dt x(t) \int_{\tau<t}\dtau i(\tau) F(t-\tau).
+	\eqlab{C1pre}
 \end{eqnarray}
+
+Note that the inner integral in \eqref{C1pre} counts the number of individuals who entered the infectious class before time $t$ and remained until then – $y(t)$.
+Thus:
+\begin{eqnarray}
+	C_1
+	&=& B \int \dt x(t) y(t)
+	\\ &=& \int \dt i(t)
+	\\ &=& Z,
+\end{eqnarray}
+as expected.
+
+In an attempt to pull similar tricks, we expand $C^2$ in our expression for $C_2$ as an integral over a square, which we write as twice the integral over one of the two symmetric triangles:
+\begin{eqnarray}
+	C_2
+	&=& \intint_{\tau<\rho} \dtau\drho w(\tau, \rho) (C(\tau, \rho))^2
+	\\ &=& 2B^2 \intintintint_{\tau<s<t<\rho} \dtau\ds\dt\drho 
+		i(\tau) f(\rho-\tau) x(s) x(t)
+	\\ &=& 2B^2 \intintint_{\tau<s<t} \dtau\ds\dt 
+		i(\tau) x(s) x(t) \int_{\rho>t} \drho f(\rho-\tau)
+	\\ &=& 2B^2 \intintint_{\tau<s<t} \dtau\ds\dt 
+		i(\tau) x(s) x(t) F(t-\tau)
+	\\ &=& 2B^2 \intint_{s<t} \ds\dt 
+		x(s) x(t) \int_{\tau<s}\dtau i(\tau) F(t-\tau) \eqlab{C2pre}
+\end{eqnarray}
+
+Now the inner integral counts the number of individuals who entered the infectious class before one time ($s$) and remained until another ($t$), which is much less pretty. There is no obvious way to move forward from here without using the Markovian property of our chosen infectious distribution, i.e., $F(a+b) = F(a) F(b)$:
+\begin{eqnarray}
+	C_2
+	&=& 2B^2 \intint_{s<t} \ds\dt 
+		x(s) x(t) \int_{\tau<s}\dtau i(\tau) F(t-s) F(s-\tau)
+	\\ &=& 2B^2 \intint_{s<t} \ds\dt 
+		x(s) x(t) F(t-s) \int_{\tau<s}\dtau i(\tau) F(s-\tau)
+	\\ &=& 2B^2 \intint_{s<t} \ds\dt 
+		x(s) x(t) F(t-s) y(s)
+	\\ &=& 2B \intint_{s<t} \ds\dt x(t) F(t-s) i(s)
+	\\ &=& 2B \int \dt x(t) \int_{s<t} \ds F(t-s) i(s)
+	\\ &=& 2B \int \dt x(t) y(t)
+	\\ &=& 2 \int \dt i(t)
+	\\ &=& 2Z.
+\end{eqnarray}
+This gives $\kappa_C = 2-1 = 1$, as desired.
+
+A couple of points of interest. We calculate $y$ from $i$ and $f$, and close the loop by calculating $i$ using $x$ and $y$. But we never calculate the population susceptibility $x$. This is a tiny bit troubling, since it seems like there must be some assumptions about $x$ necessary for our result. It also strongly suggests that the Roswell conjecture should be true even in the presence of heterogeneous susceptibility (or phenomenologically changing susceptibility in a mean-field model). It would be interesting to think about if there are any ways forward from \eqref{C2pre} for other infectious-time distributions.
 
 \end{document}
 
