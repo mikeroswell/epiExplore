@@ -15,17 +15,20 @@
 
 \begin{document}
 
+\section*{Case reproductive numbers across a simple epidemic}
+
 The Roswell conjecture is true.
 
 The conjecture asserts that the “excess” (i.e., non-Poisson) variation of individual case reproductive numbers in the standard SIR model outbreak is 1.
 
+\subsection*{Proof}
 Define $x$ as the proportion of the population susceptible, $y$ as the proportion infectious, and incidence $i = Bxy$.
 
 Let $f$ be the distribution of residence times in the infectious compartment. This is exponential in the standard SIR and we will make that assumption later. Define $F$ as the survival distribution function 
 $F(t) 
 	= 1 -\int_{\tau<t} \dtau f(\tau)
 	= \int_{\tau>t} \dtau f(\tau)
-$ (these are equivalent because the full integral of the distribution $f$ is one.
+$ (these are equivalent because the full integral of the distribution $f$ is one).
 
 Individuals are characterized by their infection time $\tau$ and recovery time $\rho$. The size of each such class is $w(\tau, \rho) = i(\tau) f(\rho-\tau)$. The expected case reproductive number (which we will use to calculate the mean and the excess variance) is $C(\tau, \rho) = B \int_{\tau<t<\rho} x(t) \dt$.
 
@@ -39,7 +42,7 @@ We have:
 	\\ &=& \int \dtau i(\tau) \int_{\rho>\tau} \drho f(\rho-\tau)
 	\\ &=& \int \dtau i(\tau), 
 \end{eqnarray}
-and $\mu_C=1$, as expected.
+as expected.
 
 Next:
 \begin{eqnarray}
@@ -62,7 +65,7 @@ Thus:
 	\\ &=& \int \dt i(t)
 	\\ &=& Z,
 \end{eqnarray}
-as expected.
+and $\mu_C=1$, as expected.
 
 In an attempt to pull similar tricks, we expand $C^2$ in our expression for $C_2$ as an integral over a square, which we write as twice the integral over one of the two symmetric triangles:
 \begin{eqnarray}
@@ -95,7 +98,11 @@ Now the inner integral counts the number of individuals who entered the infectio
 \end{eqnarray}
 This gives $\kappa_C = 2-1 = 1$, as desired.
 
-A couple of points of interest. We calculate $y$ from $i$ and $f$, and close the loop by calculating $i$ using $x$ and $y$. But we never calculate the population susceptibility $x$. This is a tiny bit troubling, since it seems like there must be some assumptions about $x$ necessary for our result. It also strongly suggests that the Roswell conjecture should be true even in the presence of heterogeneous susceptibility (or phenomenologically changing susceptibility in a mean-field model). It would be interesting to think about if there are any ways forward from \eqref{C2pre} for other infectious-time distributions.
+\subsection*{Comments}
+
+We calculate $y$ from $i$ and $f$, and close the loop by calculating $i$ using $x$ and $y$. But we never calculate the population susceptibility $x$. This is a tiny bit troubling, since it seems like there must be some assumptions about $x$ necessary for our result. It also strongly suggests that the Roswell conjecture should be true even in the presence of heterogeneous susceptibility (or phenomenologically changing susceptibility in a mean-field model). 
+
+It would be interesting to think about if there are any ways forward from \eqref{C2pre} for other infectious-time distributions.
 
 \end{document}
 
