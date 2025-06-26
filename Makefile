@@ -150,7 +150,8 @@ Sources += $(wildcard *.tex)
 ## RcNotes.pdf: RcNotes.tex
 ## RenewalCaseReproduction.pdf: RenewalCaseReproduction.md
 ## RenewalCaseReproduction.html: RenewalCaseReproduction.md
-defineConjecture.pdf: defineConjecture.md
+## defineConjecture.pdf: defineConjecture.md
+## proof.pdf: proof.tex
 
 ######################################################################
 ## Robust maximum likelihood estimation when kappa is near boundary
