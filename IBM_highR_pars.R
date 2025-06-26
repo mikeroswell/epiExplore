@@ -8,6 +8,8 @@ tMax <- 2e3
 setBeta <- 8
 setGamma <- 1/3
 tProb <- 0.075
+popSize <- 1e4
+rPar <- "exp"
 
 # daily per-person interactions
 dailyRate <- setBeta/tProb

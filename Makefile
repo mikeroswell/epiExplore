@@ -27,8 +27,11 @@ secondaryDistributionPlots.Rout: secondaryDistributionPlots.R
 ### generateds distribution functions assuming branching process
 pdfFromRates.Rout: pdfFromRates.R
 kappaFns.Rout: kappaFns.R
+# very rough peak time approximation
+tpeak.Rout: tpeak.R
 ### plotting
 densHist.Rout: densHist.R
+ggplot_limits.Rout: ggplot_limits.R
 
 ## Lloyd
 ### reproduces main conceptual ideas from Lloyd-Smith et al. 2005, plots
@@ -100,12 +103,18 @@ impmakeR += IBM
 %.IBM.Rout: IBM_minimal.R recFun.rda IBM_%_pars.rda
 	$(pipeRcall)
 
+IBM_change_%_pars.Rout: change_%.R IBM_base_pars.rda
+	$(pipeRcall)
+
 impmakeR += conjecture
 ## lowGamma.conjecture.Rout: conjecture.R
 ## base.conjecture.Rout: IBM_minimal.R conjecture.R IBM_base_pars.R
 %.conjecture.Rout: conjecture.R %.IBM.rda
 	$(pipeRcall)
 
+impmakeR += toPeak
+%.toPeak.Rout: toPeak.R tpeak.rda %.conjecture.rda nbinom_z.rda
+	$(pipeRcall)
 ## how does the CV change in an exponential-something mixture
 # lognormal_exp_sim.Rout: lognormal_exp_sim.R spreadHelpers.rda
 #	$(pipeRcall)
