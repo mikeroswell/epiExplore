@@ -115,6 +115,10 @@ impmakeR += conjecture
 impmakeR += toPeak
 %.toPeak.Rout: toPeak.R tpeak.rda %.conjecture.rda nbinom_z.rda
 	$(pipeRcall)
+
+impmakeR += hundredFiveHundred
+%.hundredFiveHundred.Rout: hundredFiveHundred.R tpeak.rda %.conjecture.rda nbinom_z.rda
+	$(pipeRcall)
 ## how does the CV change in an exponential-something mixture
 # lognormal_exp_sim.Rout: lognormal_exp_sim.R spreadHelpers.rda
 #	$(pipeRcall)
