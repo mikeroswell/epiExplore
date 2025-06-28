@@ -108,7 +108,8 @@ IBM_change_%_pars.Rout: change_%.R IBM_base_pars.rda
 
 impmakeR += conjecture
 ## lowGamma.conjecture.Rout: conjecture.R
-## base.conjecture.Rout.dd.log
+## base.conjecture.Rout.dd.nom.log:
+## base.conjecture.Rout.dd.nom.mg.pdf:
 ## base.conjecture.Rout: IBM_minimal.R conjecture.R IBM_base_pars.R
 %.conjecture.Rout: conjecture.R %.IBM.rda
 	$(pipeRcall)
@@ -264,8 +265,8 @@ makestuff/Makefile:
 
 -include makestuff/pipeR.mk
 -include makestuff/texj.mk
--include makestuff/rmd.mk
--include makestuff/pandoc.mk
+## -include makestuff/rmd.mk
+## -include makestuff/pandoc.mk
 ## -include makestuff/ldrop.mk
 -include makestuff/mirror.mk
 -include makestuff/makegraph.mk
