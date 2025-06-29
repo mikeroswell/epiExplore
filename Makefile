@@ -249,7 +249,6 @@ Ignore += makestuff
 
 Makefile: makestuff/01.stamp
 makestuff/%.stamp:
-	- $(RM) makestuff/*.stamp
 	(cd makestuff && $(MAKE) pull) || git clone --depth 1 $(msrepo)/makestuff
 	touch $@
 
