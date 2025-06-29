@@ -108,8 +108,6 @@ IBM_change_%_pars.Rout: change_%.R IBM_base_pars.rda
 
 impmakeR += conjecture
 ## lowGamma.conjecture.Rout: conjecture.R
-## base.conjecture.Rout.dd.nom.log:
-## base.conjecture.Rout.dd.nom.mg.pdf:
 ## base.conjecture.Rout: IBM_minimal.R conjecture.R IBM_base_pars.R
 %.conjecture.Rout: conjecture.R %.IBM.rda
 	$(pipeRcall)
@@ -118,7 +116,7 @@ impmakeR += toPeak
 %.toPeak.Rout: toPeak.R tpeak.rda %.conjecture.rda nbinom_z.rda
 	$(pipeRcall)
 
-## base.hundredFiveHundred.Rout.mg.pdf:
+## base.hundredFiveHundred.Rout.nom.dd.mg.pdf:
 ## base.hundredFiveHundred.Rout: hundredFiveHundred.R
 impmakeR += hundredFiveHundred
 %.hundredFiveHundred.Rout: hundredFiveHundred.R tpeak.rda %.conjecture.rda nbinom_z.rda
