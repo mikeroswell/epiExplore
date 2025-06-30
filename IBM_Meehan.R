@@ -11,13 +11,13 @@ rpcall("highGamma.IBM.Rout IBM_minimal.R IBM_highGamma_pars.rda")
 rpcall("lowGamma.IBM.Rout IBM_minimal.R IBM_lowGamma_pars.rda")
 rpcall("gamma3.IBM.Rout IBM_minimal.R recFun.rda IBM_gamma3_pars.rda")
 rpcall("const.IBM.Rout IBM_minimal.R recFun.rda IBM_const_pars.rda")
-rpcall("highR.IBM.Rout IBM_minimal.R recFun.rda IBM_highR_pars.rda")
 rpcall("base.IBM.Rout IBM_minimal.R recFun.rda IBM_base_pars.rda")
-rpcall("change_3.IBM.Rout IBM_minimal.R recFun.rda IBM_change_3_pars.rda")
-rpcall("change_12.IBM.Rout IBM_minimal.R recFun.rda IBM_change_12_pars.rda")
-rpcall("change_6.IBM.Rout IBM_minimal.R recFun.rda IBM_change_6_pars.rda")
-rpcall("change_2.IBM.Rout IBM_minimal.R recFun.rda IBM_change_2_pars.rda")
+rpcall("highR.IBM.Rout IBM_minimal.R recFun.rda IBM_highR_pars.rda")
 rpcall("change_1p5.IBM.Rout IBM_minimal.R recFun.rda IBM_change_1p5_pars.rda")
+rpcall("change_2.IBM.Rout IBM_minimal.R recFun.rda IBM_change_2_pars.rda")
+rpcall("change_3.IBM.Rout IBM_minimal.R recFun.rda IBM_change_3_pars.rda")
+rpcall("change_6.IBM.Rout IBM_minimal.R recFun.rda IBM_change_6_pars.rda")
+rpcall("change_12.IBM.Rout IBM_minimal.R recFun.rda IBM_change_12_pars.rda")
 manageConflicts()
 
 library(dplyr)
@@ -112,14 +112,13 @@ for(i in 1:nrow(contactOrder)){
 # a bunch of stuff I want to do for each row...
   # check if anyone is infectious
   tCur <- co[3]
-  cont <- states[co[1:2]] == Istate
-  if(any(cont)){
+  if(any(states[co[1:2]] == Istate)){
         # see if anyone has already recovered
     recVec <- (iTime[co[1:2]] + recDelay[co[1:2]]) <= tCur
     # count them
     # if(sum(recVec>0)){cat("recovery")}
-    I <- I - (sum(cont) * sum(recVec))
-    # remove them (this will needlessly update state from R to R sometimes)
+    I <- I - sum(recVec)
+    # remove them
     states[co[1:2]][recVec] <- Rstate
     # if one is infectious AND one is susceptible, lots to do
     if(any(states[co[1:2]] == Istate) & any(states[co[1:2]] == Sstate)){
@@ -141,7 +140,7 @@ for(i in 1:nrow(contactOrder)){
   }
 }
 # [save state? and] print some stuff once per day
-  if(floor(tCur)>dayz){
+  if(floor(tCur>dayz)){
 
       cat(paste0("day ", dayz
                  , "; contact #", i

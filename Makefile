@@ -85,8 +85,10 @@ IBM_sketch.Rout: IBM_sketch.R
 Sources += IBM_sketch.md
 
 ## Do a simple sim (but with three activity levels)
-IBM_3-way.Rout: IBM_3-way.R kappas_in_3-class.rda
+IBM_3-way.Rout: IBM_3-way.R kappas_in_3-class.rda myMeehan.rda nbinom_z.rda
 	$(pipeRcall)
+# match to an Actual Meehan model
+hundredFiveHundred.Rout: hundredFiveHundred.R tpeak.rda IBM_3-way.rda myMeehan.rda nbinom_z.rda
 IBM_sketch_sketch.Rout: IBM_sketch_sketch.R
 IBM_faster.Rout: IBM_faster.R
 ######################################################################
@@ -119,6 +121,10 @@ impmakeR += toPeak
 impmakeR += hundredFiveHundred
 %.hundredFiveHundred.Rout: hundredFiveHundred.R tpeak.rda %.conjecture.rda nbinom_z.rda
 	$(pipeRcall)
+
+# kind of want to go with some Meehan models plus dynamics.
+
+
 ## how does the CV change in an exponential-something mixture
 # lognormal_exp_sim.Rout: lognormal_exp_sim.R spreadHelpers.rda
 #	$(pipeRcall)

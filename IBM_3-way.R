@@ -1,14 +1,17 @@
 # script to begin dreaming simulation up
 
 library(shellpipes)
-rpcall("IBM_3-way.Rout IBM_3-way.R kappas_in_3-class.rda")
+rpcall("IBM_3-way.Rout IBM_3-way.R kappas_in_3-class.rda myMeehan.rda nbinom_z.rda")
 manageConflicts()
 startGraphics()
-library(dplyr)
+library(bbmle)
+library(dplyr, mask.ok = "slice")
+library(nloptr)
 library(purrr)
 library(tidyr)
 library(ggplot2)
 library(patchwork)
+
 
 set.seed(1227)
 
@@ -29,13 +32,16 @@ loadEnvironments()
 tMax <- 2e2 # measured in days, assume for most things I'll do 1 year is plenty
 popSize <- 1e4
 
-R_0 <- 12 # much higher than in current fig 1 but maybe necessarily so to enable
+R_0 <-1.63 # much higher than in current fig 1 but maybe necessarily so to enable
+R0 <- R_0
 # outbreak with high probability
 # generate ODE model parameters or something (shd be SIR)
 mod <- cmptMod(0.2, xChoice = "low", R_0 = R_0, scaleRNum = 1) #scaleRNum[2])
+# do the Meehan Europe Smallpox model
+mod <- cmptMod(0.2, xChoice = "meehan", R_0 = R_0, scaleRNum = 0)
 # First let's assume recovery times are exponentially distributed,
 # to compare to basic model
-setGamma <- 1/20 #
+setGamma <- 1 # 1/20 #
 
 
 # epidemic parameters
@@ -43,7 +49,7 @@ meanBeta <- R_0*setGamma
 
 # daily per-person interactions
 dailyRate <- 1
-
+dailyRate <- 20
 # probability transmission occurs, given contact between susceptible, infectious
 # (may have several probability values if several classes)
 
@@ -252,22 +258,22 @@ keff <- purrr::map_dfr(0:33, function(d){
 })
 
 # compute the denoised estimator with loess
-loessMu <- loess(mu~startT, data = keff)
-loessV <- loess(V ~ startT, data  = keff, span = 4)
-
-keff <- keff |> mutate(lmu = predict(loessMu, startT)
-               , lV = predict(loessV, startT)
-               , kappa_loess = (lV-lmu)/lmu^2
-               )
-# pdf("kappa_in_intermediate_ratio.pdf")
-keff |>
-  pivot_longer(cols = c("kappa_discrete", "kappa_naive", "kappa_loess"), names_to = "kappa_approximation", values_to = "Kappa") |>
-  ggplot(aes(startT, Kappa, color = kappa_approximation)) +
-  geom_point() +
-  geom_hline(yintercept = 1, color = "blue") +
-  scale_y_log10()+
-  theme_classic() +
-  labs(x = "day", y = "kappa")
+# loessMu <- loess(mu~startT, data = keff)
+# loessV <- loess(V ~ startT, data  = keff, span = 4)
+#
+# keff <- keff |> mutate(lmu = predict(loessMu, startT)
+#                , lV = predict(loessV, startT)
+#                , kappa_loess = (lV-lmu)/lmu^2
+#                )
+# # pdf("kappa_in_intermediate_ratio.pdf")
+# keff |>
+#   pivot_longer(cols = c("kappa_discrete", "kappa_naive", "kappa_loess"), names_to = "kappa_approximation", values_to = "Kappa") |>
+#   ggplot(aes(startT, Kappa, color = kappa_approximation)) +
+#   geom_point() +
+#   geom_hline(yintercept = 1, color = "blue") +
+#   scale_y_log10()+
+#   theme_classic() +
+#   labs(x = "day", y = "kappa")
 # dev.off()
 #confirm kappa
 kd(caseTally[states != Sstate])
