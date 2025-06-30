@@ -118,7 +118,7 @@ for(i in 1:nrow(contactOrder)){
     recVec <- (iTime[co[1:2]] + recDelay[co[1:2]]) <= tCur
     # count them
     # if(sum(recVec>0)){cat("recovery")}
-    I <- I - (sum(cont) * sum(recVec))
+    I <- I - sum((cont) * (recVec))
     # remove them (this will needlessly update state from R to R sometimes)
     states[co[1:2]][recVec] <- Rstate
     # if one is infectious AND one is susceptible, lots to do
