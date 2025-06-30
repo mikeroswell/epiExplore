@@ -118,6 +118,8 @@ impmakeR += toPeak
 %.toPeak.Rout: toPeak.R tpeak.rda %.conjecture.rda nbinom_z.rda
 	$(pipeRcall)
 
+## base.hundredFiveHundred.Rout.nom.dd.mg.pdf:
+## base.hundredFiveHundred.Rout: hundredFiveHundred.R
 impmakeR += hundredFiveHundred
 %.hundredFiveHundred.Rout: hundredFiveHundred.R tpeak.rda %.conjecture.rda nbinom_z.rda
 	$(pipeRcall)
@@ -253,7 +255,6 @@ Ignore += makestuff
 
 Makefile: makestuff/01.stamp
 makestuff/%.stamp:
-	- $(RM) makestuff/*.stamp
 	(cd makestuff && $(MAKE) pull) || git clone --depth 1 $(msrepo)/makestuff
 	touch $@
 
@@ -267,10 +268,11 @@ makestuff/Makefile:
 
 -include makestuff/pipeR.mk
 -include makestuff/texj.mk
--include makestuff/rmd.mk
--include makestuff/pandoc.mk
+## -include makestuff/rmd.mk
+## -include makestuff/pandoc.mk
 ## -include makestuff/ldrop.mk
 -include makestuff/mirror.mk
+-include makestuff/makegraph.mk
 
 -include makestuff/git.mk
 -include makestuff/visual.mk
