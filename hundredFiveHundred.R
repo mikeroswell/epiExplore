@@ -4,6 +4,7 @@ rpcall("change_2.hundredFiveHundred.Rout hundredFiveHundred.R tpeak.rda change_2
 rpcall("change_3.hundredFiveHundred.Rout hundredFiveHundred.R tpeak.rda change_3.conjecture.rda nbinom_z.rda")
 rpcall("change_6.hundredFiveHundred.Rout hundredFiveHundred.R tpeak.rda change_6.conjecture.rda nbinom_z.rda")
 rpcall("change_12.hundredFiveHundred.Rout hundredFiveHundred.R tpeak.rda change_12.conjecture.rda nbinom_z.rda")
+rpcall("base.hundredFiveHundred.Rout hundredFiveHundred.R tpeak.rda base.conjecture.rda nbinom_z.rda")
 
 loadEnvironments()
 manageConflicts()
