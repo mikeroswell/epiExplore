@@ -23,13 +23,25 @@ library(tidyr)
 R_0 <- 3
 scaleRNum <- c(2, 3, 5) # we pre-specify the ratio of infectiousness between mid/low/high
 xChoice <- c("low", "mid") # this is a way to specify different rules for how the fractions of low, mid, and high transmitters are determined
+
+xChoice <- "meehan"
 gamm <- 1/10 # recovery rate
+gamm <- 1
 
 tff <- 1e3
 
 # create some functions to help out here
 cmptMod <- function(x, xChoice = c("low", "mid"), R_0 = R_0, scaleRNum){
     # define probabilities for each of three compartments
+    if(xChoice == "meehan"){
+        # low <- subR(R0=R_0, sRat = 1/3, pRat = 0.07)
+        low <- subR(R0=1.63, sRat = 0.07/0.93, pRat = 0.03)
+        return(list(fracs = c(0.07, 0.93, 0)
+                    , rNums = c( low
+                                , superR(low, 0.07/0.93)
+                                , 0
+                    )))
+    }
     if(xChoice == "mid"){
         eps <- max((-sqrt((x-1)^2-4*x^2)+(1-x))/(2*x)
                    , (sqrt((x-1)^2-4*x^2)+(1-x))/(2*x))
@@ -52,6 +64,8 @@ cmptMod <- function(x, xChoice = c("low", "mid"), R_0 = R_0, scaleRNum){
     return(list(fracs = c(low, mid, high), pars = c(eps
                                                     , xChoice,  scaleRNum), rNums = c(lowR, midR, highR)))
 }
+
+
 
 # Note to self: Right now, this is not at all set up to have fixed R0, but might
 # be able to do a small amt of math to get there (i.e., we rescale)

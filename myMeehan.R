@@ -15,8 +15,8 @@ startGraphics()
 # relative to second; when iRat = 0 we have SEIR chains, and when iRat = 1 we
 # have an Erlang with size = 2; this ignores duration vs. infectiveness
 # differences
-# pRat <- 0 # fraction of individuals assigned to "superspread"
-# sRat <- 1 # ratio of *sub*spreader's to *super*spreader's reproductive number
+# pRat <- 0 # fraction of individuals assigned to "superspread" (c in Meehan)
+# sRat <- 1 # ratio of *sub*spreader's to *super*spreader's reproductive number (rho in Meehan)
 #
 
 # solve for R1, R2
