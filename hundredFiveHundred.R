@@ -1,9 +1,7 @@
 library(shellpipes)
 rpcall("hundredFiveHundred.Rout hundredFiveHundred.R tpeak.rda IBM_3-way.rda myMeehan.rda nbinom_z.rda")
-rpcall("change_12.hundredFiveHundred.Rout hundredFiveHundred.R tpeak.rda change_12.conjecture.rda nbinom_z.rda")
-rpcall("change_1p5.hundredFiveHundred.Rout hundredFiveHundred.R tpeak.rda change_1p5.conjecture.rda nbinom_z.rda")
 rpcall("change_2.hundredFiveHundred.Rout hundredFiveHundred.R tpeak.rda change_2.conjecture.rda nbinom_z.rda")
-rpcall("change_3.hundredFiveHundred.Rout hundredFiveHundred.R tpeak.rda change_3.conjecture.rda nbinom_z.rda")
+rpcall("change_12.hundredFiveHundred.Rout hundredFiveHundred.R tpeak.rda change_12.conjecture.rda nbinom_z.rda")
 
 loadEnvironments()
 manageConflicts()
@@ -13,7 +11,7 @@ library(nloptr)
 library(stringr)
 library(numDeriv)
 
-if(is.null(setBeta)){setBeta <- R0}
+if(is.null(get0("setBeta"))){setBeta <- R0}
 # assume pars have gamma, tprob both at 1
 peakEst <- tpeak(popSize, setBeta)
 

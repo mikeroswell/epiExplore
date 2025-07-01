@@ -166,12 +166,13 @@ for(i in 1:length(contactOrder[,3])){
   tCur <- co[3]
   pair <- co[1:2]
   estat <- states[pair]
-  if(any(estat %in% Istate)){
+  cont <- states[co[1:2]] == Istate
+  if(any(cont)){
         # see if anyone has already recovered
     recVec <- (iTime[pair] + recDelay[pair]) <= tCur
     # count them
     # if(sum(recVec>0)){cat("recovery")}
-    I <- I - sum(recVec)
+    I <- I - sum((cont) * (recVec))
     # remove them
     estat[recVec] <- Rstate
     # if one is infectious AND one is susceptible, lots to do

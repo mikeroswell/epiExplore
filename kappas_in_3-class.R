@@ -35,11 +35,18 @@ cmptMod <- function(x, xChoice = c("low", "mid"), R_0 = R_0, scaleRNum){
     # define probabilities for each of three compartments
     if(xChoice == "meehan"){
         # low <- subR(R0=R_0, sRat = 1/3, pRat = 0.07)
-        low <- subR(R0=1.63, sRat = 0.07/0.93, pRat = 0.03)
-        return(list(fracs = c(0.07, 0.93, 0)
+    #     low <- subR(R0=1.63, sRat = 0.07/0.93, pRat = 0.03)
+    #     return(list(fracs = c(0.07, 0.93, 0)
+    #                 , rNums = c( low
+    #                             , superR(low, 0.07/0.93)
+    #                             , 0
+    #                 )))
+    # }
+     low <- subR(R0=3.19, sRat = 0.07, pRat = 0.25)
+        return(list(fracs = c(0.25, 0.75, 0)
                     , rNums = c( low
-                                , superR(low, 0.07/0.93)
-                                , 0
+                                 , superR(low, 0.07)
+                                 , 0
                     )))
     }
     if(xChoice == "mid"){
