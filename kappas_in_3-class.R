@@ -43,7 +43,7 @@ cmptMod <- function(x, xChoice = c("low", "mid"), R_0 = R_0, scaleRNum){
     #                 )))
     # }
      low <- subR(R0=3.19, sRat = 0.07, pRat = 0.25)
-        return(list(fracs = c(0.25, 0.75, 0)
+        return(list(fracs = c(0.75, 0.25, 0)
                     , rNums = c( low
                                  , superR(low, 0.07)
                                  , 0

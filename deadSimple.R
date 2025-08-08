@@ -9,8 +9,8 @@ library(tidyr)
 library(patchwork)
 
 # parms
-beta1 <- 1.5
-beta2 <- 8
+beta1 <- 2
+beta2 <- 6
 gamm <- 1
 
 # how many slices?

@@ -34,16 +34,21 @@ popSize <- 1e4
 
 R_0 <-1.63 # much higher than in current fig 1 but maybe necessarily so to enable
 R0 <- R_0
+
+
 # outbreak with high probability
 # generate ODE model parameters or something (shd be SIR)
 mod <- cmptMod(0.2, xChoice = "low", R_0 = R_0, scaleRNum = 1) #scaleRNum[2])
 # do the Meehan Europe Smallpox model
 mod <- cmptMod(0.2, xChoice = "meehan", R_0 = R_0, scaleRNum = 0)
-# First let's assume recovery times are exponentially distributed,
+
+mod# First let's assume recovery times are exponentially distributed,
+# mod <- list(fracs = c(1/3, 1/3, 1/3), rNums <- c(3,3,3))
 # to compare to basic model
 setGamma <- 1 # 1/20 #
 
-
+R0 <- 3.19
+R_0 <- 3.19
 # epidemic parameters
 meanBeta <- R_0*setGamma
 
@@ -140,8 +145,8 @@ Rstate <- 5
 
 states <- rep(Sstate, popSize)
 # initialize with random infections
-p0 <- sample(1:popSize, 3)
-states[p0]<- sample(Istate, 3, prob = mod$fracs, replace = TRUE)
+p0 <- sample(1:popSize, 1)
+states[p0]<- sample(Istate, 1, prob = mod$fracs, replace = TRUE)
 
 # start the clock
 tCur <- 0
@@ -166,7 +171,7 @@ for(i in 1:length(contactOrder[,3])){
   tCur <- co[3]
   pair <- co[1:2]
   estat <- states[pair]
-  cont <- states[co[1:2]] == Istate
+  cont <- states[co[1:2]] %in% Istate
   if(any(cont)){
         # see if anyone has already recovered
     recVec <- (iTime[pair] + recDelay[pair]) <= tCur
@@ -174,11 +179,11 @@ for(i in 1:length(contactOrder[,3])){
     # if(sum(recVec>0)){cat("recovery")}
     I <- I - sum((cont) * (recVec))
     # remove them
-    estat[recVec] <- Rstate
+    states[pair][recVec] <- Rstate
     # if one is infectious AND one is susceptible, lots to do
-    if(any(estat== Sstate) & any(estat %in% Istate)){
+    if(any(estat == Sstate) & any(estat %in% Istate)){
       # first flip the coin on an infection
-     if(rbinom(1,1, prob = tProb[estat[estat != 1] - 1])){
+     if(rbinom(1,1, prob = tProb[cont - 1])){
        # cat("infection")
        # update cumulative state counters
         I <- I + 1
@@ -196,7 +201,7 @@ for(i in 1:length(contactOrder[,3])){
   }
 }
 # [save state? and] print some stuff once per day
-  if(floor(tCur>dayz)){
+  if(floor(tCur)>dayz){
 
       cat(paste0("day ", dayz
                  , "; contact #", i

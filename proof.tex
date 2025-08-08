@@ -17,30 +17,30 @@
 
 \section*{Case reproductive numbers across a simple epidemic}
 
-The Roswell conjecture is true.
+The variance conservation conjecture is true.
 
 The conjecture asserts that the “excess” (i.e., non-Poisson) variation of individual case reproductive numbers in the standard SIR model outbreak is 1.
 
 \subsection*{Proof}
 Define $x$ as the proportion of the population susceptible, $y$ as the proportion infectious, and incidence $i = Bxy$.
 
-Let $f$ be the distribution of residence times in the infectious compartment. This is exponential in the standard SIR and we will make that assumption later. Define $F$ as the survival distribution function 
-$F(t) 
+Let $f$ be the distribution of residence times in the infectious compartment. This is exponential in the standard SIR and we will make that assumption later. Define $F$ as the survival distribution function
+$F(t)
 	= 1 -\int_{\tau<t} \dtau f(\tau)
 	= \int_{\tau>t} \dtau f(\tau)
 $ (these are equivalent because the full integral of the distribution $f$ is one).
 
 Individuals are characterized by their infection time $\tau$ and recovery time $\rho$. The size of each such class is $w(\tau, \rho) = i(\tau) f(\rho-\tau)$. The expected case reproductive number (which we will use to calculate the mean and the excess variance) is $C(\tau, \rho) = B \int_{\tau<t<\rho} x(t) \dt$.
 
-Define the raw moments of $C$ as $C_k = \intint_{\tau<\rho} \dtau\drho w(\tau, \rho) (C(\tau, \rho))^k$. 
+Define the raw moments of $C$ as $C_k = \intint_{\tau<\rho} \dtau\drho w(\tau, \rho) (C(\tau, \rho))^k$.
 We expect $C_0=Z$, where the final size $Z = \int\dt i(t)$. From there, we will calculate $\mu_C = C_1/C_0$, and the squared CV $\kappa_c = C_0C_2/C_1^2-1$. We expect $\mu_C=1$. Thus the conjecture is equivalent to $\kappa_C = 1$.
 
 We have:
 \begin{eqnarray}
 	C_0
-	&=& \intint_{\tau<\rho} \dtau\drho w(\tau, \rho) 
+	&=& \intint_{\tau<\rho} \dtau\drho w(\tau, \rho)
 	\\ &=& \int \dtau i(\tau) \int_{\rho>\tau} \drho f(\rho-\tau)
-	\\ &=& \int \dtau i(\tau), 
+	\\ &=& \int \dtau i(\tau),
 	\\ &=& Z,
 \end{eqnarray}
 as expected.
@@ -49,10 +49,10 @@ Next:
 \begin{eqnarray}
 	C_1
 	&=& \intint_{\tau<\rho} \dtau\drho w(\tau, \rho) C(\tau, \rho)
-	\\ &=& B \intintint_{\tau<t<\rho} \dtau\dt\drho 
+	\\ &=& B \intintint_{\tau<t<\rho} \dtau\dt\drho
 		i(\tau) f(\rho-\tau) x(t)
 	\\ &=& B \intint_{\tau<t} \dtau\dt i(\tau) x(t)
-		\int_{\rho>t} \drho f(\rho-\tau) 
+		\int_{\rho>t} \drho f(\rho-\tau)
 	\\ &=& B \intint_{\tau<t} \dtau\dt i(\tau) x(t) F(t-\tau)
 	\\ &=& B \int \dt x(t) \int_{\tau<t}\dtau i(\tau) F(t-\tau).
 	\eqlab{C1pre}
@@ -72,24 +72,24 @@ In an attempt to pull similar tricks, we expand $C^2$ in our expression for $C_2
 \begin{eqnarray}
 	C_2
 	&=& \intint_{\tau<\rho} \dtau\drho w(\tau, \rho) (C(\tau, \rho))^2
-	\\ &=& 2B^2 \intintintint_{\tau<s<t<\rho} \dtau\ds\dt\drho 
+	\\ &=& 2B^2 \intintintint_{\tau<s<t<\rho} \dtau\ds\dt\drho
 		i(\tau) f(\rho-\tau) x(s) x(t)
-	\\ &=& 2B^2 \intintint_{\tau<s<t} \dtau\ds\dt 
+	\\ &=& 2B^2 \intintint_{\tau<s<t} \dtau\ds\dt
 		i(\tau) x(s) x(t) \int_{\rho>t} \drho f(\rho-\tau)
-	\\ &=& 2B^2 \intintint_{\tau<s<t} \dtau\ds\dt 
+	\\ &=& 2B^2 \intintint_{\tau<s<t} \dtau\ds\dt
 		i(\tau) x(s) x(t) F(t-\tau)
-	\\ &=& 2B^2 \intint_{s<t} \ds\dt 
+	\\ &=& 2B^2 \intint_{s<t} \ds\dt
 		x(s) x(t) \int_{\tau<s}\dtau i(\tau) F(t-\tau) \eqlab{C2pre}
 \end{eqnarray}
 
 Now the inner integral counts the number of individuals who entered the infectious class before one time ($s$) and remained until another ($t$), which is much less pretty. There is no obvious way to move forward from here without using the Markovian property of our chosen infectious distribution, i.e., $F(a+b) = F(a) F(b)$:
 \begin{eqnarray}
 	C_2
-	&=& 2B^2 \intint_{s<t} \ds\dt 
+	&=& 2B^2 \intint_{s<t} \ds\dt
 		x(s) x(t) \int_{\tau<s}\dtau i(\tau) F(t-s) F(s-\tau)
-	\\ &=& 2B^2 \intint_{s<t} \ds\dt 
+	\\ &=& 2B^2 \intint_{s<t} \ds\dt
 		x(s) x(t) F(t-s) \int_{\tau<s}\dtau i(\tau) F(s-\tau)
-	\\ &=& 2B^2 \intint_{s<t} \ds\dt 
+	\\ &=& 2B^2 \intint_{s<t} \ds\dt
 		x(s) x(t) F(t-s) y(s)
 	\\ &=& 2B \intint_{s<t} \ds\dt x(t) F(t-s) i(s)
 	\\ &=& 2B \int \dt x(t) \int_{s<t} \ds F(t-s) i(s)
@@ -101,7 +101,7 @@ This gives $\kappa_C = 2-1 = 1$, as desired.
 
 \subsection*{Comments}
 
-We calculate $y$ from $i$ and $f$, and close the loop by calculating $i$ using $x$ and $y$. But we never calculate the population susceptibility $x$. This is a tiny bit troubling, since it seems like there must be some assumptions about $x$ necessary for our result. What it seems to mean is that the Roswell conjecture is true more broadly than conjectured – population susceptibility can change, or susceptibles can be replenished, and the excess variation in $R_c$ is still 1 as long as the epidemic is bounded. Further, a limit argument suggests that it should also be true on average for a persistent periodic system.
+We calculate $y$ from $i$ and $f$, and close the loop by calculating $i$ using $x$ and $y$. But we never calculate the population susceptibility $x$. This is a tiny bit troubling, since it seems like there must be some assumptions about $x$ necessary for our result. What it seems to mean is that the variance conservation conjecture is true more broadly than conjectured – population susceptibility can change, or susceptibles can be replenished, and the excess variation in $R_c$ is still 1 as long as the epidemic is bounded. Further, a limit argument suggests that it should also be true on average for a persistent periodic system.
 
 It would be interesting to think about if there are any ways forward from \eqref{C2pre} for other infectious-time distributions.
 
