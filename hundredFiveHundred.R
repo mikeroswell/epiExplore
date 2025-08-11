@@ -26,6 +26,7 @@ peakEst <- tpeak(popSize, setBeta)
 z <- caseTally[which(rank(iTime)>100 & rank(iTime)<600)]
 MLE <- fit_kappaNB(data.frame(z = z))
 pf <- iTime[rank(iTime) == 600]/peakEst
+max(iTime)
 
 earlyStats <- data.frame(R0 = setBeta, kappa = coef(MLE)[[2]], mu = exp(coef(MLE)[[1]]), peakFrac = pf)
 

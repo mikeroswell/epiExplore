@@ -12,6 +12,7 @@ rpcall("lowGamma.IBM.Rout IBM_minimal.R IBM_lowGamma_pars.rda")
 rpcall("gamma3.IBM.Rout IBM_minimal.R recFun.rda IBM_gamma3_pars.rda")
 rpcall("const.IBM.Rout IBM_minimal.R recFun.rda IBM_const_pars.rda")
 rpcall("highR.IBM.Rout IBM_minimal.R recFun.rda IBM_highR_pars.rda")
+rpcall("change_8.IBM.Rout IBM_minimal.R recFun.rda IBM_change_8_pars.rda")
 manageConflicts()
 
 library(dplyr)
