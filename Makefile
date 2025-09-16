@@ -159,12 +159,12 @@ Sources += $(wildcard *.tex)
 
 ## Notes on mean and variance in R_c
 
+## proof.pdf: proof.tex
 ## forward.pdf: forward.tex
 ## RcNotes.pdf: RcNotes.tex
 ## RenewalCaseReproduction.pdf: RenewalCaseReproduction.md
 ## RenewalCaseReproduction.html: RenewalCaseReproduction.md
 ## defineConjecture.pdf: defineConjecture.md
-## proof.pdf: proof.tex
 
 ######################################################################
 ## Robust maximum likelihood estimation when kappa is near boundary
