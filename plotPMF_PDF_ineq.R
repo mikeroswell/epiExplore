@@ -187,7 +187,7 @@ twoClass <- cFracs |>
 # }
 
 deadDistPlot <- fancyHist |> densHist(colorVar = "distParms"
-                                      , colorVals = c(1.5, 8)
+                                      , colorVals = c(2, 6, 12)
                                       , colorLab = "R_0"
                                       , groupVar = "distr"
                                       )

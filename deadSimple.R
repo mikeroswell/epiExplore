@@ -11,6 +11,7 @@ library(patchwork)
 # parms
 beta1 <- 2
 beta2 <- 6
+beta3 <- 12
 gamm <- 1
 
 # how many slices?
@@ -20,7 +21,7 @@ xmax <- 30.5
 
 act1 <- beta1/gamm
 act2 <- beta2/gamm
-
+act3 <- beta3/gamm
 
 actDist <- function(low = 0, high = 30, n = n, act){
   x <- seq(low, high, length.out = n)
@@ -54,15 +55,20 @@ secHist <- function(n, act){
 
 deadDat <- bind_rows( actDist(low = 0, high = xmax, n = n, act = act1)
                        , actDist(low = 0, high = xmax, n = n, act = act2)
+                       , actDist(low = 0, high = xmax, n = n, act = act3)
                        , secDist(high = xmax, act = act1)
                        , secDist(high = xmax, act = act2)
+                       , secDist(high = xmax, act = act3)
                        )
 n <- 2e4
 histDat <- data.frame(ind = 1:n
                       , activity_1 = actHist(n, act1)
                       , activity_2 = actHist(n, act2)
+                      , activity_3 = actHist(n, act3)
                       , secondary_1 = secHist(n, act1)
                       , secondary_2 = secHist(n, act2)
+                      , secondary_3 = secHist(n, act3)
+
                       )
 
 

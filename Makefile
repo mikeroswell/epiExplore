@@ -52,6 +52,11 @@ plotMPOPHC.Rout: plotMPOPHC.R myMeehan.rda
 
 impmakeR += plotPMF_PDF_ineq
 
+## Densities and density histograms
+### deadSimple.R is doing too much work right now... it generates data from
+### branching processes in fully susceptible populations. The data are then
+### plotted by the plotPMF_PDF_ineq.R script, which looks basically fine but
+### probably want to make a bit more modular for tapan's talk.
 plotPMF_PDF_ineq.Rout: plotPMF_PDF_ineq.R myMeehan.rda deadSimple.rda densHist.rda
 	$(pipeRcall)
 
