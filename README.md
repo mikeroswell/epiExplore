@@ -1,7 +1,10 @@
 # epiExplore
 
-This repository is for developing ideas about implied and explicitly-encoded
-flavors of heterogeneity in epidemic models. 
+This repository is for developing ideas about implied and explicitly-encoded flavors of heterogeneity in epidemic models. 
+
+## Status
+
+AA and JD are going to stop working here for now 2025 Nov 04 (Tue) and move stuff to the overleaf started for MR, … JSW's paper.
 
 ## Navigation
 See the Makefile to see how this repository is organized

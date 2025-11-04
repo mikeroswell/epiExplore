@@ -27,7 +27,7 @@ stats_cohorts<-case_per_case_overall$halfDayz |> unique() |>map_dfr(statCohort)
 v1_k <- (stats_cohorts |> ggplot()
          + aes(x=deltaT, y = kappa_discrete)
          + geom_point()
-         + labs(x="normalized time to the infectious duration"
+         + labs(x="time (normalized by infectious duration)"
                 ,y=bquote(kappa[discrete])
                 ,title=bquote(kappa[discrete]~"over time for"~R[0]~":"~.(setBeta)))
          
