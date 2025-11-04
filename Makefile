@@ -102,7 +102,7 @@ IBM_faster.Rout: IBM_faster.R
 
 ## use IBM to check conjecture that secondary case dist variance = 2 (kappa_discrete = 1)
 
-rrun = pipeR
+rrun = $(pipeR)
 
 ## highGamma.Rout: IBM_minimal.R
 impmakeR += IBM
