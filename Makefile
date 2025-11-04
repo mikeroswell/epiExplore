@@ -35,7 +35,7 @@ ggplot_limits.Rout: ggplot_limits.R
 ### reproduces main conceptual ideas from Lloyd-Smith et al. 2005, plots
 ### realized and idealized inequality curves given kappa
 myLloyd-Smith.Rout: myLloyd-Smith.R spreadHelpers.rda
-	$(pipeRcall)
+	$(rrun)
 
 ## Meehan
 ### uses the branching process reasoning from Meehan et al. 2021. Caution, slow.
@@ -43,10 +43,10 @@ myLloyd-Smith.Rout: myLloyd-Smith.R spreadHelpers.rda
 ### same logic but might produce more relevant outputs. However, plot from
 ### MPOPHC grant generated here.
 myMeehan.Rout: myMeehan.R spreadHelpers.rda secondaryDistributionPlots.rda
-	$(pipeRcall)
+	$(rrun)
 
 plotMPOPHC.Rout: plotMPOPHC.R myMeehan.rda
-	$(pipeRcall)
+	$(rrun)
 
 impmakeR += plotPMF_PDF_ineq
 
@@ -56,7 +56,7 @@ impmakeR += plotPMF_PDF_ineq
 ### plotted by the plotPMF_PDF_ineq.R script, which looks basically fine but
 ### probably want to make a bit more modular for tapan's talk.
 plotPMF_PDF_ineq.Rout: plotPMF_PDF_ineq.R myMeehan.rda deadSimple.rda densHist.rda
-	$(pipeRcall)
+	$(rrun)
 
 ######################################################################
 
@@ -67,7 +67,7 @@ plotPMF_PDF_ineq.Rout: plotPMF_PDF_ineq.R myMeehan.rda deadSimple.rda densHist.r
 ### branching processes for (early-phase outbreak) superspreading, and
 ### compartmental models, for longer-term, deterministic trajectories.
 loseSus.Rout: loseSus.R kappaFns.rda
-	$(pipeRcall)
+	$(rrun)
 
 ## kappa mystery: naive kappa estimation is downwards biased
 ### superceded, I suspect, but note error likely in optim
@@ -77,7 +77,7 @@ low_kappa.Rout: low_kappa.R
 
 ## dead simple emergent plots
 deadSimple.Rout: deadSimple.R spreadHelpers.rda
-	(pipeRcall)
+	(rrun)
 
 ## emergent heterogeneity in compartmental models
 kappas_in_3-class.Rout: kappas_in_3-class.R
@@ -89,7 +89,7 @@ Sources += IBM_sketch.md
 
 ## Do a simple sim (but with three activity levels)
 IBM_3-way.Rout: IBM_3-way.R kappas_in_3-class.rda myMeehan.rda nbinom_z.rda
-	$(pipeRcall)
+	$(rrun)
 # match to an Actual Meehan model
 hundredFiveHundred.Rout: hundredFiveHundred.R tpeak.rda IBM_3-way.rda myMeehan.rda nbinom_z.rda
 IBM_sketch_sketch.Rout: IBM_sketch_sketch.R
@@ -102,52 +102,57 @@ IBM_faster.Rout: IBM_faster.R
 
 ## use IBM to check conjecture that secondary case dist variance = 2 (kappa_discrete = 1)
 
+rrun = pipeR
+
 ## highGamma.Rout: IBM_minimal.R
 impmakeR += IBM
 ## base.IBM.Rout: IBM_minimal.R IBM_base_pars.rda
 %.IBM.Rout: IBM_minimal.R recFun.rda IBM_%_pars.rda
 	$(pipeRcall)
 
+recFun.Rout: recFun.R
+	$(pipeR)
+
 IBM_for_v1.Rout: IBM_for_v1.R recFun.rda IBM_for_v1_pars.rda
-	$(pipeRcall)
+	$(rrun)
 IBM_for_v1_pars.Rout: IBM_for_v1_pars.R
-	$(pipeRcall)
+	$(rrun)
 
 IBM_change_%_pars.Rout: change_%.R IBM_base_pars.rda
-	$(pipeRcall)
+	$(rrun)
 
 impmakeR += conjecture
 ## lowGamma.conjecture.Rout: conjecture.R
 ## base.conjecture.Rout: IBM_minimal.R conjecture.R IBM_base_pars.R
 %.conjecture.Rout: conjecture.R %.IBM.rda
-	$(pipeRcall)
+	$(rrun)
 
 ## v1.hist.Rout: v1.hist.R
 v1.%.Rout: v1.%.R IBM_for_v1.rda
-	$(pipeRcall)
+	$(rrun)
 
 impmakeR += toPeak
 %.toPeak.Rout: toPeak.R tpeak.rda %.conjecture.rda nbinom_z.rda
-	$(pipeRcall)
+	$(rrun)
 
 ## base.hundredFiveHundred.Rout.nom.dd.mg.pdf:
 ## change_12.hundredFiveHundred.Rout: hundredFiveHundred.R
 ## base.hundredFiveHundred.Rout: hundredFiveHundred.R
 impmakeR += hundredFiveHundred
 %.hundredFiveHundred.Rout: hundredFiveHundred.R tpeak.rda %.conjecture.rda nbinom_z.rda
-	$(pipeRcall)
+	$(rrun)
 
 # kind of want to go with some Meehan models plus dynamics.
 
 
 ## how does the CV change in an exponential-something mixture
 # lognormal_exp_sim.Rout: lognormal_exp_sim.R spreadHelpers.rda
-#	$(pipeRcall)
+#	$(rrun)
 
 ## show that kappa can be less than 1 when Re is falling
 ### linear example
 decreasingRe.Rout: decreasingRe.R spreadHelpers.rda
-	$(pipeRcall)
+	$(rrun)
 
 ######################################################################
 
@@ -155,9 +160,9 @@ decreasingRe.Rout: decreasingRe.R spreadHelpers.rda
 
 ## test.sim.Rout: jdMess.R test.pars.R
 %.sim.Rout: jdMess.R %.pars.rda
-	$(pipeR)
+	$(rrun)
 %.pars.Rout: %.pars.R
-	$(pipeR)
+	$(rrun)
 
 ######################################################################
 
@@ -198,7 +203,7 @@ mleRepeat.Rout: mleRepeat.R
 ## MLE_start.lnorm.Rout: MLE_start.R sim_lnorm.R
 ## MLE_start.exp.Rout: MLE_start.R sim_exp.R
 MLE_start.%.Rout: MLE_start.R kapWrap.rda nbinom_z.rda sim_%.rda
-	$(pipeRcall)
+	$(rrun)
 
 ## Questions for Ben
 breakTMB.Rout: breakTMB.R kapWrap.rda nbinom_z.rda
@@ -217,7 +222,7 @@ nbtest.Rout: nbtest.R
 ## plots for MS?
 
 ineqPlots_for_emergent.Rout: ineqPlots_for_emergent.R spreadHelpers.rda kappas_in_3-class.rda pdfFromRates.rda
-	$(pipeRcall)
+	$(rrun)
 
 Ignore += *.html
 
