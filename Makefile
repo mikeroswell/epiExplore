@@ -12,8 +12,6 @@ vim_session:
 
 Sources += $(wildcard *.R)
 
-autopipeRcall = defined
-
 ######################################################################
 
 Sources += $(wildcard *.md)
