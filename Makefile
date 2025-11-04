@@ -110,6 +110,11 @@ impmakeR += IBM
 %.IBM.Rout: IBM_minimal.R recFun.rda IBM_%_pars.rda
 	$(pipeRcall)
 
+IBM_for_v1.Rout: IBM_for_v1.R recFun.rda IBM_for_v1_pars.rda
+	$(pipeRcall)
+IBM_for_v1_pars.Rout: IBM_for_v1_pars.R
+	$(pipeRcall)
+
 IBM_change_%_pars.Rout: change_%.R IBM_base_pars.rda
 	$(pipeRcall)
 
@@ -117,6 +122,9 @@ impmakeR += conjecture
 ## lowGamma.conjecture.Rout: conjecture.R
 ## base.conjecture.Rout: IBM_minimal.R conjecture.R IBM_base_pars.R
 %.conjecture.Rout: conjecture.R %.IBM.rda
+	$(pipeRcall)
+
+v1.%.Rout: v1.%.R IBM_for_v1.rda
 	$(pipeRcall)
 
 impmakeR += toPeak
