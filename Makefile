@@ -131,6 +131,7 @@ impmakeR += conjecture
 
 Ignore += figs
 MEASURE ?= proportion
+## v1.kappa.Rout: v1.kappa.R
 ## v1.hist.Rout: v1.hist.R
 figs/v1.%.Rout: slow/IBM_for_v1_pars.rda  v1.%.R "$(MEASURE)"  | figs
 	$(pipeCom)
