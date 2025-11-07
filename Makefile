@@ -96,6 +96,16 @@ IBM_sketch_sketch.Rout: IBM_sketch_sketch.R
 IBM_faster.Rout: IBM_faster.R
 ######################################################################
 
+## Pass a parameter file
+## azadeh.calcs.Rout: calcs.R azadeh.params.tsv 
+%.calcs.Rout: calcs.R %.params.tsv 
+	$(pipeCom)
+
+## Pass a param via filename
+## 7.square.Rout: square.R
+%.square.Rout: square.R
+	$(pipeCom)
+
 ## notes on enumerating kappa_c
 ## Had to do some makestuff hacking to make this rule work; in general fake rules should work
 # integrationNotes.pdf: integrationNotes.md

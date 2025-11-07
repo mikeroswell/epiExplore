@@ -1,0 +1,3 @@
+library(shellpipes)
+
+print(pipeStar())
