@@ -17,7 +17,7 @@ Sources += $(wildcard *.R)
 Sources += $(wildcard *.md)
 ## drop.filemerge: drop.md
 ## mirrors += drop
-
+Sources += $(wildcard slow/*)
 ######################################################################
 ## utilities
 spreadHelpers.Rout: spreadHelpers.R
@@ -113,23 +113,30 @@ impmakeR += IBM
 recFun.Rout: recFun.R
 	$(pipeR)
 
-IBM_for_v1.Rout: IBM_for_v1.R recFun.rda IBM_for_v1_pars.rda
+IBM_for_v1.Rout: IBM_for_v1.R recFun.rda finalSize.rda
 	$(pipeCom)
-IBM_for_v1_pars.Rout: IBM_for_v1_pars.R
+
+slowtarget/IBM_for_v1_pars.Rout: IBM_for_v1_pars.R IBM_for_v1.rda
 	$(pipeCom)
 
 IBM_change_%_pars.Rout: change_%.R IBM_base_pars.rda
 	$(pipeCom)
-
+%.Rout: %.R
+	$(pipeCom)
 impmakeR += conjecture
 ## lowGamma.conjecture.Rout: conjecture.R
 ## base.conjecture.Rout: IBM_minimal.R conjecture.R IBM_base_pars.R
 %.conjecture.Rout: conjecture.R %.IBM.rda
 	$(pipeCom)
 
+Ignore += figs
+MEASURE ?= proportion
 ## v1.hist.Rout: v1.hist.R
-v1.%.Rout: v1.%.R IBM_for_v1.rda
+figs/v1.%.Rout: slow/IBM_for_v1_pars.rda  v1.%.R "$(MEASURE)"  | figs
 	$(pipeCom)
+
+figs:
+	$(mkdir)
 
 impmakeR += toPeak
 %.toPeak.Rout: toPeak.R tpeak.rda %.conjecture.rda nbinom_z.rda
@@ -289,6 +296,7 @@ makestuff/Makefile:
 ## -include makestuff/rmd.mk
 ## -include makestuff/pandoc.mk
 ## -include makestuff/ldrop.mk
+-include makestuff/slowtarget.mk
 -include makestuff/mirror.mk
 -include makestuff/makegraph.mk
 

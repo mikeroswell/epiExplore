@@ -1,20 +1,24 @@
 # script to begin dreaming simulation up
 
-# random note but I'm committed to using the native R pipe for the first time
 
 # load some libraries
 library(shellpipes)
-rpcall("IBM_for_v1.Rout IBM_for_v1.R recFun.rda IBM_for_v1_pars.rda")
+rpcall("IBM_for_v1.Rout IBM_for_v1.R recFun.rda")
 manageConflicts()
-
 library(dplyr)
 # library(purrr)
 library(tidyr)
 loadEnvironments()
 
-#This is a script to streamline the IBM script for single-class SIR models.
+IBM_v1<- function(setBeta = 1.5, seed = 10, popSize = 1e4, tProb = 1
+                  ,tMax = 2e3){
+#This script is based on IMB_minimal.R
 set.seed(seed)
 results <- vector("list", 50)
+thr_counter <-1
+threshold <- seq(0.1,1,by=0.1)
+results_infected <- vector("list", length(threshold))
+Ifinal<-popSize*finalSize(setBeta)
 
 # combn is very slow with big numbers
 # looks good https://stackoverflow.com/a/49153855/8400969
@@ -129,26 +133,27 @@ for(i in 1:nrow(contactOrder)){
     }
   }
 }
-# [save state? and] print some stuff once per day
-  if(tCur>halfDayz/2){
-    df <- as.data.frame(table(caseTally[states !=Sstate]))  
-    names(df) <- c("num_cases", "count")
-    df$halfDayz <- halfDayz
-    results[[halfDayz]] <- df
-    halfDayz <- halfDayz + 1
+  if(sum(states!=Sstate)>=Ifinal*threshold[thr_counter]){
+    df_I <- as.data.frame(table(caseTally[states !=Sstate]))  
+    names(df_I) <- c("num_cases", "count")
+    df_I$threshold <- threshold[thr_counter]
+    df_I$day <- dayz
+    df_I$type <- "proportion"
+    df_I$beta <- setBeta
+    results_infected[[thr_counter]] <- df_I
+    thr_counter <- thr_counter + as.integer(thr_counter < length(threshold))
+    
   }
-  if(floor(tCur)>dayz){
-
-      cat(paste0("day ", dayz
-                 , "; contact #", i
-                 ,"; I = ", I
-                 , ", S = " , S
-                 , "; maxCases = ", max(caseTally)
-                 , "\n")
-    )
-    dayz <- dayz + 1
-    }
-  # stop when no new infecti ons
+if(tCur>=halfDayz/2){
+  df <- as.data.frame(table(caseTally[states !=Sstate]))  
+  names(df) <- c("num_cases", "count")
+  df$threshold <- halfDayz
+  df$day <- dayz
+  df$type <- "half-day"
+  df$beta <- setBeta
+  results[[halfDayz]] <- df
+  halfDayz <- halfDayz + 1
+}
  if(S == 0 | I == 0){
    cat(paste0("END!  day ", dayz
               , "; contact # ", i
@@ -160,7 +165,12 @@ for(i in 1:nrow(contactOrder)){
    break}
 }
 case_per_case_overall <- do.call(rbind, results)
+case_per_case_over_infected <- do.call(rbind, results_infected)
 # questionable move to save storage
 rm(list= c("rateFrame", "rateInds", "contactOrder", "contInd", "contTime" ))
+
+return(list(setBeta = setBeta, overTime = case_per_case_overall,
+            overEpiState = case_per_case_over_infected))
+}
 
 saveEnvironment()
