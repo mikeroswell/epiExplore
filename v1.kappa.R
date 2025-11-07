@@ -1,5 +1,5 @@
 library(shellpipes)
-rpcall("v1.kappa.Rout v1.kappa.R")
+#rpcall("v1.kappa.Rout v1.kappa.R")
 loadEnvironments()
 manageConflicts()
 library(dplyr)
@@ -8,9 +8,7 @@ library(ggplot2)
 library(tidyr)
 startGraphics()
 
-args <- commandArgs(trailingOnly = TRUE)
-measure <- args[1]
-
+measure <- "proportion"
 
 colorval<- c("#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00", "#CC79A7")
 kd <- function(x){(sd(x)^2-mean(x))/mean(x)^2}

@@ -1,16 +1,13 @@
 library(shellpipes)
-rpcall("v1.Rout v1.R IBM_for_v1.rda")
-rpcall("v1.hist.Rout v1.hist.R IBM_for_v1.rda")
-loadEnvironments()
-manageConflicts()
 library(ggplot2)
 library(dplyr)
 library(purrr)
 library(tidyr)
+loadEnvironments()
+manageConflicts()
 startGraphics()
 
-#args <- commandArgs(trailingOnly = TRUE)
-#measure <- args[1]
+
 measure<-"proportion"
 label_wrap <-function(x, measure){
   ifelse(measure == "proportion", paste(as.numeric(x)*100
@@ -19,7 +16,7 @@ label_wrap <-function(x, measure){
 
 colorval<- c("#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00", "#CC79A7")
 #plotting the histogram
-plt<- (IBM_v1_results_rep |> filter(type == "proportion") |> 
+plt<- (IBM_v1_results_rep |> filter(type == measure) |> 
          mutate(threshold = factor(threshold, levels
                                    = sort(unique(threshold)))
                 , beta = factor(beta))
@@ -39,7 +36,7 @@ plt<- (IBM_v1_results_rep |> filter(type == "proportion") |>
        )
        + theme(strip.text =element_text(size = 7))
        + theme_bw()
-       + scale_color_manual(values=colorval[seq_len(nlevels(factor(IBM_v1_results_rep$beta)))])
+       + scale_fill_manual(values=colorval[seq_len(nlevels(factor(IBM_v1_results_rep$beta)))])
 )
 
 print(plt)
