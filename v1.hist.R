@@ -9,9 +9,9 @@ library(purrr)
 library(tidyr)
 startGraphics()
 
-args <- commandArgs(trailingOnly = TRUE)
-measure <- args[1]
-
+#args <- commandArgs(trailingOnly = TRUE)
+#measure <- args[1]
+measure<-"proportion"
 label_wrap <-function(x, measure){
   ifelse(measure == "proportion", paste(as.numeric(x)*100
         ,"% of finalSize\n infected so far"), paste(as.numeric(x), 

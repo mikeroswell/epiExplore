@@ -11,7 +11,7 @@ tMax <- 2e3
 setBetas <- c(2,4,8)
 setGamma <- 1 # because we can rescale time if needed
 tProb <- 1 ## could fiddle with transmission probabilities, but that might be equivalent to another time rescaling
-popSize <- 1e2## popSize is a parameter, and belongs here
+popSize <- 1e4## popSize is a parameter, and belongs here
 seed <- 240
 rPar <- "exp" # sets duration distribution as exponential (base model)
 
