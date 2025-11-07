@@ -1,5 +1,4 @@
 ## This is a epiExplore (Roswell/Weitz heterogeneity)(
-
 current: target
 -include target.mk
 
@@ -143,9 +142,11 @@ impmakeR += conjecture
 
 Ignore += figs
 MEASURE ?= proportion
-## figs/v1.kappa.Rout: v1.kappa.R
-## figs/v1.hist.Rout: v1.hist.R
-figs/v1.%.Rout: slow/IBM_for_v1_pars.rda  v1.%.R  | figs
+## figs/v1.epi.kappa.Rout: v1.kappa.R
+## figs/v1.epi.hist.Rout: v1.hist.R
+figs/v1.epi.%.Rout: slow/IBM_for_v1_pars.rda  v1.%.R v1.epi.rda  | figs
+	$(pipeCom)
+figs/v1.time.%.Rout: slow/IBM_for_v1_pars.rda v1.%.R v1.time.rda | figs
 	$(pipeCom)
 
 figs:

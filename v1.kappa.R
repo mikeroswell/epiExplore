@@ -8,7 +8,6 @@ library(ggplot2)
 library(tidyr)
 startGraphics()
 
-measure <- "proportion"
 
 colorval<- c("#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00", "#CC79A7")
 kd <- function(x){(sd(x)^2-mean(x))/mean(x)^2}
@@ -38,7 +37,7 @@ aa<-map_dfr(unique(IBM_v1_results_rep$beta),
 
 xlabel<-function(type = "proportion"){ifelse(type=="proportion",
       "proportion of cases infected so far relative to the final epidemic size",
-      "half-days sinces the outbreak onset")}
+      "half-days since the outbreak onset")}
 
 plt_kd<- (aa |> 
             mutate(beta = factor(beta))

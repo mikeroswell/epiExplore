@@ -7,12 +7,15 @@ loadEnvironments()
 manageConflicts()
 startGraphics()
 
+# label_wrap <- function(x,measure) {
+# 
+#     ifelse(measure == "proportion", 
+#            paste(as.numeric(as.character(x)) * 100, "% of finalSize\n infected so far"), 
+#            paste(as.numeric(as.character(x)), "half-days since outbreak onset"))
+#   
+# }
 
-measure<-"proportion"
-label_wrap <-function(x, measure){
-  ifelse(measure == "proportion", paste(as.numeric(x)*100
-        ,"% of finalSize\n infected so far"), paste(as.numeric(x), 
-                                                   "half-days since outbreak onset"))}
+measure <- "proportion"
 
 colorval<- c("#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00", "#CC79A7")
 #plotting the histogram
@@ -27,10 +30,11 @@ plt<- (IBM_v1_results_rep |> filter(type == measure) |>
          ))
        +
          geom_histogram( binwidth = 1, alpha = 0.8,
-                         position="identity") 
-       + facet_wrap(~ threshold, scales = "free_y"
-                    ,  labeller = labeller(threshold = function(x){label_wrap(x, measure)})
-       ) 
+                         position="identity") +
+         facet_wrap(~ threshold, scales = "free_y"
+                   ,labeller = labeller(threshold = function(x){
+                     paste(as.numeric(as.character(x)) * 100, "% of finalSize\n infected so far")}))
+                    
        + labs(x = "cases per case", y = "Density", fill = bquote(beta)
               #, title=bquote("case per case distribution for "~R[0]~":"~.(setBeta))
        )
