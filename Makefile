@@ -96,6 +96,8 @@ IBM_sketch_sketch.Rout: IBM_sketch_sketch.R
 IBM_faster.Rout: IBM_faster.R
 ######################################################################
 
+Sources += $(wildcard *.params.tsv)
+
 ## Pass a parameter file
 ## azadeh.calcs.Rout: calcs.R azadeh.params.tsv 
 %.calcs.Rout: calcs.R %.params.tsv 
