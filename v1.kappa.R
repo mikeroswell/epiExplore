@@ -8,7 +8,6 @@ library(ggplot2)
 library(tidyr)
 startGraphics()
 
-
 colorval<- c("#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00", "#CC79A7")
 kd <- function(x){(sd(x)^2-mean(x))/mean(x)^2}
 
@@ -33,8 +32,7 @@ aa<-map_dfr(unique(IBM_v1_results_rep$beta),
                                      typex = measure,
                                      R0 = x)})
 
-xlabel<-function(pairs, type = "proportion"){ifelse(type=="proportion",
-      "proportion of cases infected so far relative to the final epidemic size",
+xlabel<-function(pairs, type = "proportion"){ifelse(type=="half-day",
       paste(
         "percentage of the outbreak duration",
         "(the outbreak duration: the time from the outbreak onset to",
@@ -42,8 +40,9 @@ xlabel<-function(pairs, type = "proportion"){ifelse(type=="proportion",
         "(beta, outbreak duration):",
         paste(pairs, collapse = ", "),
         sep = "\n"
-      )
-      
+      ),ifelse(type=="proportion",
+               "proportion of cases infected so far relative to the final epidemic size"
+               , "log base 10 of the proportion of cases infected so far relative to the final epidemic size")
       )
 }
 
@@ -57,7 +56,10 @@ pairs <- with(df, paste0("(", beta, ", ", max_day, ")"))
 plt_kd<- (aa |> 
             mutate(beta = factor(beta))
           |>
-            ggplot(aes(x =ifelse(type=="half-day", 10*threshold, threshold)
+            ggplot(aes(x =ifelse(type=="half-day", 10*threshold,
+                                 ifelse(type=="proportion",
+                                        threshold,
+                                        log10(threshold)))
                        , y=kd
                        , color =  beta
             ))

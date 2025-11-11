@@ -6,6 +6,7 @@ library(shellpipes)
 rpcall("IBM_for_v1.Rout IBM_for_v1.R recFun.rda")
 manageConflicts()
 library(dplyr)
+library(pracma)
 # library(purrr)
 library(tidyr)
 loadEnvironments()
@@ -18,9 +19,12 @@ results <- vector("list", 50)
 thr_counter <-1
 threshold <- seq(0.1,1,by=0.1)
 results_infected <- vector("list", length(threshold))
+log_thr_counter <-1
+log_threshold <- logspace(-4,0,5)
+results_log_infected <- vector("list", length(log_threshold))
 Ifinal<-popSize*finalSize(setBeta)
 flag <- 1 #flag is one if the total infected individuals is less than Ifinal
-
+log_flag <-1
 # combn is very slow with big numbers
 # looks good https://stackoverflow.com/a/49153855/8400969
 comb2.int <- function(n, rep = FALSE){
@@ -149,7 +153,20 @@ for(i in 1:nrow(contactOrder)){
     results_infected[[thr_counter]] <- df_I
     flag<- as.integer(thr_counter < length(threshold))
     thr_counter <- thr_counter + flag
-    
+  }
+  if((sum(states!=Sstate)>=Ifinal*log_threshold[log_thr_counter] & log_flag ==1 )| 
+     (log_thr_counter == length(log_threshold) & sum(states!=Sstate) > 
+      Ifinal*0.99 & log_flag ==1 )){
+    df_logI <- as.data.frame(table(caseTally[states !=Sstate]))  
+    names(df_logI) <- c("num_cases", "count")
+    df_logI$threshold <- log_threshold[log_thr_counter]
+    df_logI$day <- dayz
+    df_logI$type <- "logproportion"
+    df_logI$beta <- setBeta
+    df_logI$cmpt <-halfDayz
+    results_log_infected[[log_thr_counter]] <- df_logI
+    log_flag<- as.integer(log_thr_counter < length(log_threshold))
+    log_thr_counter <- log_thr_counter + log_flag
   }
 if(tCur>=halfDayz/2){
   df <- as.data.frame(table(caseTally[states !=Sstate]))  
@@ -181,13 +198,15 @@ if(tCur>=halfDayz/2){
 }
 case_per_case_overall <- do.call(rbind, results)
 case_per_case_over_infected <- do.call(rbind, results_infected)
+case_per_case_over_log_infected <- do.call(rbind, results_log_infected)
 # questionable move to save storage
 rm(list= c("rateFrame", "rateInds", "contactOrder", "contInd", "contTime" ))
 
 write.table(finalDay, file = paste0(setBeta,"finalDay.txt"), sep = "\t", 
             row.names = FALSE)
 return(list(setBeta = setBeta, overTime = case_per_case_overall,
-            overEpiState = case_per_case_over_infected))
+            overEpiState = case_per_case_over_infected,
+            overEpiStatelog = case_per_case_over_log_infected))
 }
 
 

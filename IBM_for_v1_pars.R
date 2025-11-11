@@ -3,6 +3,7 @@ library(dplyr)
 library(purrr)
 library(ggplot2)
 library(tidyr)
+library(pracma)
 loadEnvironments()
 
 ## how long to run
@@ -19,7 +20,7 @@ days_counter <- 10
 IBM_v1_results <- map_dfr(setBetas, function(x) {
   out<-IBM_v1(setBeta = x, seed = seed, popSize = popSize, tProb = tProb
          ,tMax = tMax)
-    do.call(rbind, list(out$overTime, out$overEpiState))
+    do.call(rbind, list(out$overTime, out$overEpiState, out$overEpiStatelog))
   })
 
 sel_thr <- IBM_v1_results %>%

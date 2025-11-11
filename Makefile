@@ -123,6 +123,8 @@ impmakeR += IBM
 
 recFun.Rout: recFun.R
 	$(pipeR)
+v1.logepi.Rout: v1.logepi.R
+	$(pipeCom)
 
 IBM_for_v1.Rout: IBM_for_v1.R recFun.rda finalSize.rda
 	$(pipeCom)
@@ -146,12 +148,16 @@ Ignore += figures
 
 ## figures/v1.epi.kappa.Rout: slow/IBM_for_v1_pars.rda v1.kappa.R v1.epi.rda
 ## figures/v1.epi.hist.Rout: slow/IBM_for_v1_pars.rda  v1.hist.R v1.epi.rda
+## figures/v1.logepi.kappa.Rout: slow/IBM_for_v1_pars.rda v1.kappa.R v1.logepi.rda
+## figures/v1.logepi.hist.Rout: slow/IBM_for_v1_pars.rda  v1.hist.R v1.logepi.rda
 ## figures/v1.time.kappa.Rout: slow/IBM_for_v1_pars.rda v1.kappa.R v1.time.rda
 ## figures/v1.time.hist.Rout: slow/IBM_for_v1_pars.rda v1.hist.R v1.time.rda
 ## figures/v1.half.compare.Rout: slow/IBM_for_v1_pars.rda v1.half.compare.R
 ## figures/v1.percentage.compare.Rout: slow/IBM_for_v1_pars.rda v1.percentage.compare.R
 figures/v1.epi.%.Rout: slow/IBM_for_v1_pars.rda  v1.%.R v1.epi.rda  | figures
 	$(pipeCom)
+figures/v1.logepi.%.Rout: slow/IBM_for_v1_pars.rda  v1.%.R v1.logepi.rda  | figures
+	 $(pipeCom)
 figures/v1.time.%.Rout: slow/IBM_for_v1_pars.rda v1.%.R v1.time.rda | figures
 	$(pipeCom)
 figures/v1.%.compare.Rout: slow/IBM_for_v1_pars.rda  v1.%.compare.R  | figures

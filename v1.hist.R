@@ -8,9 +8,12 @@ manageConflicts()
 startGraphics(width=10, height=5)
 
 label_wrap <- function(wrap_level, measure) {
-    sapply(wrap_level,function(x){ifelse(measure == "proportion",
-           paste(as.numeric(as.character(x)) * 100, "% of finalSize\n infected so far"),
-           paste(as.numeric(as.character(x))*10, "% of the \n outbreak duration"))
+    sapply(wrap_level,function(x){ifelse(measure == "half-day",
+          paste(as.numeric(as.character(x))*10,
+                "% of the \n outbreak duration"),
+           paste(as.numeric(as.character(x)) * 100,
+                 "% of finalSize\n infected so far")
+           )
 })}
 
 
@@ -24,11 +27,18 @@ if(measure=="half-day"){
   IBM_v1_results_rep |> dplyr::filter(type=="half-day",
                                       threshold %in% unique_threshold[c(1,
             median(unique_threshold),length(unique_threshold))])}else{
+              if(measure=="proportion"){
               IBM_v1_results_rep_modified<- IBM_v1_results_rep |>
                 dplyr::filter(type=="proportion"
                               ,threshold %in% unique_threshold[c(1,
                               (length(unique_threshold)+1)/2
-                              ,length(unique_threshold))])
+                              ,length(unique_threshold))])}else{
+                                IBM_v1_results_rep_modified<- 
+                                  IBM_v1_results_rep |>
+                                dplyr::filter(type=="logproportion"
+                                              ,threshold %in% unique_threshold[c(1,
+                                (length(unique_threshold)+1)/2
+                                ,length(unique_threshold))])}
               }
 
 plt<- (IBM_v1_results_rep_modified  |> 
