@@ -1,25 +1,47 @@
 library(shellpipes)
-rpcall("v1.Rout v1.R IBM_for_v1.rda")
-rpcall("v1.hist.Rout v1.hist.R IBM_for_v1.rda")
-loadEnvironments()
-manageConflicts()
 library(ggplot2)
 library(dplyr)
 library(purrr)
 library(tidyr)
-startGraphics()
+loadEnvironments()
+manageConflicts()
+startGraphics(width=10, height=5)
 
-#args <- commandArgs(trailingOnly = TRUE)
-#measure <- args[1]
-measure<-"proportion"
-label_wrap <-function(x, measure){
-  ifelse(measure == "proportion", paste(as.numeric(x)*100
-        ,"% of finalSize\n infected so far"), paste(as.numeric(x), 
-                                                   "half-days since outbreak onset"))}
+label_wrap <- function(wrap_level, measure) {
+    sapply(wrap_level,function(x){ifelse(measure == "half-day",
+          paste(as.numeric(as.character(x))*10,
+                "% of the \n outbreak duration"),
+           paste(as.numeric(as.character(x)) * 100,
+                 "% of finalSize\n infected so far")
+           )
+})}
+
+
 
 colorval<- c("#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00", "#CC79A7")
-#plotting the histogram
-plt<- (IBM_v1_results_rep |> filter(type == "proportion") |> 
+
+IBM_v1_results_rep_mod<-IBM_v1_results_rep |> dplyr::filter(type==measure)
+unique_threshold<-sort(unique(IBM_v1_results_rep_mod$threshold))
+if(measure=="half-day"){
+  IBM_v1_results_rep_modified <-
+  IBM_v1_results_rep |> dplyr::filter(type=="half-day",
+                                      threshold %in% unique_threshold[c(1,
+            median(unique_threshold),length(unique_threshold))])}else{
+              if(measure=="proportion"){
+              IBM_v1_results_rep_modified<- IBM_v1_results_rep |>
+                dplyr::filter(type=="proportion"
+                              ,threshold %in% unique_threshold[c(1,
+                              (length(unique_threshold)+1)/2
+                              ,length(unique_threshold))])}else{
+                                IBM_v1_results_rep_modified<- 
+                                  IBM_v1_results_rep |>
+                                dplyr::filter(type=="logproportion"
+                                              ,threshold %in% unique_threshold[c(1,
+                                (length(unique_threshold)+1)/2
+                                ,length(unique_threshold))])}
+              }
+
+plt<- (IBM_v1_results_rep_modified  |> 
          mutate(threshold = factor(threshold, levels
                                    = sort(unique(threshold)))
                 , beta = factor(beta))
@@ -29,17 +51,19 @@ plt<- (IBM_v1_results_rep |> filter(type == "proportion") |>
                     , fill = beta
          ))
        +
-         geom_histogram( binwidth = 1, alpha = 0.8,
-                         position="identity") 
-       + facet_wrap(~ threshold, scales = "free_y"
-                    ,  labeller = labeller(threshold = function(x){label_wrap(x, measure)})
-       ) 
-       + labs(x = "cases per case", y = "Density", fill = bquote(beta)
+         geom_histogram( binwidth = 1, alpha = 1,
+                         position="identity") +
+         facet_wrap(~ threshold, scales = "free_y"
+                   ,labeller = labeller(threshold = function(x){
+                     label_wrap(x, measure)}))
+                    
+       + labs(x = "Cases per case", y = "Frequency", fill = bquote(beta)
               #, title=bquote("case per case distribution for "~R[0]~":"~.(setBeta))
        )
        + theme(strip.text =element_text(size = 7))
+       + scale_fill_manual(values=colorval[seq_len(nlevels(factor(IBM_v1_results_rep_modified$beta)))])
+       + scale_color_manual(values=colorval[seq_len(nlevels(factor(IBM_v1_results_rep_modified$beta)))])
        + theme_bw()
-       + scale_color_manual(values=colorval[seq_len(nlevels(factor(IBM_v1_results_rep$beta)))])
 )
 
 print(plt)

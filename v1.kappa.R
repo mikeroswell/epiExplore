@@ -1,5 +1,5 @@
 library(shellpipes)
-rpcall("v1.kappa.Rout v1.kappa.R")
+#rpcall("v1.kappa.Rout v1.kappa.R")
 loadEnvironments()
 manageConflicts()
 library(dplyr)
@@ -8,22 +8,16 @@ library(ggplot2)
 library(tidyr)
 startGraphics()
 
-args <- commandArgs(trailingOnly = TRUE)
-measure <- args[1]
-
-
 colorval<- c("#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00", "#CC79A7")
 kd <- function(x){(sd(x)^2-mean(x))/mean(x)^2}
 
 #kd_evolution returns kd over the course of outbreak characterized by 
 #either "proportion" (proportion of infected so far relative to the finalSize)
-# or "half-day" (number of half-days past the outbreak onset)
+# or "half-day" (ratio of time past since outbreak to the entire outbreak duration)
 
 kd_evolution<-function(data, typex = "proportion", R0 = 2){
-  filtered_data<-data|> filter(type== typex) |> filter(beta == R0)
-  ser<-as.array(unique(filtered_data$threshold))
-  print(ser)
-  a<-map_dfr(ser, function(x){
+  filtered_data<-data|> filter(type== typex, beta == R0)
+  a<-map_dfr(unique(filtered_data$threshold), function(x){
     filtered_data_x <-filtered_data  |>
       filter(threshold == x)
     return(data.frame(threshold = x,
@@ -38,14 +32,34 @@ aa<-map_dfr(unique(IBM_v1_results_rep$beta),
                                      typex = measure,
                                      R0 = x)})
 
-xlabel<-function(type = "proportion"){ifelse(type=="proportion",
-      "proportion of cases infected so far relative to the final epidemic size",
-      "half-days sinces the outbreak onset")}
+xlabel<-function(pairs, type = "proportion"){ifelse(type=="half-day",
+      paste(
+        "percentage of the outbreak duration",
+        "(the outbreak duration: the time from the outbreak onset to",
+        " the first time the number of infectious individuals hits zero)",
+        "(beta, outbreak duration):",
+        paste(pairs, collapse = ", "),
+        sep = "\n"
+      ),ifelse(type=="proportion",
+               "proportion of cases infected so far relative to the final epidemic size"
+               , "log base 10 of the proportion of cases infected so far relative to the final epidemic size")
+      )
+}
+
+df<- map_dfr(setBetas, function(x){
+             IBM_v1_results |>
+               filter(beta == x) |>
+               summarise(beta = x, max_day = max(day, na.rm = TRUE))}
+)
+pairs <- with(df, paste0("(", beta, ", ", max_day, ")"))
 
 plt_kd<- (aa |> 
             mutate(beta = factor(beta))
           |>
-            ggplot(aes(x =threshold
+            ggplot(aes(x =ifelse(type=="half-day", 10*threshold,
+                                 ifelse(type=="proportion",
+                                        threshold,
+                                        log10(threshold)))
                        , y=kd
                        , color =  beta
             ))
@@ -54,7 +68,7 @@ plt_kd<- (aa |>
             geom_line() +
             scale_color_manual(values=colorval[seq_len(nlevels((factor(aa$beta))))]) + 
             theme_minimal()
-          + labs(x =xlabel(measure) ,
+          + labs(x =xlabel(pairs, measure) ,
                  y = bquote(kappa[d]),
                  color = bquote(beta)
                  #, title=bquote("case per case distribution for "~R[0]~":"~.(setBeta))
