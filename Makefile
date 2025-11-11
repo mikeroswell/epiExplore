@@ -1,4 +1,4 @@
-## This is a epiExplore (Roswell/Weitz heterogeneity)(
+## This is epiExplore (Roswell/Weitz heterogeneity)(
 
 current: target
 -include target.mk
