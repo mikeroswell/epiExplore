@@ -11,6 +11,7 @@ colorval<- c("#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00", "#CC79A7")
 setBetas <- c(2,4,8)
 finTime <- 40
 steps <- 2e3
+#he
 xlimits <- finTime
 straightSim <- map_dfr(setBetas, function(B0){
   return(data.frame(sim( B0=B0,
