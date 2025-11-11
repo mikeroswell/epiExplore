@@ -1,10 +1,12 @@
-library(shellpipes)
-library(ggplot2)
+library(ggplot2); theme_set(theme_bw())
 library(dplyr)
 library(purrr)
 library(patchwork)
+library(tidyr)
+library(shellpipes)
 library(deSolve)
 loadEnvironments()
+startGraphics(width=10, height=5)
 colorval<- c("#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00", "#CC79A7")
 setBetas <- c(2,4,8)
 finTime <- 40
@@ -29,7 +31,6 @@ SusPlot  <- (straightSim |>
   +
   xlim(c(0, xlimits))
   +  guides(color="none")
-  +  theme_bw()
   )
 
 IPlot  <- (straightSim |>
@@ -40,11 +41,12 @@ IPlot  <- (straightSim |>
        , y = "population proportion \n of infectious"
        , color = bquote(beta))
   + xlim(c(0, xlimits)) 
-  + theme_bw() 
   + theme(legend.position = "inside"
-        , legend.position.inside = c(0.7, 0.9))
+        , legend.position.inside = c(0.7, 0.7))
 )
 
-(IPlot
+finalfig<- (IPlot
       + SusPlot 
       + plot_annotation(tag_levels = "a"))
+print(finalfig)
+saveEnvironment()

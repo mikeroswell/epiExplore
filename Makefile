@@ -156,7 +156,7 @@ figures/v1.time.%.Rout: slow/IBM_for_v1_pars.rda v1.%.R v1.time.rda | figures
 	$(pipeCom)
 figures/v1.%.compare.Rout: slow/IBM_for_v1_pars.rda  v1.%.compare.R  | figures
 	$(pipeCom)
-timePlot.Rout: timePlot.R timeSim.rda
+figures/timePlot.Rout: timePlot.R timeSim.rda | figures
 	$(pipeCom)
 figures:
 	$(mkdir)
