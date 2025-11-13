@@ -18,6 +18,7 @@ Sources += $(wildcard *.md)
 ## drop.filemerge: drop.md
 ## mirrors += drop
 Sources += $(wildcard slow/*)
+autopipeR = defined
 ######################################################################
 ## utilities
 spreadHelpers.Rout: spreadHelpers.R
@@ -135,6 +136,10 @@ slowtarget/IBM_for_v1_pars.Rout: IBM_for_v1_pars.R IBM_for_v1.rda
 
 IBM_change_%_pars.Rout: change_%.R IBM_base_pars.rda
 	$(pipeCom)
+slowtarget/RcbarPlotVaryingEndTimeSim.Rout: RcbarPlotVaryingEndTimeSim.R parmsVaryingEndTime.rda v1Stats.rda
+	$(pipeCom)
+slowtarget/cohortSim.Rout: cohortSim.R  parmsVaryingEndTime.rda v1Stats.rda
+	$(pipeCom)
 %.Rout: %.R
 	$(pipeCom)
 impmakeR += conjecture
@@ -147,7 +152,7 @@ impmakeR += conjecture
 ######################################################################
 
 Ignore += figures
-
+## The following are related to IBM implementation of v1
 ## figures/v1.epi.kappa.Rout: slow/IBM_for_v1_pars.rda v1.kappa.R v1.epi.rda
 ## figures/v1.epi.hist.Rout: slow/IBM_for_v1_pars.rda  v1.hist.R v1.epi.rda
 ## figures/v1.logepi.kappa.Rout: slow/IBM_for_v1_pars.rda v1.kappa.R v1.logepi.rda
@@ -164,7 +169,11 @@ figures/v1.time.%.Rout: slow/IBM_for_v1_pars.rda v1.%.R v1.time.rda | figures
 	$(pipeCom)
 figures/v1.%.compare.Rout: slow/IBM_for_v1_pars.rda  v1.%.compare.R  | figures
 	$(pipeCom)
-figures/timePlot.Rout: timePlot.R timeSim.rda | figures
+timeSimulation.Rout: slow/RcbarPlotVaryingEndTimeSim.rda timeSimulation.R v1Stats.rda
+	$(pipeCom)
+# The following  one is based on ODEs
+##figures/RcbarPlotVaryingEndTime.Rout: slow/RcbarPlotVaryingEndTimeSim.rda slow/cohortSim.rda timeSimulation.rda  RcbarPlotVaryingEndTime.R
+figures/RcbarPlotVaryingEndTime.Rout: slow/RcbarPlotVaryingEndTimeSim.rda slow/cohortSim.rda timeSimulation.rda  RcbarPlotVaryingEndTime.R | figures
 	$(pipeCom)
 figures:
 	$(mkdir)
