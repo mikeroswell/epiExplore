@@ -79,7 +79,7 @@ kc <- (cohorts |>
 
 cohortFig <- rc + kc
 ############### Time Evolution ##############
-epiXlabel <- "normalized Time"
+epiXlabel <- "normalized time"
 SusPlot  <- (straightSim |>
                ggplot(aes(time, x, color = as.factor(B0)))
              + geom_line(linewidth = LineWidth)
@@ -97,7 +97,7 @@ SusPlot  <- (straightSim |>
 
 IPlot  <- (straightSim |>
              ggplot(aes(time, y, color = as.factor(B0)))
-           + geom_line(inewidth = LineWidth)
+           + geom_line(linewidth = LineWidth)
            + geom_vline(xintercept = cutoffTime
                         , linetype=lineType
                         , linewidth=interceptLineWidth)
@@ -109,7 +109,21 @@ IPlot  <- (straightSim |>
            + theme(legend.position = "inside"
                    ,legend.position.inside = c(0.7, 0.6))
 )
-epiFig<- IPlot + SusPlot
+inc <- (straightSim |>
+             ggplot(aes(time, inc, color = as.factor(B0)))
+           + geom_line(linewidth = LineWidth)
+           + geom_vline(xintercept = cutoffTime
+                        , linetype=lineType
+                        , linewidth=interceptLineWidth)
+           + scale_color_manual(values = colorVec[1:length(B0)])
+           + labs(x = epiXlabel
+                  , y = "incidence"
+                  , color = bquote(beta))
+           + xlim(c(0, temporalFinalTime)) 
+        + guides(color="none") 
+          
+)
+epiFig<- inc + SusPlot
 ############### Final Plot #############
 print(stackbar / epiFig / cohortFig
       + plot_annotation(tag_levels ="a")
