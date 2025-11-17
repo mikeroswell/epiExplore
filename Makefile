@@ -1,4 +1,5 @@
 ## This is epiExplore (Roswell/Weitz heterogeneity)
+## https://github.com/mikeroswell/epiExplore
 
 current: target
 -include target.mk
@@ -19,6 +20,7 @@ Sources += $(wildcard *.md)
 ## mirrors += drop
 Sources += $(wildcard slow/*)
 autopipeR = defined
+
 ######################################################################
 ## utilities
 spreadHelpers.Rout: spreadHelpers.R
@@ -238,6 +240,9 @@ Sources += $(wildcard *.tex)
 ## RenewalCaseReproduction.pdf: RenewalCaseReproduction.md
 ## RenewalCaseReproduction.html: RenewalCaseReproduction.md
 ## defineConjecture.pdf: defineConjecture.md
+
+## Trying to write up a properly general version of the proof
+## infection.pdf: infection.tex
 
 ######################################################################
 ## Robust maximum likelihood estimation when kappa is near boundary
