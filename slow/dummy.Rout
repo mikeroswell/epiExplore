@@ -1,0 +1,44 @@
+
+R version 4.5.2 (2025-10-31) -- "[Not] Part in a Rumble"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(dplyr)
+> library(purrr)
+> library(tidyr)
+> library(deSolve)
+> library(shellpipes)
+> #An attempt to implement V1 of Roswell's manuscript using a deterministic framework
+> loadEnvironments()
+> B0 <- c(2,4,8)
+> cutoffTime <- c(1,2,2.93,6.84,10)
+> steps <- 5000
+> cars <- 1
+> cohortProp <- 0.6
+> y0 <- 1e-9
+>   res_mat <- map_dfr(B0, function(x){v1Stats_1(R0 = x
++                                                ,cars=cars
++                                                ,cohortProp=cohortProp
++                                                ,steps=steps
++                                               ,y0=y0
++                                               ,cutoffTime = cutoffTime
++                                               )
++ })
+> 
+> 
+> saveEnvironment()
+> 

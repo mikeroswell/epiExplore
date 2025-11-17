@@ -1,6 +1,5 @@
 library(deSolve)
 library(shellpipes)
-rpcall("Codes/RcStat.Rout Codes/RcStat.R")
 
 loadEnvironments()
 ## m for moment; these two functions integrate across the infectors from a given cohort
@@ -135,17 +134,18 @@ v1ODE <- function(time, vars, parms){
   Rc <- parms$rcfun(time)
   varRc <- parms$varrcfun(time)
   wss <- parms$wssfun(time)
-  return(list(c(  #finS=0, mu=0, SS=0, V=0, w = 0, checkV = 0,     SSS=0, S4 = 0
+  return(with(as.list(c(parms, vars)),{
+  (list(c(  #finS=0, mu=0, SS=0, V=0, w = 0, checkV = 0,     SSS=0, S4 = 0
     inc #finS
     ,inc*Rc #mu
     ,inc*Rc*Rc #RSS
     ,inc*varRc #V
     ,inc*wss #w
     ,inc*(wss - Rc^2) #checkV
-  )))
+  ))) 
+  }
+))
 }
-
-
 boxcar <- function(time, vars, parms){
   with(as.list(c(vars, parms)), {
     yvec <- (unlist(mget(paste0("y", 1:cars))))

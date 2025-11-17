@@ -14,7 +14,6 @@ startGraphics(width=10, height=10)
 
 
 
-
 wrap_f <- function(wrap_level, B0) {
   sapply(wrap_level,function(x){
   paste("Cohorts infected prior to time", x, "are considered")
