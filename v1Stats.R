@@ -101,6 +101,8 @@ v1Stats_s <- function(B0=1
         checkV <- (checkV/finS)
         within <- (V/finS)
         between <- (SS-mu^2)
+        withinKRc <- within/mu^2
+        betweenKRc <- between/mu^2
         total = within + between
         otherCheck = (w-mu^2)
         Finalsize <- finS
@@ -116,6 +118,8 @@ v1Stats_s <- function(B0=1
                    , withinSS = w
                    , totalVRc = total
                    , totalVRc_simplified = otherCheck
+                   , withinKRc = withinKRc
+                   , betweenKRc = betweenKRc
                    , totalKRc=total/mu^2
         ))
       })
@@ -124,67 +128,6 @@ v1Stats_s <- function(B0=1
 )
 ))
   })}
-v1Stats <- function(B0=1
-                          , cohortProp=0.6
-                          , steps=300
-                          , dfun = boxcar
-                          , cars = 1
-                          , finTime = 365
-                          , cutoffTime = 50 
-                          , y0 = 1e-9
-                          , t0 = 0){
-  mySim<- sim(B0=B0, timeStep=finTime/steps,
-              finTime=finTime, dfun=dfun, cars=cars,  y0 =y0, t0=t0
-  )
-  with(mySim, {
-    maxCohort <- t0 + cohortProp*finTime
-    ifun <- approxfun(time, y*x, rule=2)
-    cStats <- cohortStats( B0 = B0,
-                          sdat=mySim,
-                          maxCohort=maxCohort, 
-                          cars=cars)
-    rcfun <- approxfun(cStats$cohort, cStats$Rc, rule=2)
-    varrcfun <- approxfun(cStats$cohort, cStats$varRc, rule=2)
-    wssfun <- approxfun(cStats$cohort, cStats$RcSS, rule = 2)
-    integrationtime<-with(cStats,{
-      a<-unlist(cStats$cohort)
-      return(a[a<=cutoffTime])
-      } )
-    mom <- as.data.frame(ode(
-      y=c(finS=0, mu=0, SS=0, V=0, w = 0, checkV = 0)
-      , func=v1ODE
-      , times=integrationtime
-      , parms=list( B0 = B0, ifun=ifun, rcfun=rcfun, varrcfun=varrcfun,
-                    wssfun = wssfun))
-    )
-    
-    with(mom[nrow(mom), ], {
-      mu <- mu/finS
-      SS <- SS/finS
-      w <- w/finS
-      checkV <- (checkV/finS)
-      within <- (V/finS)
-      between <- (SS-mu^2)
-      total = within + between
-      otherCheck = (w-mu^2)
-      Finalsize <- finS
-      return(c(  stepSize=steps
-                 , B0 = B0
-                 , finTime=finTime
-                 , cutoffTime=cutoffTime
-                 , Finalsize=Finalsize
-                 , muRc=mu
-                 , within=within
-                 , checkWithin = checkV
-                 , between=between
-                 , withinSS = w
-                 , totalVRc = total
-                 , totalVRc_simplified = otherCheck
-                 , totalKRc=total/mu^2
-      ))
-    })
-  })
-}
 
 v1ODE <- function(time, vars, parms){
   Bt<-parms$B0
@@ -248,7 +191,7 @@ sim <- function(B0=1,  cars = 1, finTime=365,
     else{
       y <- y1
     }
-    inc <- c(diff(cum),0)
+    inc <- c(diff(cum), NA)
     
   }))
 }

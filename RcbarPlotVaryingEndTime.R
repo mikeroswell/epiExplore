@@ -23,7 +23,7 @@ lineType <- "dotted"
 interceptLineWidth <- 0.5 #intercept's line width
 LineWidth <-1 #lines' line width
 ############### Bar Plot ########################
-stackbar<-( res_mat    |> pivot_longer(cols = c(between, within),
+stackbar_vRc<-( res_mat    |> pivot_longer(cols = c(between, within),
                                        names_to = "source",
                                        values_to = "RcVariance")
             |> mutate(cutoffTime = factor(cutoffTime
@@ -44,6 +44,30 @@ stackbar<-( res_mat    |> pivot_longer(cols = c(between, within),
             + xlab(bquote(beta))
             + theme(axis.title.y = element_text(size = 10)
                     ,strip.text.x = element_text(size = 8))
+)
+stackbar_kRc<-( res_mat |> pivot_longer(cols = c(betweenKRc, withinKRc),
+                                        names_to = "source",
+                                        values_to = "KRc")
+                |> mutate(cutoffTime = factor(cutoffTime
+                                              , levels = sort(unique(cutoffTime)))
+                          , B0 = as.factor(B0) )|>
+                  ggplot()
+                + aes(x = B0, y = KRc,  fill = source)
+                +  geom_bar(stat = "identity", position = "stack")
+                + geom_hline (yintercept = 1, linetype=lineType
+                              , linewidth=interceptLineWidth)
+                + facet_wrap(~ cutoffTime
+                             , labeller = labeller(cutoffTime = function(x){
+                               wrap_f(x)
+                             })
+                )
+                + scale_color_viridis_d()
+                +  labs(y=bquote(kappa)
+                        , x = bquote(beta)
+                )
+                + scale_fill_discrete(labels=c("between", "within"))
+                + theme(axis.title.y = element_text(size = 10)
+                        ,strip.text.x = element_text(size = 8))
 )
 
 ########### Rc and kappa_c over time #########
@@ -125,7 +149,7 @@ inc <- (straightSim |>
 )
 epiFig<- inc + SusPlot
 ############### Final Plot #############
-print(stackbar / epiFig / cohortFig
+print(stackbar_vRc / epiFig / cohortFig
       + plot_annotation(tag_levels ="a")
       + plot_layout(heights=c(2,1,1) )
  )
