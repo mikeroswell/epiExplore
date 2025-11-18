@@ -180,10 +180,10 @@ timeSimulation.Rout: slow/RcbarPlotVaryingEndTimeSim.rda timeSimulation.R v1Stat
 ##figures/RcbarPlotVaryingEndTime.Rout: slow/RcbarPlotVaryingEndTimeSim.rda slow/cohortSim.rda timeSimulation.rda  RcbarPlotVaryingEndTime.R
 figures/RcbarPlotVaryingEndTime.Rout: slow/RcbarPlotVaryingEndTimeSim.rda slow/cohortSim.rda timeSimulation.rda  RcbarPlotVaryingEndTime.R | figures
 	$(pipeCom)
-##figures/KappaPlotVaryingEndTime.Rout: slow/RcbarPlotVaryingEndTimeSim.rda  KappaPlotVaryingEndTime.R
+## figures/KappaPlotVaryingEndTime.Rout: slow/RcbarPlotVaryingEndTimeSim.rda  KappaPlotVaryingEndTime.R
 figures/KappaPlotVaryingEndTime.Rout: slow/RcbarPlotVaryingEndTimeSim.rda  KappaPlotVaryingEndTime.R | figures
 	$(pipeCom)
-##figures/RcTimePlotVaryingEndTime.Rout: slow/RcTimePlotVaryingEndTimeSim.rda  RcTimePlotVaryingEndTime.R
+## figures/RcTimePlotVaryingEndTime.Rout: slow/RcTimePlotVaryingEndTimeSim.rda  RcTimePlotVaryingEndTime.R
 figures/RcTimePlotVaryingEndTime.Rout: slow/RcTimePlotVaryingEndTimeSim.rda  RcTimePlotVaryingEndTime.R | figures
 	$(pipeCom)
 figures:
