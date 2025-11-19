@@ -1,0 +1,60 @@
+\documentclass[12pt]{article}
+
+\newcommand{\dt}{dt\,}
+\newcommand{\ds}{ds\,}
+\newcommand{\dtau}{d\tau\,}
+\newcommand{\drho}{d\rho\,}
+
+\newcommand{\intint}{{\int\!\!\int}}
+\newcommand{\intintint}{{\int\!\!\int\!\!\int}}
+\newcommand{\intintintint}{{\int\!\!\int\!\!\int\!\!\int}}
+
+\newcommand{\eqlab}[1]{\label{eq:#1}}
+\newcommand{\eqref}[1]{(\ref{eq:#1})}
+
+\begin{document}
+
+Imagine an infectious process where infectious incidence is proportional to a number of infectors, and to other factors that may change through time (e.g., mixing rate, protective measures, population susceptibility):
+
+\begin{equation}
+	i(t) = h(t) I(t)
+\end{equation}
+
+Assuming the proportion of individuals remaining infectious at infection age $a$ is constant over time of infection, $F(a)$, then the number of infectious individuals at time $t>0$ is 
+
+\begin{equation}
+	I(t) = I_0(t) + \int_0^t \dtau i(t) F(t),
+\end{equation}
+
+where $I_0(t)$ is the number of people infectious at time 0 who are still infectious at time $t$. We hope to return to this eqn, but for now, let's consider the simpler idea that we run the model from a long time \emph{before} $t=0$, and can neglect the starting condition:
+
+\begin{equation}
+	I(t) = \int\dtau i(t) F(t).
+\end{equation}
+
+We are interested in the heterogeneity that emerges from the assumption here that individuals have discrete times of infection and recovery. Define the case-reproductive potential of an individual infected at time $\tau$ and recovering at time $\rho$:
+\begin{equation}
+	C(\tau, \rho) = \int_\tau^\rho\dt h(t).
+\end{equation}
+
+The density, or weight, of individuals in each of these classes is given by 
+\begin{equation}
+	\omega(\tau, \rho) = i(\tau) f(\rho-\tau),
+\end{equation}
+where $f = -dF/dt$ is the distribution of recovery times associated with the survival function $F$.
+We then study the distribution of $C$ over individuals by studying the weighted raw moments of $C(\tau, \rho)$:
+\begin{equation}
+	C_n = \intint_{\tau<\rho}\dtau\drho (C(\tau, \rho))^n \omega(\tau, \rho)
+\end{equation}
+
+Thus:
+\begin{eqnarray}
+	C_0 &= \intint_{\tau<\rho}\dtau\drho \omega(\tau, \rho)
+	\\ &= \int\int_{\tau<\rho}\dtau\drho i(\tau) f(\rho-\tau)
+	\\ &= \int\dtau i(\tau) \int_{\rho>\tau} \drho f(\rho-\tau)
+	\\ &= \int\dtau i(\tau) \equiv Z,
+\end{eqnarray}
+where $Z$ is the total “size” of the outbreak (the total number infected).
+
+\end{document}
+

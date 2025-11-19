@@ -186,14 +186,9 @@ if(tCur>=halfDayz/2){
               , ", S = " , S
               , ", maxCases = ", max(caseTally)
               , ", beta = ", setBeta
+              , ", seed = ", seed
               , "\n")
  )
-   finalDay <- data.frame(Values = c(dayz, halfDayz, sum(states!=Sstate)/Ifinal,
-                                     setBeta),
-                          Variables = c("day", "half-days",
-                                        "proportionInfected",
-                                        "beta"))
-   
    break}
 }
 case_per_case_overall <- do.call(rbind, results)
@@ -202,8 +197,6 @@ case_per_case_over_log_infected <- do.call(rbind, results_log_infected)
 # questionable move to save storage
 rm(list= c("rateFrame", "rateInds", "contactOrder", "contInd", "contTime" ))
 
-write.table(finalDay, file = paste0(setBeta,"finalDay.txt"), sep = "\t", 
-            row.names = FALSE)
 return(list(setBeta = setBeta, overTime = case_per_case_overall,
             overEpiState = case_per_case_over_infected,
             overEpiStatelog = case_per_case_over_log_infected))
