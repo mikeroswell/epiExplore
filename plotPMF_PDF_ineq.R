@@ -1,3 +1,4 @@
+## Deprecated! Moved to emergentHeterogeneity overleaf
 library(shellpipes)
 rpcall("plotPMF_PDF_ineq.Rout plotPMF_PDF_ineq.R myMeehan.rda deadSimple.rda densHist.rda")
 library(ggplot2)
