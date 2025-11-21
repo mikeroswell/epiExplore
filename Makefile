@@ -160,6 +160,7 @@ Ignore += figures
 ## The following are related to IBM implementation of v1
 ## figures/v1.epi.kappa.Rout: slow/IBM_for_v1_pars.rda v1.kappa.R v1.epi.rda
 ## figures/v1.epi.hist.Rout: slow/IBM_for_v1_pars.rda  v1.hist.R v1.epi.rda
+## v1.hist.R.blame
 ## figures/v1.logepi.kappa.Rout: slow/IBM_for_v1_pars.rda v1.kappa.R v1.logepi.rda
 ## figures/v1.logepi.hist.Rout: slow/IBM_for_v1_pars.rda  v1.hist.R v1.logepi.rda
 ## figures/v1.time.kappa.Rout: slow/IBM_for_v1_pars.rda v1.kappa.R v1.time.rda
